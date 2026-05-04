@@ -36,3 +36,5 @@ Thumbs.db
 
 # VS Code
 .vscode/
+
+.github/workflows/deploy.yml
