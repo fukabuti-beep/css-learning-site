@@ -22,6 +22,8 @@ start_server.vbs
 stop_server.bat
 open.bat
 launcher.html
+push_to_github.bat
+github_config.txt
 
 # 秘密情報
 netlify_token.txt
