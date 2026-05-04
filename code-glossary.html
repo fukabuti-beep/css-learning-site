@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>コード用語辞典 | CSS学習</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ── コード辞典専用スタイル ── */
+    .code-hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f1a2e 100%);
+      padding: 4rem 1.5rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .code-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(99,102,241,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(16,185,129,0.1) 0%, transparent 50%);
+    }
+    .code-hero-badge {
+      display: inline-block;
+      background: rgba(99,102,241,0.2);
+      border: 1px solid rgba(99,102,241,0.4);
+      color: #a5b4fc;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      padding: 0.3rem 1rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .code-hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 0.75rem;
+      position: relative;
+    }
+    .code-hero h1 span { color: #818cf8; }
+    .code-hero p {
+      color: #94a3b8;
+      font-size: 1rem;
+      max-width: 560px;
+      margin: 0 auto 1.5rem;
+      position: relative;
+      line-height: 1.7;
+    }
+    .code-search-wrap {
+      position: relative;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .code-search-icon {
+      position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+      font-size: 1rem; pointer-events: none;
+    }
+    .code-search {
+      width: 100%;
+      padding: 0.85rem 1rem 0.85rem 2.8rem;
+      font-size: 1rem;
+      border: 1.5px solid rgba(99,102,241,0.4);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.06);
+      color: #e2e8f0;
+      outline: none;
+      font-family: 'Fira Code', monospace;
+      transition: border-color 0.2s, background 0.2s;
+      box-sizing: border-box;
+    }
+    .code-search::placeholder { color: #64748b; font-family: 'Fira Code', monospace; }
+    .code-search:focus {
+      border-color: #818cf8;
+      background: rgba(255,255,255,0.09);
+    }
+
+    .code-main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+    .code-cats {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .code-cat-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.45rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.82rem; font-weight: 500;
+      cursor: pointer; transition: all 0.18s;
+      font-family: 'Fira Code', monospace;
+    }
+    .code-cat-btn:hover { border-color: #818cf8; color: #818cf8; }
+    .code-cat-btn.active {
+      border-color: #818cf8; background: rgba(99,102,241,0.12);
+      color: #818cf8;
+    }
+
+    .code-count {
+      color: var(--text-muted); font-size: 0.82rem;
+      margin-bottom: 1.25rem;
+      font-family: 'Fira Code', monospace;
+    }
+
+    .code-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .code-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 1.4rem 1.5rem;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .code-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--card-accent, linear-gradient(90deg, #818cf8, #6366f1));
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .code-card:hover {
+      border-color: #818cf8;
+      box-shadow: 0 8px 24px rgba(99,102,241,0.12);
+      transform: translateY(-2px);
+    }
+    .code-card:hover::before { opacity: 1; }
+
+    .code-card-header {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .code-card-term {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #818cf8;
+      line-height: 1.3;
+      flex: 1;
+    }
+    .code-card-cat {
+      display: inline-block;
+      font-size: 0.72rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(99,102,241,0.1);
+      color: #a5b4fc;
+      border: 1px solid rgba(99,102,241,0.2);
+      white-space: nowrap;
+      flex-shrink: 0;
+      font-family: 'Fira Code', monospace;
+    }
+    .code-card-en {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+    .code-card-def {
+      font-size: 0.875rem;
+      color: var(--text-body);
+      line-height: 1.75;
+    }
+    .code-card-def code {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.83em;
+      background: rgba(99,102,241,0.08);
+      border: 1px solid rgba(99,102,241,0.15);
+      padding: 0.1em 0.4em;
+      border-radius: 4px;
+      color: #a5b4fc;
+    }
+    .code-card-example {
+      margin-top: 0.85rem;
+      background: #0f172a;
+      border: 1px solid rgba(99,102,241,0.2);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+    .code-card-example .kw { color: #c084fc; }   /* keyword / property */
+    .code-card-example .val { color: #34d399; }  /* value */
+    .code-card-example .sel { color: #fb923c; }  /* selector */
+    .code-card-example .cmt { color: #475569; font-style: italic; }
+    .code-card-example .tag { color: #f472b6; }  /* HTML tag */
+    .code-card-example .attr { color: #fb923c; } /* attribute */
+    .code-card-example .str { color: #34d399; }  /* string */
+    .code-card-example .num { color: #818cf8; }  /* number/unit */
+    .code-card-example .fn { color: #22d3ee; }   /* function */
+
+    .code-empty {
+      display: none;
+      text-align: center; padding: 4rem 1.5rem;
+      color: var(--text-muted); grid-column: 1/-1;
+    }
+
+    /* ── Related link ── */
+    .code-card-link {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: #818cf8;
+      text-decoration: none;
+      font-family: 'Fira Code', monospace;
+    }
+    .code-card-link:hover { text-decoration: underline; }
+
+    @media (max-width: 640px) {
+      .code-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">&lt;/CSS学習&gt;</a>
+      <div class="nav-links">
+        <a href="index.html">ホーム</a>
+        <a href="index.html#curriculum">カリキュラム</a>
+        <a href="glossary.html">用語辞典</a>
+        <a href="code-glossary.html" class="active">コード辞典</a>
+        <a href="quiz.html">テスト</a>
+        <a href="patchnotes.html">パッチノート</a>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <button class="share-nav-btn" onclick="openShareModal()" style="display:none">🔗 共有</button>
+        <button class="admin-login-btn" onclick="openAdminModal()">🔒 管理者</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="code-hero">
+    <div class="code-hero-badge">/* CODE REFERENCE */</div>
+    <h1>💻 コード<span>専用</span>用語辞典</h1>
+    <p>HTML・CSSのコード構文・記号・関数・単位など、コードを読み書きするために必要な用語を完全解説。コード例付きで直感的に理解できます。</p>
+    <div class="code-search-wrap">
+      <span class="code-search-icon">🔍</span>
+      <input class="code-search" id="code-search" type="text"
+        placeholder="用語を検索… (例: :root, calc, @media)">
+    </div>
+  </div>
+
+  <div class="code-main">
+    <div class="code-cats" id="code-cats">
+      <button class="code-cat-btn active" data-cat="all">📋 すべて</button>
+      <button class="code-cat-btn" data-cat="HTML構文">🏷️ HTML構文</button>
+      <button class="code-cat-btn" data-cat="CSS構文">🎨 CSS構文</button>
+      <button class="code-cat-btn" data-cat="記号・構造">⚙️ 記号・構造</button>
+      <button class="code-cat-btn" data-cat="単位・数値">📐 単位・数値</button>
+      <button class="code-cat-btn" data-cat="CSS関数">🔧 CSS関数</button>
+      <button class="code-cat-btn" data-cat="アットルール">@ アットルール</button>
+      <button class="code-cat-btn" data-cat="色の指定">🎨 色の指定</button>
+      <button class="code-cat-btn" data-cat="開発ツール">🛠️ 開発ツール</button>
+    </div>
+
+    <div class="code-count" id="code-count"></div>
+
+    <div class="code-grid" id="code-grid"></div>
+    <div class="code-empty" id="code-empty">
+      <div style="font-size:3rem; margin-bottom:1rem;">🔍</div>
+      <p>「<span id="code-empty-q"></span>」に一致する用語が見つかりませんでした。</p>
+    </div>
+  </div>
+
+  <footer style="border-top:1px solid var(--border); padding:2rem 1.5rem; text-align:center; color:var(--text-dim); font-size:0.85rem;">
+    <p><a href="index.html" style="color:var(--primary);">&lt;/CSS学習&gt;</a> — Webデザイナー向けCSS学習サイト &nbsp;|&nbsp; <span class="footer-producer">Produced by Sumeragi</span></p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // ===================================
+    // コード専用用語辞典データ
+    // ===================================
+    const CODE_GLOSSARY = [
+
+      // ── HTML構文 ──
+      {
+        term: 'DOCTYPE宣言',
+        en: '<!DOCTYPE html>',
+        cat: 'HTML構文',
+        def: 'HTMLファイルの<strong>最初の1行目</strong>に必ず書く宣言。ブラウザに「このファイルはHTML5で書かれています」と伝えます。これがないと<em>互換モード（Quirks Mode）</em>で動作し、レイアウトが崩れる原因になります。',
+        example: '<span class="tag">&lt;!DOCTYPE html&gt;</span>\n<span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="str">"ja"</span><span class="tag">&gt;</span>',
+        link: 'lessons/01-html-basics.html'
+      },
+      {
+        term: '開始タグ・終了タグ',
+        en: 'Opening Tag / Closing Tag',
+        cat: 'HTML構文',
+        def: '開始タグは <code>&lt;p&gt;</code> のように<code>&lt;タグ名&gt;</code>の形式。終了タグは <code>&lt;/p&gt;</code> のように<code>&lt;/タグ名&gt;</code>の形式。ほとんどの要素は開始タグと終了タグのペアで使います。',
+        example: '<span class="tag">&lt;p&gt;</span>これが段落テキストです。<span class="tag">&lt;/p&gt;</span>\n<span class="tag">&lt;h1&gt;</span>ページタイトル<span class="tag">&lt;/h1&gt;</span>',
+        link: 'lessons/01-html-basics.html'
+      },
+      {
+        term: '空要素（自己閉じタグ）',
+        en: 'Void Element / Self-closing Tag',
+        cat: 'HTML構文',
+        def: '終了タグを持たないHTML要素。<code>&lt;img&gt;</code>、<code>&lt;input&gt;</code>、<code>&lt;br&gt;</code>、<code>&lt;hr&gt;</code>、<code>&lt;meta&gt;</code>、<code>&lt;link&gt;</code> などがあります。中に内容（テキスト・子要素）を持てません。',
+        example: '<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="str">"photo.jpg"</span> <span class="attr">alt</span>=<span class="str">"写真"</span><span class="tag">&gt;</span>\n<span class="tag">&lt;br&gt;</span>\n<span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"text"</span><span class="tag">&gt;</span>',
+        link: 'lessons/01-html-basics.html'
+      },
+      {
+        term: '属性（attribute）',
+        en: 'HTML Attribute',
+        cat: 'HTML構文',
+        def: 'HTMLタグに追加情報を与える設定値。<code>属性名="値"</code>の形式で<strong>開始タグの中</strong>に書きます。例：<code>href</code>（リンク先）、<code>src</code>（ソース）、<code>class</code>（CSSクラス）、<code>id</code>（識別子）。',
+        example: '<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="str">"https://example.com"</span> <span class="attr">target</span>=<span class="str">"_blank"</span><span class="tag">&gt;</span>リンク<span class="tag">&lt;/a&gt;</span>',
+        link: 'lessons/01-html-basics.html'
+      },
+      {
+        term: 'id属性',
+        en: 'id attribute',
+        cat: 'HTML構文',
+        def: 'ページ内で<strong>1回しか使えない</strong>一意の識別子を付ける属性。CSSでは <code>#id名</code>、JavaScriptでは <code>getElementById("id名")</code> で取得。ページ内リンク（<code>href="#id名"</code>）にも使います。',
+        example: '<span class="tag">&lt;section</span> <span class="attr">id</span>=<span class="str">"about"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/section&gt;</span>\n\n<span class="cmt">/* CSS */</span>\n<span class="sel">#about</span> { <span class="kw">background</span>: <span class="val">#f0f4ff</span>; }',
+        link: 'lessons/03-selectors.html'
+      },
+      {
+        term: 'class属性',
+        en: 'class attribute',
+        cat: 'HTML構文',
+        def: '複数の要素に同じスタイルを適用するための分類名。<strong>同じclass名を何度でも</strong>使えます。CSSでは <code>.class名</code> で選択。スペース区切りで複数のクラスを同時に指定できます。',
+        example: '<span class="tag">&lt;p</span> <span class="attr">class</span>=<span class="str">"card featured"</span><span class="tag">&gt;</span>内容<span class="tag">&lt;/p&gt;</span>\n\n<span class="cmt">/* CSS */</span>\n<span class="sel">.card</span> { <span class="kw">border-radius</span>: <span class="val">8px</span>; }\n<span class="sel">.featured</span> { <span class="kw">background</span>: <span class="val">#fef3c7</span>; }',
+        link: 'lessons/03-selectors.html'
+      },
+      {
+        term: 'data属性',
+        en: 'data-* attribute',
+        cat: 'HTML構文',
+        def: '独自のデータをHTML要素に埋め込むための属性。<code>data-任意の名前="値"</code>の形式。JavaScriptから <code>element.dataset.名前</code> でアクセスできます。CSSの属性セレクターでスタイルを当てることも可能です。',
+        example: '<span class="tag">&lt;button</span> <span class="attr">data-color</span>=<span class="str">"primary"</span> <span class="attr">data-size</span>=<span class="str">"lg"</span><span class="tag">&gt;</span>\n  クリック\n<span class="tag">&lt;/button&gt;</span>\n\n<span class="cmt">// JavaScript</span>\nbtn.dataset.color; <span class="cmt">// "primary"</span>',
+        link: 'lessons/01-html-basics.html'
+      },
+      {
+        term: 'パス（相対・絶対）',
+        en: 'Relative / Absolute Path',
+        cat: 'HTML構文',
+        def: '<strong>絶対パス</strong>はURLのフル指定（<code>https://...</code> または <code>/</code>から始まる）。<strong>相対パス</strong>は現在のファイルからの位置（<code>../</code>は1つ上のフォルダ、<code>./</code>は同じフォルダ）。',
+        example: '<span class="cmt">&lt;!-- 絶対パス --&gt;</span>\n<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="str">"https://example.com/img.jpg"</span><span class="tag">&gt;</span>\n<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="str">"/images/img.jpg"</span><span class="tag">&gt;</span>\n\n<span class="cmt">&lt;!-- 相対パス --&gt;</span>\n<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="str">"../images/img.jpg"</span><span class="tag">&gt;</span>',
+        link: 'lessons/01-html-basics.html'
+      },
+
+      // ── CSS構文 ──
+      {
+        term: 'セレクター',
+        en: 'CSS Selector',
+        cat: 'CSS構文',
+        def: 'スタイルを<strong>どのHTML要素に適用するか</strong>を指定するパターン。ルールセットの <code>{</code> の前の部分です。要素名・クラス・ID・属性・状態など様々な種類があります。',
+        example: '<span class="sel">h1</span> { ... }          <span class="cmt">/* 要素セレクター */</span>\n<span class="sel">.card</span> { ... }      <span class="cmt">/* クラスセレクター */</span>\n<span class="sel">#hero</span> { ... }      <span class="cmt">/* IDセレクター */</span>\n<span class="sel">a:hover</span> { ... }    <span class="cmt">/* 疑似クラス */</span>\n<span class="sel">p::before</span> { ... }  <span class="cmt">/* 疑似要素 */</span>',
+        link: 'lessons/03-selectors.html'
+      },
+      {
+        term: 'プロパティ',
+        en: 'CSS Property',
+        cat: 'CSS構文',
+        def: 'CSS宣言の中で「<strong>何を変えるか</strong>」を指定するキーワード。コロン（<code>:</code>）の左側に書きます。例：<code>color</code>（文字色）、<code>font-size</code>（文字サイズ）、<code>margin</code>（余白）など200以上あります。',
+        example: '<span class="sel">p</span> {\n  <span class="kw">color</span>: <span class="val">red</span>;           <span class="cmt">/* color がプロパティ */</span>\n  <span class="kw">font-size</span>: <span class="val">1rem</span>;     <span class="cmt">/* font-size がプロパティ */</span>\n  <span class="kw">margin-bottom</span>: <span class="val">1rem</span>; <span class="cmt">/* margin-bottom がプロパティ */</span>\n}',
+        link: 'lessons/02-css-intro.html'
+      },
+      {
+        term: '値（バリュー）',
+        en: 'CSS Value',
+        cat: 'CSS構文',
+        def: 'CSSプロパティに対して「<strong>どのように変えるか</strong>」を指定する部分。コロン（<code>:</code>）の右側に書きます。数値・単位・キーワード・関数など様々な形式があります。',
+        example: '<span class="sel">h1</span> {\n  <span class="kw">color</span>: <span class="val">#ff0000</span>;      <span class="cmt">/* 16進数カラー */</span>\n  <span class="kw">font-size</span>: <span class="val">2rem</span>;     <span class="cmt">/* 数値＋単位 */</span>\n  <span class="kw">text-align</span>: <span class="val">center</span>;  <span class="cmt">/* キーワード */</span>\n  <span class="kw">width</span>: <span class="fn">calc</span>(<span class="val">100% - 2rem</span>); <span class="cmt">/* 関数 */</span>\n}',
+        link: 'lessons/02-css-intro.html'
+      },
+      {
+        term: '宣言',
+        en: 'CSS Declaration',
+        cat: 'CSS構文',
+        def: '<code>プロパティ: 値;</code> の1セット。セミコロン（<code>;</code>）で終わります。ルールセットの波括弧内に書き、複数並べることができます。宣言1つが「スタイルの1命令」に相当します。',
+        example: '<span class="sel">button</span> {\n  <span class="kw">background</span>: <span class="val">#6366f1</span>;  <span class="cmt">← 宣言1つ</span>\n  <span class="kw">color</span>: <span class="val">white</span>;          <span class="cmt">← 宣言1つ</span>\n  <span class="kw">padding</span>: <span class="val">0.5rem 1rem</span>;  <span class="cmt">← 宣言1つ</span>\n}',
+        link: 'lessons/02-css-intro.html'
+      },
+      {
+        term: 'ルールセット',
+        en: 'Rule Set',
+        cat: 'CSS構文',
+        def: 'セレクターと波括弧で囲まれた宣言のまとまり。CSSの基本単位です。1つのルールセットに複数の宣言を書けます。セレクターをカンマで区切ると複数の要素に同じスタイルを適用できます。',
+        example: '<span class="cmt">/* ルールセット全体 */</span>\n<span class="sel">h1, h2, h3</span> {           <span class="cmt">← セレクター</span>\n  <span class="kw">font-weight</span>: <span class="val">bold</span>;   <span class="cmt">← 宣言</span>\n  <span class="kw">color</span>: <span class="val">#1e293b</span>;     <span class="cmt">← 宣言</span>\n}                        <span class="cmt">← ここまでがルールセット</span>',
+        link: 'lessons/02-css-intro.html'
+      },
+      {
+        term: 'ショートハンド',
+        en: 'CSS Shorthand Property',
+        cat: 'CSS構文',
+        def: '複数のプロパティを1行にまとめて書ける省略記法。<code>margin</code>・<code>padding</code>・<code>border</code>・<code>font</code>・<code>background</code>・<code>flex</code>・<code>grid</code>などがあります。書く順番が決まっている場合があります。',
+        example: '<span class="cmt">/* ショートハンドなし（4行） */</span>\n<span class="kw">margin-top</span>: <span class="val">1rem</span>;\n<span class="kw">margin-right</span>: <span class="val">2rem</span>;\n<span class="kw">margin-bottom</span>: <span class="val">1rem</span>;\n<span class="kw">margin-left</span>: <span class="val">2rem</span>;\n\n<span class="cmt">/* ショートハンドで1行 */</span>\n<span class="kw">margin</span>: <span class="val">1rem 2rem</span>;',
+        link: 'lessons/04-box-model.html'
+      },
+      {
+        term: 'カスケード',
+        en: 'Cascade',
+        cat: 'CSS構文',
+        def: '同じ要素に複数のルールが適用された場合に<strong>どのスタイルが優先されるか</strong>を決めるCSSの仕組み。①詳細度（specificity）②記述順（後が優先）③重要度（!important）の3つで決まります。',
+        example: '<span class="sel">p</span> { <span class="kw">color</span>: <span class="val">blue</span>; }   <span class="cmt">/* 先に書いた */</span>\n<span class="sel">p</span> { <span class="kw">color</span>: <span class="val">red</span>; }    <span class="cmt">/* 後で書いた → red が適用 */</span>\n\n<span class="sel">.text</span> { <span class="kw">color</span>: <span class="val">green</span>; }  <span class="cmt">/* クラスは高詳細度 → green */</span>',
+        link: 'lessons/02-css-intro.html'
+      },
+      {
+        term: '詳細度（Specificity）',
+        en: 'CSS Specificity',
+        cat: 'CSS構文',
+        def: 'どのセレクターが優先されるかを決める点数。<strong>インラインスタイル(1000)</strong> > <strong>ID(100)</strong> > <strong>クラス・属性・疑似クラス(10)</strong> > <strong>要素・疑似要素(1)</strong> の順で計算されます。',
+        example: '<span class="sel">p</span>              { } <span class="cmt">/* 詳細度: 0-0-1 */</span>\n<span class="sel">.card</span>          { } <span class="cmt">/* 詳細度: 0-1-0 */</span>\n<span class="sel">#header</span>        { } <span class="cmt">/* 詳細度: 1-0-0 */</span>\n<span class="sel">#header .title</span> { } <span class="cmt">/* 詳細度: 1-1-0 */</span>',
+        link: 'lessons/03-selectors.html'
+      },
+      {
+        term: '継承',
+        en: 'CSS Inheritance',
+        cat: 'CSS構文',
+        def: '親要素のCSSプロパティが子要素に引き継がれる仕組み。<code>color</code>・<code>font-family</code>・<code>line-height</code>などは継承されます。<code>margin</code>・<code>border</code>・<code>background</code>などは<strong>継承されません</strong>。<code>inherit</code>値を使えば強制的に継承できます。',
+        example: '<span class="sel">body</span> {\n  <span class="kw">color</span>: <span class="val">#333</span>;         <span class="cmt">/* 全子孫に継承 */</span>\n  <span class="kw">font-family</span>: <span class="val">sans-serif</span>; <span class="cmt">/* 全子孫に継承 */</span>\n}\n\n<span class="sel">p</span> {\n  <span class="kw">border</span>: <span class="kw">inherit</span>; <span class="cmt">/* 強制継承 */</span>\n}',
+        link: 'lessons/02-css-intro.html'
+      },
+      {
+        term: '!important',
+        en: '!important',
+        cat: 'CSS構文',
+        def: '宣言の末尾に書くことで<strong>最高優先度を強制</strong>するキーワード。他のすべてのスタイルを上書きします。原則として乱用はNG。外部ライブラリを上書きする場合などやむを得ない状況のみで使います。',
+        example: '<span class="sel">.hidden</span> {\n  <span class="kw">display</span>: <span class="val">none</span> <span class="kw">!important</span>;\n  <span class="cmt">/* 詳細度に関係なく常に適用 */</span>\n}',
+        link: 'lessons/02-css-intro.html'
+      },
+
+      // ── 記号・構造 ──
+      {
+        term: '波括弧 { }',
+        en: 'Curly Braces',
+        cat: '記号・構造',
+        def: 'CSSのルールセットを囲む記号。セレクターの後に開き波括弧 <code>{</code> で始まり、全宣言の後に閉じ波括弧 <code>}</code> で終わります。<strong>対応する開閉が必須</strong>で、忘れるとそれ以降のCSSが全て壊れます。',
+        example: '<span class="sel">h1</span> <span class="kw">{</span>            <span class="cmt">← ここで開く</span>\n  <span class="kw">color</span>: <span class="val">red</span>;\n<span class="kw">}</span>            <span class="cmt">← ここで閉じる</span>',
+        link: 'lessons/02-css-intro.html'
+      },
+      {
+        term: 'セミコロン ;',
+        en: 'Semicolon',
+        cat: '記号・構造',
+        def: 'CSS宣言の末尾に付ける<strong>区切り文字</strong>。<code>color: red;</code> の最後の <code>;</code> がセミコロンです。最後の宣言でも省略しないのが慣習。省略するとその行以降の宣言が無効になる場合があります。',
+        example: '<span class="sel">p</span> {\n  <span class="kw">color</span>: <span class="val">red</span><span class="kw">;</span>       <span class="cmt">← セミコロンが区切り</span>\n  <span class="kw">font-size</span>: <span class="val">1rem</span><span class="kw">;</span>  <span class="cmt">← 最後でも付ける</span>\n}',
+        link: 'lessons/02-css-intro.html'
+      },
+      {
+        term: 'コロン :',
+        en: 'Colon',
+        cat: '記号・構造',
+        def: 'CSS宣言でプロパティと値を<strong>区切る記号</strong>。<code>color: red</code> の真ん中の <code>:</code> がコロンです。疑似クラス（<code>:hover</code>）・疑似要素（<code>::before</code>）のセレクターにも使われます（別の意味）。',
+        example: '<span class="sel">a</span> {\n  <span class="kw">color</span><span class="kw">:</span> <span class="val">blue</span>;       <span class="cmt">← プロパティ: 値</span>\n}\n\n<span class="sel">a<span class="kw">:</span>hover</span> {          <span class="cmt">← 疑似クラスのコロン</span>\n  <span class="kw">color</span>: <span class="val">darkblue</span>;\n}',
+        link: 'lessons/02-css-intro.html'
+      },
+      {
+        term: 'コメント',
+        en: 'CSS Comment / HTML Comment',
+        cat: '記号・構造',
+        def: 'ブラウザに無視されるメモ書き。CSSは <code>/* コメント */</code>、HTMLは <code>&lt;!-- コメント --&gt;</code> の形式。コードの説明・一時的な無効化に使います。複数行にまたがることも可能です。',
+        example: '<span class="cmt">/* CSS コメント（一行） */</span>\n\n<span class="cmt">/*\n  CSS コメント\n  複数行も書ける\n*/</span>\n\n<span class="cmt">&lt;!-- HTML コメント --&gt;</span>',
+        link: 'lessons/02-css-intro.html'
+      },
+      {
+        term: 'インデント',
+        en: 'Indentation',
+        cat: '記号・構造',
+        def: 'コードの<strong>入れ子構造を視覚化</strong>するための字下げ。スペース2個またはタブ1個が一般的。インデントを正しく付けると構造が把握しやすく、バグを見つけやすくなります。ブラウザの動作には影響しません。',
+        example: '<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"card"</span><span class="tag">&gt;</span>\n  <span class="tag">&lt;h2&gt;</span>タイトル<span class="tag">&lt;/h2&gt;</span>   <span class="cmt">← 2スペースインデント</span>\n  <span class="tag">&lt;p&gt;</span>本文<span class="tag">&lt;/p&gt;</span>\n<span class="tag">&lt;/div&gt;</span>',
+        link: 'lessons/01-html-basics.html'
+      },
+      {
+        term: 'ネスト（入れ子）',
+        en: 'Nesting',
+        cat: '記号・構造',
+        def: 'ある要素の中に別の要素を配置すること。HTMLでは要素を別の要素の中に入れることができます。CSSネスティング（最新機能）では、セレクター内に子セレクターを書くこともできます。',
+        example: '<span class="tag">&lt;ul&gt;</span>              <span class="cmt">← 親要素</span>\n  <span class="tag">&lt;li&gt;</span>リスト1<span class="tag">&lt;/li&gt;</span>  <span class="cmt">← 子要素（ネスト）</span>\n  <span class="tag">&lt;li&gt;</span>リスト2<span class="tag">&lt;/li&gt;</span>\n<span class="tag">&lt;/ul&gt;</span>\n\n<span class="cmt">/* CSS ネスティング (最新) */</span>\n<span class="sel">.card</span> {\n  <span class="kw">padding</span>: <span class="val">1rem</span>;\n  <span class="sel">&amp; h2</span> { <span class="kw">color</span>: <span class="val">navy</span>; }\n}',
+        link: 'lessons/01-html-basics.html'
+      },
+
+      // ── 単位・数値 ──
+      {
+        term: 'px（ピクセル）',
+        en: 'Pixel (px)',
+        cat: '単位・数値',
+        def: 'CSSの<strong>絶対単位</strong>。画面の物理ピクセルを基準にした固定サイズ。<code>1px = 画面最小点1個分</code>。ブラウザのフォントサイズ変更に追従しないため、アクセシビリティ面から<strong>フォントサイズにはrem推奨</strong>。ボーダーや小さな固定サイズに向きます。',
+        example: '<span class="sel">.box</span> {\n  <span class="kw">width</span>: <span class="val">300px</span>;      <span class="cmt">/* 固定300px */</span>\n  <span class="kw">border</span>: <span class="val">1px</span> <span class="val">solid</span> <span class="val">#ddd</span>;\n  <span class="kw">font-size</span>: <span class="val">16px</span>;   <span class="cmt">/* ← remの方がベター */</span>\n}',
+        link: 'lessons/05-typography.html'
+      },
+      {
+        term: 'rem',
+        en: 'Root Em (rem)',
+        cat: '単位・数値',
+        def: '<strong>html要素のフォントサイズ</strong>を基準にした相対単位。デフォルトは <code>1rem = 16px</code>。ブラウザのフォントサイズ設定に自動追従するため、アクセシビリティに優れ、<strong>フォントサイズと余白指定に推奨</strong>の単位です。',
+        example: '<span class="sel">html</span> { <span class="kw">font-size</span>: <span class="val">16px</span>; }\n\n<span class="sel">h1</span> { <span class="kw">font-size</span>: <span class="val">2rem</span>; }    <span class="cmt">/* = 32px */</span>\n<span class="sel">p</span>  { <span class="kw">font-size</span>: <span class="val">1rem</span>; }    <span class="cmt">/* = 16px */</span>\n<span class="sel">.small</span> { <span class="kw">font-size</span>: <span class="val">0.75rem</span>; } <span class="cmt">/* = 12px */</span>',
+        link: 'lessons/05-typography.html'
+      },
+      {
+        term: 'em',
+        en: 'Em Unit (em)',
+        cat: '単位・数値',
+        def: '<strong>親要素のフォントサイズ</strong>を基準にした相対単位。入れ子になると計算が複雑になるため、現在は <strong>rem の使用が推奨</strong>されます。ただし padding や margin を文字サイズに連動させたい場合は em が便利です。',
+        example: '<span class="sel">body</span> { <span class="kw">font-size</span>: <span class="val">16px</span>; }\n\n<span class="sel">p</span> {\n  <span class="kw">font-size</span>: <span class="val">1.25em</span>;   <span class="cmt">/* = 20px */</span>\n  <span class="kw">padding</span>: <span class="val">0.5em</span>;      <span class="cmt">/* = 10px (p基準) */</span>\n}',
+        link: 'lessons/05-typography.html'
+      },
+      {
+        term: '%（パーセント）',
+        en: 'Percentage (%)',
+        cat: '単位・数値',
+        def: '<strong>親要素のサイズ</strong>を基準にした相対単位。<code>width: 50%</code> なら親の横幅の半分になります。<code>height</code> に % を使うには、<strong>親要素に高さが定義されている必要</strong>があります。フォントサイズに % を使うと <code>em</code> と同様の挙動になります。',
+        example: '<span class="sel">.parent</span> { <span class="kw">width</span>: <span class="val">800px</span>; }\n\n<span class="sel">.child</span> {\n  <span class="kw">width</span>: <span class="val">50%</span>;    <span class="cmt">/* = 400px */</span>\n  <span class="kw">padding</span>: <span class="val">5%</span>;  <span class="cmt">/* = 40px */</span>\n}',
+        link: 'lessons/04-box-model.html'
+      },
+      {
+        term: 'vw / vh',
+        en: 'Viewport Width / Height',
+        cat: '単位・数値',
+        def: '<strong>ブラウザの表示領域（viewport）</strong>を基準にした単位。<code>1vw = 画面幅の1%</code>、<code>1vh = 画面高さの1%</code>。<code>height: 100vh</code> でヒーローセクション全画面表示。<code>width: 100vw</code> でフル幅レイアウトに使います。',
+        example: '<span class="sel">.hero</span> {\n  <span class="kw">width</span>: <span class="val">100vw</span>;    <span class="cmt">/* 画面幅いっぱい */</span>\n  <span class="kw">height</span>: <span class="val">100vh</span>;   <span class="cmt">/* 画面高さいっぱい */</span>\n}\n\n<span class="sel">h1</span> {\n  <span class="kw">font-size</span>: <span class="val">5vw</span>;  <span class="cmt">/* 画面幅に応じたサイズ */</span>\n}',
+        link: 'lessons/10-responsive.html'
+      },
+      {
+        term: 'fr（フラクション）',
+        en: 'Fraction Unit (fr)',
+        cat: '単位・数値',
+        def: 'CSSグリッド<strong>専用の単位</strong>。利用可能なスペースを分割します。<code>1fr 2fr</code> なら 1:2 の比率で列幅を分割。<code>%</code> と違い、<code>gap</code>（隙間）を自動で差し引いた上で残りを分割するのが特徴です。',
+        example: '<span class="sel">.grid</span> {\n  <span class="kw">display</span>: <span class="val">grid</span>;\n  <span class="kw">grid-template-columns</span>: <span class="val">1fr 2fr 1fr</span>;\n  <span class="cmt">/* 1:2:1 の比率で3列 */</span>\n  <span class="kw">gap</span>: <span class="val">1rem</span>; <span class="cmt">/* gapを引いた後に分割 */</span>\n}',
+        link: 'lessons/08-grid.html'
+      },
+      {
+        term: 'dvh / svh / lvh',
+        en: 'Dynamic / Small / Large Viewport Height',
+        cat: '単位・数値',
+        def: 'スマートフォンのアドレスバーを考慮した新しいvhの派生単位。<code>dvh</code>=動的（アドレスバー出没に追従）、<code>svh</code>=最小viewport（アドレスバー表示時）、<code>lvh</code>=最大viewport（アドレスバー非表示時）。モバイルの <code>100vh</code> 問題を解決します。',
+        example: '<span class="sel">.hero</span> {\n  <span class="kw">height</span>: <span class="val">100dvh</span>;  <span class="cmt">/* モバイルで正確 */</span>\n  <span class="cmt">/* 旧: height: 100vh; は</span>\n     <span class="cmt">アドレスバーで見切れることがある */</span>\n}',
+        link: 'lessons/10-responsive.html'
+      },
+
+      // ── CSS関数 ──
+      {
+        term: 'var()',
+        en: 'var() function',
+        cat: 'CSS関数',
+        def: 'CSS変数（カスタムプロパティ）の値を参照する関数。<code>var(--変数名)</code> の形式。第2引数でフォールバック値を指定できます：<code>var(--primary, blue)</code>。変数が未定義の場合にフォールバック値が使われます。',
+        example: '<span class="sel">:root</span> {\n  <span class="kw">--primary</span>: <span class="val">#6366f1</span>;\n  <span class="kw">--spacing</span>: <span class="val">1rem</span>;\n}\n\n<span class="sel">button</span> {\n  <span class="kw">background</span>: <span class="fn">var</span>(<span class="val">--primary</span>);\n  <span class="kw">padding</span>: <span class="fn">var</span>(<span class="val">--spacing</span>, 0.5rem);\n}',
+        link: 'lessons/12-css-variables.html'
+      },
+      {
+        term: 'calc()',
+        en: 'calc() function',
+        cat: 'CSS関数',
+        def: '異なる単位を<strong>組み合わせた計算</strong>ができるCSS関数。<code>+</code>・<code>-</code>・<code>*</code>・<code>/</code> の四則演算が使えます。演算子の前後に<strong>スペースが必要</strong>（特に + と -）。複雑なレイアウト計算に欠かせません。',
+        example: '<span class="sel">.sidebar</span> {\n  <span class="kw">width</span>: <span class="fn">calc</span>(<span class="val">100% - 320px</span>);\n  <span class="cmt">/* 100%からサイドバー幅を引く */</span>\n}\n<span class="sel">.grid</span> {\n  <span class="kw">gap</span>: <span class="fn">calc</span>(<span class="val">1rem * 1.5</span>);\n}',
+        link: 'lessons/12-css-variables.html'
+      },
+      {
+        term: 'clamp()',
+        en: 'clamp() function',
+        cat: 'CSS関数',
+        def: '<code>clamp(最小値, 推奨値, 最大値)</code> の形式で<strong>値の範囲を制限</strong>するCSS関数。フォントサイズやコンテナ幅のレスポンシブ調整に最適。メディアクエリ不要で流動的なサイズ変化を実現できます。',
+        example: '<span class="sel">h1</span> {\n  <span class="kw">font-size</span>: <span class="fn">clamp</span>(<span class="val">1.5rem, 5vw, 3rem</span>);\n  <span class="cmt">/* 最小1.5rem、最大3rem、</span>\n     <span class="cmt">間は画面幅に応じて流動的に変化 */</span>\n}',
+        link: 'lessons/10-responsive.html'
+      },
+      {
+        term: 'min() / max()',
+        en: 'min() / max() functions',
+        cat: 'CSS関数',
+        def: '<code>min()</code> は引数の中で<strong>最小値</strong>を、<code>max()</code> は<strong>最大値</strong>を返す関数。<code>width: min(100%, 1200px)</code> は「100%と1200pxのうち小さい方」→ コンテナの最大幅制限によく使われます。',
+        example: '<span class="sel">.container</span> {\n  <span class="kw">width</span>: <span class="fn">min</span>(<span class="val">100%, 1200px</span>);\n  <span class="cmt">/* max-widthと同じ効果 */</span>\n}\n<span class="sel">.font</span> {\n  <span class="kw">font-size</span>: <span class="fn">max</span>(<span class="val">1rem, 2vw</span>);\n  <span class="cmt">/* 最低でも1remを保証 */</span>\n}',
+        link: 'lessons/10-responsive.html'
+      },
+      {
+        term: 'linear-gradient()',
+        en: 'linear-gradient() function',
+        cat: 'CSS関数',
+        def: '<strong>直線状のグラデーション</strong>を作るCSS関数。方向（<code>to right</code>・<code>45deg</code>など）と色を指定します。複数の色・色の停止位置も指定できます。<code>background-image</code> または <code>background</code> プロパティで使います。',
+        example: '<span class="sel">.hero</span> {\n  <span class="kw">background</span>: <span class="fn">linear-gradient</span>(\n    <span class="val">135deg</span>,\n    <span class="val">#6366f1</span> <span class="val">0%</span>,\n    <span class="val">#8b5cf6</span> <span class="val">50%</span>,\n    <span class="val">#ec4899</span> <span class="val">100%</span>\n  );\n}',
+        link: 'lessons/06-colors.html'
+      },
+      {
+        term: 'rgb() / rgba()',
+        en: 'rgb() / rgba() color functions',
+        cat: 'CSS関数',
+        def: '赤(R)・緑(G)・青(B)の3値で色を指定する関数。各値は <code>0〜255</code>。<code>rgba()</code> の4番目の値は<strong>不透明度（0〜1）</strong>。例：<code>rgba(0,0,0,0.5)</code> は半透明の黒。現代では <code>rgb(0 0 0 / 50%)</code> のスペース区切り記法も使えます。',
+        example: '<span class="sel">.box</span> {\n  <span class="kw">color</span>: <span class="fn">rgb</span>(<span class="val">30, 100, 200</span>);\n  <span class="kw">background</span>: <span class="fn">rgba</span>(<span class="val">0, 0, 0, 0.5</span>);\n  <span class="cmt">/* 新記法 */</span>\n  <span class="kw">border-color</span>: <span class="fn">rgb</span>(<span class="val">0 0 0 / 20%</span>);\n}',
+        link: 'lessons/06-colors.html'
+      },
+      {
+        term: 'hsl() / hsla()',
+        en: 'hsl() / hsla() color functions',
+        cat: 'CSS関数',
+        def: '<strong>色相(H)・彩度(S)・輝度(L)</strong>で色を指定する関数。色相は0〜360°、彩度・輝度は%。デザイナーが直感的に色を調整しやすく人気の記法。明度だけ変えてカラーバリエーションを作るのに便利です。',
+        example: '<span class="sel">:root</span> {\n  <span class="kw">--brand</span>: <span class="val">230</span>; <span class="cmt">/* 色相のみ変数に */</span>\n}\n<span class="sel">.btn</span> {\n  <span class="kw">background</span>: <span class="fn">hsl</span>(<span class="val">var(--brand), 80%, 55%</span>);\n}\n<span class="sel">.btn:hover</span> {\n  <span class="kw">background</span>: <span class="fn">hsl</span>(<span class="val">var(--brand), 80%, 45%</span>);\n}',
+        link: 'lessons/06-colors.html'
+      },
+      {
+        term: 'minmax()',
+        en: 'minmax() function',
+        cat: 'CSS関数',
+        def: 'CSSグリッドのトラックサイズの<strong>最小値と最大値</strong>を指定する関数。<code>minmax(200px, 1fr)</code> は「最小200px、最大は残りスペース」を意味します。<code>auto-fill</code>・<code>auto-fit</code> と組み合わせてレスポンシブグリッドを作るのに必須です。',
+        example: '<span class="sel">.grid</span> {\n  <span class="kw">display</span>: <span class="val">grid</span>;\n  <span class="kw">grid-template-columns</span>:\n    <span class="fn">repeat</span>(<span class="val">auto-fill</span>, <span class="fn">minmax</span>(<span class="val">200px</span>, <span class="val">1fr</span>));\n  <span class="cmt">/* 200px以上を維持しつつ自動折り返し */</span>\n}',
+        link: 'lessons/08-grid.html'
+      },
+
+      // ── アットルール ──
+      {
+        term: '@media',
+        en: '@media rule',
+        cat: 'アットルール',
+        def: 'デバイスの<strong>画面幅・向き・解像度・OSの設定</strong>などに応じてCSSを切り替えるアットルール。レスポンシブデザインの核心。<code>min-width</code>（モバイルファースト）・<code>max-width</code>（デスクトップファースト）のどちらで書くかが設計の出発点です。',
+        example: '<span class="cmt">/* モバイルファースト */</span>\n<span class="sel">.nav</span> { <span class="kw">flex-direction</span>: <span class="val">column</span>; }\n\n@<span class="kw">media</span> (<span class="kw">min-width</span>: <span class="val">768px</span>) {\n  <span class="sel">.nav</span> { <span class="kw">flex-direction</span>: <span class="val">row</span>; }\n}',
+        link: 'lessons/10-responsive.html'
+      },
+      {
+        term: '@keyframes',
+        en: '@keyframes rule',
+        cat: 'アットルール',
+        def: 'アニメーションの各ステップを定義するアットルール。<code>from〜to</code> または <code>0%〜100%</code> で各フレームのスタイルを指定します。<code>animation</code> プロパティで要素に適用します。名前は任意の文字列です。',
+        example: '@<span class="kw">keyframes</span> <span class="sel">fadeIn</span> {\n  <span class="val">from</span> { <span class="kw">opacity</span>: <span class="val">0</span>; <span class="kw">transform</span>: <span class="fn">translateY</span>(<span class="val">20px</span>); }\n  <span class="val">to</span>   { <span class="kw">opacity</span>: <span class="val">1</span>; <span class="kw">transform</span>: <span class="fn">translateY</span>(<span class="val">0</span>); }\n}\n\n<span class="sel">.card</span> {\n  <span class="kw">animation</span>: <span class="val">fadeIn 0.5s ease both</span>;\n}',
+        link: 'lessons/11-transitions-animations.html'
+      },
+      {
+        term: '@import',
+        en: '@import rule',
+        cat: 'アットルール',
+        def: '別のCSSファイルを読み込むアットルール。CSSファイルの<strong>最初</strong>に書く必要があります。ただし<strong>追加のHTTPリクエストが発生</strong>してパフォーマンスが低下するため、<code>&lt;link&gt;</code>タグでの読み込みが推奨されます。Google Fontsの読み込みにも使われます。',
+        example: '<span class="cmt">/* CSSファイルの先頭 */</span>\n@<span class="kw">import</span> <span class="str">url("reset.css")</span>;\n@<span class="kw">import</span> <span class="str">url("typography.css")</span>;\n@<span class="kw">import</span> <span class="str">url("https://fonts.googleapis.com/css2?family=...")</span>;',
+        link: 'lessons/02-css-intro.html'
+      },
+      {
+        term: '@font-face',
+        en: '@font-face rule',
+        cat: 'アットルール',
+        def: 'フォントファイルをサーバーから直接読み込んでWebフォントとして使えるようにするアットルール。<code>font-family</code> で名前を定義し、<code>src</code> でファイルのパスを指定します。Google Fontsはこれを自動生成してくれます。',
+        example: '@<span class="kw">font-face</span> {\n  <span class="kw">font-family</span>: <span class="str">"MyFont"</span>;\n  <span class="kw">src</span>: <span class="fn">url</span>(<span class="str">"myfont.woff2"</span>) <span class="kw">format</span>(<span class="str">"woff2"</span>);\n  <span class="kw">font-weight</span>: <span class="val">400</span>;\n  <span class="kw">font-display</span>: <span class="val">swap</span>; <span class="cmt">/* FOUT防止 */</span>\n}',
+        link: 'lessons/05-typography.html'
+      },
+      {
+        term: '@layer',
+        en: '@layer (Cascade Layers)',
+        cat: 'アットルール',
+        def: 'CSSのカスケード順序を<strong>レイヤーで明示的に管理</strong>できる最新機能。<code>!important</code> 乱用を防ぎ、スタイルの優先順位を宣言的に制御できます。フレームワーク・コンポーネント・ユーティリティの順で整理するのが一般的です。',
+        example: '@<span class="kw">layer</span> <span class="val">reset, base, components, utilities</span>;\n\n@<span class="kw">layer</span> <span class="val">base</span> {\n  <span class="sel">body</span> { <span class="kw">color</span>: <span class="val">#333</span>; }\n}\n@<span class="kw">layer</span> <span class="val">utilities</span> {\n  <span class="sel">.hidden</span> { <span class="kw">display</span>: <span class="val">none</span>; }\n}',
+        link: 'lessons/02-css-intro.html'
+      },
+      {
+        term: '@container',
+        en: '@container (Container Queries)',
+        cat: 'アットルール',
+        def: 'ビューポートではなく<strong>親要素（コンテナ）のサイズ</strong>に基づいてスタイルを変えられる最新機能。コンポーネント単位でレスポンシブ対応できるため再利用性が大幅に向上します。<code>container-type</code> プロパティで登録が必要。',
+        example: '<span class="sel">.card-wrapper</span> {\n  <span class="kw">container-type</span>: <span class="val">inline-size</span>;\n}\n\n@<span class="kw">container</span> (<span class="kw">min-width</span>: <span class="val">400px</span>) {\n  <span class="sel">.card</span> { <span class="kw">flex-direction</span>: <span class="val">row</span>; }\n}',
+        link: 'lessons/10-responsive.html'
+      },
+
+      // ── 色の指定 ──
+      {
+        term: '16進数カラーコード',
+        en: 'Hex Color Code',
+        cat: '色の指定',
+        def: '<code>#RRGGBB</code> の形式で色を指定する方法。各2桁が赤(R)・緑(G)・青(B)の強さを <code>00〜ff</code> で表します。3桁省略形（<code>#rgb</code>）も可能。<code>#ff0000</code>=赤、<code>#0000ff</code>=青、<code>#ffffff</code>=白、<code>#000000</code>=黒。',
+        example: '<span class="sel">h1</span> { <span class="kw">color</span>: <span class="val">#ff6b6b</span>; } <span class="cmt">/* 赤系 */</span>\n<span class="sel">p</span>  { <span class="kw">color</span>: <span class="val">#333</span>; }    <span class="cmt">/* 省略形 = #333333 */</span>\n\n<span class="cmt">/* 透明度付き（8桁） */</span>\n<span class="sel">.overlay</span> { <span class="kw">background</span>: <span class="val">#00000080</span>; }',
+        link: 'lessons/06-colors.html'
+      },
+      {
+        term: 'oklch()',
+        en: 'oklch() color function',
+        cat: '色の指定',
+        def: '知覚的に均一な色空間で色を指定する最新CSS関数。<code>oklch(明度 彩度 色相)</code> の形式。<code>hsl()</code> と比べて<strong>明度を変えても色が歪まず</strong>、鮮やかなグラデーションが作りやすい。CSS Color Level 4で導入されました。',
+        example: '<span class="sel">.btn</span> {\n  <span class="kw">background</span>: <span class="fn">oklch</span>(<span class="val">0.6 0.2 250</span>);\n  <span class="cmt">/* 明度60%, 彩度0.2, 色相250° */</span>\n}\n<span class="sel">.btn:hover</span> {\n  <span class="kw">background</span>: <span class="fn">oklch</span>(<span class="val">0.5 0.2 250</span>);\n  <span class="cmt">/* 明度だけ下げる */</span>\n}',
+        link: 'lessons/06-colors.html'
+      },
+      {
+        term: 'color-mix()',
+        en: 'color-mix() function',
+        cat: '色の指定',
+        def: '2つの色を<strong>指定した比率で混合</strong>するCSS関数。<code>color-mix(in oklch, 色1 50%, 色2)</code> の形式。CSS変数と組み合わせてダークモード・ホバー色・透明バリアントを自動生成するのに便利な最新機能です。',
+        example: '<span class="sel">.tint</span> {\n  <span class="kw">background</span>: <span class="fn">color-mix</span>(\n    <span class="kw">in oklch</span>,\n    <span class="val">#6366f1</span> <span class="val">80%</span>,\n    <span class="val">white</span>\n  ); <span class="cmt">/* 紫を白で20%薄める */</span>\n}',
+        link: 'lessons/06-colors.html'
+      },
+
+      // ── 開発ツール ──
+      {
+        term: 'デベロッパーツール',
+        en: 'Developer Tools (DevTools)',
+        cat: '開発ツール',
+        def: 'ブラウザ内蔵の開発支援ツール。<strong>F12キー</strong>または右クリック→「検証」で開けます。HTMLの構造確認・CSSの編集・ネットワーク・JavaScriptデバッグなどができます。Web制作には必須のツールです。',
+        example: '<span class="cmt">/* DevToolsでできること */</span>\n1. 要素を選択してCSSをリアルタイム編集\n2. ボックスモデル（margin/padding）を視覚確認\n3. レスポンシブモード（スマホ表示）シミュレート\n4. ネットワーク読み込み時間の計測\n5. コンソールでJSのエラー確認',
+        link: 'lessons/01-html-basics.html'
+      },
+      {
+        term: 'コンソール',
+        en: 'Console',
+        cat: '開発ツール',
+        def: 'デベロッパーツールのConsoleタブ。JavaScriptのエラーメッセージが表示される場所で、<code>console.log()</code> でデバッグ出力ができます。CSSの問題でなくJSのエラーが原因でページが壊れていることも多く、まず確認する場所です。',
+        example: '<span class="cmt">// よく使うconsoleメソッド</span>\nconsole.log(<span class="str">"テスト"</span>);       <span class="cmt">// 値を出力</span>\nconsole.error(<span class="str">"エラー"</span>);     <span class="cmt">// エラー表示</span>\nconsole.table(array);        <span class="cmt">// 表形式で表示</span>\nconsole.time(<span class="str">"test"</span>);       <span class="cmt">// 処理時間計測</span>',
+        link: 'lessons/01-html-basics.html'
+      },
+      {
+        term: 'ブラウザ互換性',
+        en: 'Browser Compatibility / Cross-browser',
+        cat: '開発ツール',
+        def: 'CSSプロパティがChrome・Firefox・Safari・Edgeなど異なるブラウザで同様に動作するかどうか。<strong>Can I use（caniuse.com）</strong>でブラウザ対応状況を確認できます。ベンダープレフィックス（<code>-webkit-</code>）が必要な場合もあります。',
+        example: '<span class="cmt">/* ベンダープレフィックスの例 */</span>\n<span class="sel">.box</span> {\n  <span class="kw">-webkit-backdrop-filter</span>: <span class="fn">blur</span>(<span class="val">10px</span>);\n  <span class="kw">backdrop-filter</span>: <span class="fn">blur</span>(<span class="val">10px</span>);\n  <span class="cmt">/* SafariはSafariはWebkit接頭辞が必要 */</span>\n}',
+        link: 'lessons/10-responsive.html'
+      },
+      {
+        term: 'バリデーション',
+        en: 'HTML / CSS Validation',
+        cat: '開発ツール',
+        def: 'HTMLやCSSのコードが仕様に沿って正しく書かれているかチェックすること。<strong>W3C Markup Validator（validator.w3.org）</strong>でHTMLを、<strong>CSS Validator（jigsaw.w3.org/css-validator）</strong>でCSSをチェックできます。',
+        example: '<span class="cmt">/* よくあるバリデーションエラー */</span>\n- タグの閉じ忘れ: &lt;div&gt; ... (閉じていない)\n- 入れ子の間違い: &lt;p&gt;&lt;div&gt;&lt;/div&gt;&lt;/p&gt;\n- 必須属性の欠如: &lt;img&gt; に alt 属性なし\n- CSSの誤ったプロパティ名・値',
+        link: 'lessons/01-html-basics.html'
+      },
+      {
+        term: 'ソースコード表示',
+        en: 'View Page Source',
+        cat: '開発ツール',
+        def: 'ページのHTMLソースをそのまま表示する機能。ブラウザのアドレスバーに <code>view-source:</code> を付けるか、右クリック→「ページのソースを表示」で確認できます。デベロッパーツールの「Elements」とは違い、サーバーから来た生のHTMLを確認できます。',
+        example: '<span class="cmt">/* アドレスバーに入力 */</span>\nview-source:https://example.com\n\n<span class="cmt">/* キーボードショートカット */</span>\nCtrl + U (Windows)\nCmd + Option + U (Mac)',
+        link: 'lessons/01-html-basics.html'
+      }
+    ];
+
+    // ===================================
+    // レンダリング
+    // ===================================
+    let currentCat = 'all';
+    let currentQ = '';
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&lt;/g, '<').replace(/&gt;/g, '>')  // already HTML
+        .replace(/</g, '&lt;').replace(/>/g, '&gt;'); // encode for safety if needed
+    }
+
+    function renderCodeGlossary() {
+      const grid = document.getElementById('code-grid');
+      const empty = document.getElementById('code-empty');
+      const count = document.getElementById('code-count');
+      const emptyQ = document.getElementById('code-empty-q');
+
+      const q = currentQ.toLowerCase();
+      const filtered = CODE_GLOSSARY.filter(item => {
+        const catOK = currentCat === 'all' || item.cat === currentCat;
+        const qOK = !q ||
+          item.term.toLowerCase().includes(q) ||
+          (item.en && item.en.toLowerCase().includes(q)) ||
+          item.def.toLowerCase().includes(q);
+        return catOK && qOK;
+      });
+
+      if (filtered.length === 0) {
+        grid.style.display = 'none';
+        empty.style.display = 'block';
+        emptyQ.textContent = currentQ;
+        count.textContent = '0 件の用語';
+        return;
+      }
+
+      grid.style.display = '';
+      empty.style.display = 'none';
+      count.textContent = `${filtered.length} 件のコード用語`;
+
+      grid.innerHTML = filtered.map(item => `
+        <div class="code-card" id="code-${item.term.replace(/[^a-zA-Z0-9]/g, '-')}">
+          <div class="code-card-header">
+            <div class="code-card-term">${item.term}</div>
+            <span class="code-card-cat">${item.cat}</span>
+          </div>
+          ${item.en ? `<div class="code-card-en">// ${item.en}</div>` : ''}
+          <div class="code-card-def">${item.def}</div>
+          ${item.example ? `<div class="code-card-example">${item.example}</div>` : ''}
+          ${item.link ? `<a class="code-card-link" href="${item.link}">📖 関連レッスン →</a>` : ''}
+        </div>`).join('');
+    }
+
+    document.getElementById('code-search').addEventListener('input', function () {
+      currentQ = this.value;
+      renderCodeGlossary();
+    });
+
+    document.getElementById('code-cats').addEventListener('click', function (e) {
+      const btn = e.target.closest('.code-cat-btn');
+      if (!btn) return;
+      document.querySelectorAll('.code-cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCat = btn.dataset.cat;
+      renderCodeGlossary();
+    });
+
+    document.addEventListener('DOMContentLoaded', renderCodeGlossary);
+  </script>
+</body>
+</html>
