@@ -221,6 +221,51 @@
   <!-- タイムライン -->
   <div class="patch-timeline">
 
+    <!-- v2.0.0 -->
+    <div class="patch-entry">
+      <div class="patch-dot major">🚀</div>
+      <div class="patch-card">
+        <div class="patch-header">
+          <div>
+            <div class="patch-version">v2.0.0</div>
+          </div>
+          <span class="patch-date">2026-05-04</span>
+        </div>
+        <div class="patch-title">コード専用用語辞典の追加・GitHub Pages 移行・キャッシュ完全対策</div>
+        <div class="patch-summary">
+          プログラミング・マークアップ構文に特化した「コード辞典」ページを新設しました。また、ホスティングをGitHub Pagesへ移行し、全ページのCSS・JSにキャッシュバスター（?v=2.0.1）を付与してブラウザ・CDNの古いキャッシュ問題を根本解決しました。
+        </div>
+        <div class="patch-changes">
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>コード専用用語辞典（code-glossary.html）を新設 — HTML構文 / CSS構文 / 記号・構造 / 単位・数値 / CSS関数 / アットルール / 色の指定 / 開発ツール の8カテゴリ44用語をシンタックスハイライト付きコード例で掲載</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>全20ページのナビゲーションに「コード辞典」リンクを追加 — どのページからもワンクリックでアクセス可能に</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-infra">INFRA</span>
+            <span>ホスティングをNetlifyからGitHub Pagesへ移行（URL: https://fukabuti-beep.github.io/css-learning-site/）— 容量制限なし・常時無料・自動デプロイ対応</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-fix">FIX</span>
+            <span>全HTMLファイルのCSS・JS読み込みURLに ?v=2.0.1 を付与 — ブラウザキャッシュ・CDNキャッシュによる用語辞典の非表示問題を根本解決</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-fix">FIX</span>
+            <span>.gitignore に .github/workflows/deploy.yml を追加 — workflowスコープなしのPATでも安定してpush可能に</span>
+          </div>
+        </div>
+        <div class="patch-tags">
+          <span class="patch-tag">コード辞典</span>
+          <span class="patch-tag">GitHub Pages</span>
+          <span class="patch-tag">キャッシュ対策</span>
+          <span class="patch-tag">ナビ更新</span>
+        </div>
+      </div>
+    </div>
+
     <!-- v1.9 -->
     <div class="patch-entry">
       <div class="patch-dot feature">🔗</div>
