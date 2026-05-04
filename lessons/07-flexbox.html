@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flexbox完全ガイド | CSS学習</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo">&lt;/CSS学習&gt;</a>
+      <div class="nav-links">
+        <a href="../index.html">ホーム</a>
+        <a href="../index.html#curriculum">カリキュラム</a>
+        <a href="../index.html#lessons">レッスン一覧</a>
+        <a href="../glossary.html">用語辞典</a>
+        <a href="../quiz.html">テスト</a>
+        <a href="../patchnotes.html">パッチノート</a>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <button class="share-nav-btn" onclick="openShareModal()" style="display:none">🔗 共有</button>
+        <button class="admin-login-btn" onclick="openAdminModal()">🔒 管理者</button>
+        <button class="menu-btn" id="menuBtn">☰</button>
+      </div>
+    </div>
+  </nav>
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="sidebar-overlay"></div>
+  <div class="lesson-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h3>カリキュラム</h3>
+        <div class="overall-progress">
+          <div class="overall-progress-label"><span>進捗</span><span><span id="progressPct">0</span>%</span></div>
+          <div class="overall-progress-track"><div class="overall-progress-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="01-html-basics.html" class="sidebar-link" data-lesson-id="01-html-basics"><span class="sidebar-num">01</span><span>HTMLの基礎</span></a>
+        <a href="02-css-intro.html" class="sidebar-link" data-lesson-id="02-css-intro"><span class="sidebar-num">02</span><span>CSSとは何か</span></a>
+        <a href="03-selectors.html" class="sidebar-link" data-lesson-id="03-selectors"><span class="sidebar-num">03</span><span>セレクター完全ガイド</span></a>
+        <a href="04-box-model.html" class="sidebar-link" data-lesson-id="04-box-model"><span class="sidebar-num">04</span><span>ボックスモデル</span></a>
+        <a href="05-typography.html" class="sidebar-link" data-lesson-id="05-typography"><span class="sidebar-num">05</span><span>タイポグラフィ</span></a>
+        <a href="06-colors.html" class="sidebar-link" data-lesson-id="06-colors"><span class="sidebar-num">06</span><span>色と背景</span></a>
+        <a href="07-flexbox.html" class="sidebar-link" data-lesson-id="07-flexbox"><span class="sidebar-num">07</span><span>Flexbox完全ガイド</span></a>
+        <a href="08-grid.html" class="sidebar-link" data-lesson-id="08-grid"><span class="sidebar-num">08</span><span>CSS Grid完全ガイド</span></a>
+        <a href="09-positioning.html" class="sidebar-link" data-lesson-id="09-positioning"><span class="sidebar-num">09</span><span>ポジショニング</span></a>
+        <a href="10-responsive.html" class="sidebar-link" data-lesson-id="10-responsive"><span class="sidebar-num">10</span><span>レスポンシブデザイン</span></a>
+        <a href="11-transitions-animations.html" class="sidebar-link" data-lesson-id="11-transitions-animations"><span class="sidebar-num">11</span><span>トランジション・アニメーション</span></a>
+        <a href="12-css-variables.html" class="sidebar-link" data-lesson-id="12-css-variables"><span class="sidebar-num">12</span><span>CSS変数（カスタムプロパティ）</span></a>
+        <a href="13-pseudo.html" class="sidebar-link" data-lesson-id="13-pseudo"><span class="sidebar-num">13</span><span>疑似クラス・疑似要素</span></a>
+        <a href="14-design-principles.html" class="sidebar-link" data-lesson-id="14-design-principles"><span class="sidebar-num">14</span><span>デザイン原則</span></a>
+        <a href="15-color-theory.html" class="sidebar-link" data-lesson-id="15-color-theory"><span class="sidebar-num">15</span><span>色彩理論</span></a>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <div class="lesson-header">
+        <div class="lesson-meta">
+          <span class="badge badge-intermediate">中級</span>
+          <span class="badge">⏱ 40分</span>
+          <span class="badge badge-primary">モジュール3: レイアウト</span>
+        </div>
+        <h1>Flexbox完全ガイド</h1>
+        <p class="lesson-intro">FlexboxはCSSの1次元レイアウトシステムです。justify-content・align-items・flex-growなどのプロパティをマスターして、自在にレイアウトを組みましょう。</p>
+      </div>
+
+      <section class="content-section">
+        <h2>Flexboxとは</h2>
+        <p><strong>Flexbox</strong>は、1次元（行または列）のレイアウトを効率よく実現するCSSの仕組みです。コンテナに <code>display: flex</code> を指定するだけで、子要素（アイテム）を柔軟に配置できます。</p>
+
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-selector">.container</span> {
+  <span class="token-property">display</span>: <span class="token-value">flex</span>;           <span class="token-comment">/* Flexboxを有効化 */</span>
+  <span class="token-property">flex-direction</span>: <span class="token-value">row</span>;   <span class="token-comment">/* row（横）/ column（縦）*/</span>
+  <span class="token-property">gap</span>: <span class="token-value">1rem</span>;              <span class="token-comment">/* アイテム間の隙間 */</span>
+}</code></pre>
+        </div>
+
+        <div class="code-anatomy">
+          <h4>🔍 Flexboxのコード - 1行ずつ読む</h4>
+          <div class="anatomy-code-block">
+<span class="ana-selector">.container</span> {
+  <span class="ana-property">display</span>: <span class="ana-value">flex</span>;
+  <span class="ana-property">flex-direction</span>: <span class="ana-value">row</span>;
+  <span class="ana-property">gap</span>: <span class="ana-value">1rem</span>;
+}</div>
+          <div class="code-explain-rows">
+            <div class="code-explain-row">
+              <code><span class="ana-property">display</span>: <span class="ana-value">flex</span></code>
+              <span>→ この要素をFlexコンテナにする。子要素が横並びになる</span>
+            </div>
+            <div class="code-explain-row">
+              <code><span class="ana-property">flex-direction</span>: <span class="ana-value">row</span></code>
+              <span>→ 並ぶ方向を指定。<code>row</code>=横、<code>column</code>=縦</span>
+            </div>
+            <div class="code-explain-row">
+              <code><span class="ana-property">gap</span>: <span class="ana-value">1rem</span></code>
+              <span>→ アイテム同士の<strong>隙間</strong>を1rem（約16px）にする</span>
+            </div>
+          </div>
+          <ul class="code-note-list">
+            <li class="code-note"><strong>コンテナとアイテムの区別</strong>：<code>display: flex</code>を書く側が「コンテナ（親）」、その直接の子要素が「アイテム（子）」</li>
+            <li class="code-note">コンテナのプロパティ（justify-content等）とアイテムのプロパティ（flex-grow等）は書く場所が違うので注意</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>主軸の配置: justify-content</h2>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-selector">.container</span> {
+  <span class="token-property">justify-content</span>: <span class="token-value">flex-start</span>;    <span class="token-comment">/* 左寄せ（デフォルト）*/</span>
+  <span class="token-property">justify-content</span>: <span class="token-value">flex-end</span>;      <span class="token-comment">/* 右寄せ */</span>
+  <span class="token-property">justify-content</span>: <span class="token-value">center</span>;        <span class="token-comment">/* 中央寄せ */</span>
+  <span class="token-property">justify-content</span>: <span class="token-value">space-between</span>; <span class="token-comment">/* 両端揃え */</span>
+  <span class="token-property">justify-content</span>: <span class="token-value">space-around</span>;  <span class="token-comment">/* 均等配置 */</span>
+  <span class="token-property">justify-content</span>: <span class="token-value">space-evenly</span>;  <span class="token-comment">/* 完全均等配置 */</span>
+}</code></pre>
+        </div>
+
+        <div class="code-anatomy">
+          <h4>↔️ 主軸 vs 交差軸 - justify と align の違い</h4>
+          <div class="code-explain-rows">
+            <div class="code-explain-row">
+              <code class="ana-property">justify-content</code>
+              <span>→ <strong>主軸</strong>方向（flex-direction と同じ方向）の配置。rowなら<strong>横方向</strong></span>
+            </div>
+            <div class="code-explain-row">
+              <code class="ana-property">align-items</code>
+              <span>→ <strong>交差軸</strong>方向（主軸の垂直方向）の配置。rowなら<strong>縦方向</strong></span>
+            </div>
+          </div>
+          <ul class="code-note-list">
+            <li class="code-note"><strong>覚え方</strong>：<code>justify</code>=横に整列、<code>align</code>=縦に整列（flex-direction: rowの場合）</li>
+            <li class="code-note"><code>space-between</code>は「間に均等スペース」、<code>space-around</code>は「各要素の周囲に均等スペース」（端の余白が半分）</li>
+          </ul>
+        </div>
+
+        <div class="demo-section">
+          <h3>🎯 justify-content デモ</h3>
+          <div class="demo-preview" style="display:flex; flex-direction:column; gap:0.75rem;">
+            <div>
+              <p style="font-size:0.75rem; color:var(--text-dim); margin-bottom:0.25rem; font-family:var(--font-mono);">flex-start</p>
+              <div style="display:flex; justify-content:flex-start; gap:0.5rem; background:var(--dark); padding:0.5rem; border-radius:6px;">
+                <div class="demo-box" style="padding:0.5rem 0.75rem; min-width:50px;">A</div>
+                <div class="demo-box" style="padding:0.5rem 0.75rem; min-width:50px;">B</div>
+                <div class="demo-box" style="padding:0.5rem 0.75rem; min-width:50px;">C</div>
+              </div>
+            </div>
+            <div>
+              <p style="font-size:0.75rem; color:var(--text-dim); margin-bottom:0.25rem; font-family:var(--font-mono);">space-between</p>
+              <div style="display:flex; justify-content:space-between; gap:0.5rem; background:var(--dark); padding:0.5rem; border-radius:6px;">
+                <div class="demo-box" style="padding:0.5rem 0.75rem;">A</div>
+                <div class="demo-box" style="padding:0.5rem 0.75rem;">B</div>
+                <div class="demo-box" style="padding:0.5rem 0.75rem;">C</div>
+              </div>
+            </div>
+            <div>
+              <p style="font-size:0.75rem; color:var(--text-dim); margin-bottom:0.25rem; font-family:var(--font-mono);">center</p>
+              <div style="display:flex; justify-content:center; gap:0.5rem; background:var(--dark); padding:0.5rem; border-radius:6px;">
+                <div class="demo-box" style="padding:0.5rem 0.75rem;">A</div>
+                <div class="demo-box" style="padding:0.5rem 0.75rem;">B</div>
+                <div class="demo-box" style="padding:0.5rem 0.75rem;">C</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>交差軸の配置: align-items</h2>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-selector">.container</span> {
+  <span class="token-property">align-items</span>: <span class="token-value">stretch</span>;     <span class="token-comment">/* 引き伸ばし（デフォルト）*/</span>
+  <span class="token-property">align-items</span>: <span class="token-value">flex-start</span>; <span class="token-comment">/* 上揃え */</span>
+  <span class="token-property">align-items</span>: <span class="token-value">flex-end</span>;   <span class="token-comment">/* 下揃え */</span>
+  <span class="token-property">align-items</span>: <span class="token-value">center</span>;     <span class="token-comment">/* 垂直中央揃え */</span>
+  <span class="token-property">align-items</span>: <span class="token-value">baseline</span>;   <span class="token-comment">/* ベースライン揃え */</span>
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>flex-grow / flex-shrink / flex-basis</h2>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-selector">.item</span> {
+  <span class="token-comment">/* 余ったスペースをどれだけ受け取るか（比率）*/</span>
+  <span class="token-property">flex-grow</span>: <span class="token-value">1</span>;
+
+  <span class="token-comment">/* スペース不足時にどれだけ縮むか */</span>
+  <span class="token-property">flex-shrink</span>: <span class="token-value">1</span>;
+
+  <span class="token-comment">/* 基本サイズ */</span>
+  <span class="token-property">flex-basis</span>: <span class="token-value">200px</span>;
+
+  <span class="token-comment">/* ショートハンド: flex-grow flex-shrink flex-basis */</span>
+  <span class="token-property">flex</span>: <span class="token-value">1 1 200px</span>;
+  <span class="token-property">flex</span>: <span class="token-value">1</span>;        <span class="token-comment">/* flex: 1 1 0% */</span>
+  <span class="token-property">flex</span>: <span class="token-value">auto</span>;     <span class="token-comment">/* flex: 1 1 auto */</span>
+  <span class="token-property">flex</span>: <span class="token-value">none</span>;     <span class="token-comment">/* flex: 0 0 auto（固定サイズ）*/</span>
+}</code></pre>
+        </div>
+
+        <div class="code-anatomy">
+          <h4>📏 flex ショートハンドの読み方</h4>
+          <div class="anatomy-code-block">
+<span class="ana-property">flex</span>: <span class="ana-selector">1</span> <span class="ana-value">1</span> <span class="token-value">200px</span>;
+      ↑   ↑    ↑
+  grow shrink basis</div>
+          <div class="code-explain-rows">
+            <div class="code-explain-row">
+              <code class="ana-selector">flex-grow: 1</code>
+              <span>→ 余ったスペースを「1の比率」で受け取る。0なら広がらない</span>
+            </div>
+            <div class="code-explain-row">
+              <code class="ana-value">flex-shrink: 1</code>
+              <span>→ 幅が足りない時に「1の比率」で縮む。0なら縮まない</span>
+            </div>
+            <div class="code-explain-row">
+              <code>flex-basis: 200px</code>
+              <span>→ 伸び縮みする前の<strong>基本サイズ</strong>（widthと似た役割）</span>
+            </div>
+          </div>
+          <ul class="code-note-list">
+            <li class="code-note"><code>flex: 1</code> は <code>flex: 1 1 0%</code> の短縮形。複数アイテムに使うと「均等幅」になる</li>
+            <li class="code-note"><code>flex: none</code> はサイズ固定。ロゴやアイコンなど縮まれると困る要素に使う</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>実践レイアウト例</h2>
+        <h3>① ナビゲーションバー</h3>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-selector">.navbar</span> {
+  <span class="token-property">display</span>: <span class="token-value">flex</span>;
+  <span class="token-property">justify-content</span>: <span class="token-value">space-between</span>;
+  <span class="token-property">align-items</span>: <span class="token-value">center</span>;
+  <span class="token-property">padding</span>: <span class="token-value">1rem 2rem</span>;
+}
+<span class="token-selector">.nav-links</span> {
+  <span class="token-property">display</span>: <span class="token-value">flex</span>;
+  <span class="token-property">gap</span>: <span class="token-value">1.5rem</span>;
+}</code></pre>
+        </div>
+
+        <h3>② 完全センタリング</h3>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-selector">.center</span> {
+  <span class="token-property">display</span>: <span class="token-value">flex</span>;
+  <span class="token-property">justify-content</span>: <span class="token-value">center</span>;
+  <span class="token-property">align-items</span>: <span class="token-value">center</span>;
+  <span class="token-property">min-height</span>: <span class="token-value">100vh</span>;
+}</code></pre>
+        </div>
+      </section>
+
+      <div class="lesson-complete-section" id="complete-section">
+        <h3>🎉 このレッスンを完了しましたか？</h3>
+        <p>理解できたら完了ボタンを押して進捗を記録しましょう。</p>
+        <button class="btn btn-accent btn-lg" id="complete-btn" onclick="markComplete()">✓ このレッスンを完了にする</button>
+      </div>
+
+      <section class="content-section">
+        <h2>📝 このレッスンの重要用語</h2>
+        <p>青くなった用語をクリックすると詳細な説明が表示されます。<a href="../glossary.html">用語辞典</a>でまとめて確認することもできます。</p>
+        <p class="lesson-term-index">フレックスコンテナ、フレックスアイテム、flex-wrap、flex-basis、flex-shrink</p>
+      </section>
+
+      <div class="lesson-navigation">
+        <a href="06-colors.html" class="btn btn-ghost">← 前のレッスン</a>
+        <a href="08-grid.html" class="btn btn-primary">次のレッスン →</a>
+      </div>
+    </main>
+  </div>
+  <script src="../js/main.js"></script>
+
+  <footer style="border-top:1px solid rgba(255,255,255,0.06);padding:1.5rem 2rem;text-align:center;color:var(--text-dim);font-size:0.82rem;">
+    <a href="../index.html" style="color:var(--primary);text-decoration:none;">&lt;/CSS学習&gt;</a> &nbsp;|&nbsp; <span class="footer-producer">Produced by Sumeragi</span>
+  </footer>
+</body>
+</html>

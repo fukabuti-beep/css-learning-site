@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用語辞典 | CSS学習</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">&lt;/CSS学習&gt;</a>
+      <div class="nav-links">
+        <a href="index.html">ホーム</a>
+        <a href="index.html#curriculum">カリキュラム</a>
+        <a href="index.html#lessons">レッスン一覧</a>
+        <a href="glossary.html" class="active">用語辞典</a>
+        <a href="quiz.html">テスト</a>
+        <a href="patchnotes.html">パッチノート</a>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <button class="share-nav-btn" onclick="openShareModal()" style="display:none">🔗 共有</button>
+      
+        <button class="admin-login-btn" onclick="openAdminModal()">🔒 管理者</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="glossary-hero">
+    <h1>📖 CSS用語辞典</h1>
+    <p>CSS・HTMLの重要用語を分かりやすく解説。各用語から関連レッスンに直接アクセスできます。</p>
+    <div class="glossary-search-wrap">
+      <span class="glossary-search-icon">🔍</span>
+      <input class="glossary-search" id="glossary-search" type="text"
+        placeholder="用語を検索（例: Flexbox, セレクター…）" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="glossary-main">
+    <div class="glossary-filters" id="glossary-filters">
+      <button class="glossary-filter-btn active" data-cat="all">すべて</button>
+      <button class="glossary-filter-btn" data-cat="HTML基礎">HTML基礎</button>
+      <button class="glossary-filter-btn" data-cat="CSS基礎">CSS基礎</button>
+      <button class="glossary-filter-btn" data-cat="レイアウト">レイアウト</button>
+      <button class="glossary-filter-btn" data-cat="タイポグラフィ">タイポグラフィ</button>
+      <button class="glossary-filter-btn" data-cat="色・背景">色・背景</button>
+      <button class="glossary-filter-btn" data-cat="レスポンシブ">レスポンシブ</button>
+      <button class="glossary-filter-btn" data-cat="アニメーション">アニメーション</button>
+      <button class="glossary-filter-btn" data-cat="モダンCSS">モダンCSS</button>
+      <button class="glossary-filter-btn" data-cat="アクセシビリティ">アクセシビリティ</button>
+    </div>
+
+    <div class="glossary-count" id="glossary-count"></div>
+
+    <div class="glossary-grid" id="glossary-grid"></div>
+    <div class="glossary-empty" id="glossary-empty">
+      <div style="font-size:3rem; margin-bottom:1rem;">🔍</div>
+      <p>「<span id="glossary-empty-q"></span>」に一致する用語が見つかりませんでした。</p>
+    </div>
+  </div>
+
+  <footer style="border-top:1px solid var(--border); padding:2rem 1.5rem; text-align:center; color:var(--text-dim); font-size:0.85rem;">
+    <p><a href="index.html" style="color:var(--primary);">&lt;/CSS学習&gt;</a> — Webデザイナー向けCSS学習サイト &nbsp;|&nbsp; <span class="footer-producer">Produced by Sumeragi</span></p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // 用語辞典ページ固有のスクリプト
+    let currentCat = 'all';
+    let currentQ = '';
+
+    function renderGlossary() {
+      const grid = document.getElementById('glossary-grid');
+      const empty = document.getElementById('glossary-empty');
+      const count = document.getElementById('glossary-count');
+      const emptyQ = document.getElementById('glossary-empty-q');
+
+      const entries = Object.entries(GLOSSARY_DATA).filter(([key, data]) => {
+        const catOK = currentCat === 'all' || data.category === currentCat;
+        const q = currentQ.toLowerCase();
+        const qOK = !q || data.title.toLowerCase().includes(q) ||
+          (data.en && data.en.toLowerCase().includes(q)) ||
+          data.def.toLowerCase().includes(q);
+        return catOK && qOK;
+      });
+
+      // アンカーハッシュがある場合スクロール
+      const hash = window.location.hash.replace('#', '');
+
+      grid.innerHTML = entries.map(([key, data]) => `
+        <div class="glossary-card" id="glossary-${key}">
+          <div class="glossary-card-term">${data.title}</div>
+          ${data.en ? `<div class="glossary-card-en">${data.en}</div>` : ''}
+          <div class="glossary-card-def">${data.def}</div>
+          <div class="glossary-card-footer">
+            <span class="glossary-card-category">${data.category}</span>
+            ${data.lesson ? `<a class="glossary-card-link" href="${data.lesson}">📖 レッスンで学ぶ →</a>` : ''}
+          </div>
+        </div>`).join('');
+
+      const hasResults = entries.length > 0;
+      grid.style.display = hasResults ? '' : 'none';
+      empty.style.display = hasResults ? 'none' : 'block';
+      if (!hasResults) emptyQ.textContent = currentQ;
+      count.textContent = `${entries.length} 件の用語`;
+
+      if (hash) {
+        setTimeout(() => {
+          const el = document.getElementById('glossary-' + hash);
+          if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.style.borderColor = 'var(--accent)'; }
+        }, 100);
+      }
+    }
+
+    document.getElementById('glossary-search').addEventListener('input', function () {
+      currentQ = this.value;
+      renderGlossary();
+    });
+
+    document.getElementById('glossary-filters').addEventListener('click', function (e) {
+      const btn = e.target.closest('.glossary-filter-btn');
+      if (!btn) return;
+      document.querySelectorAll('.glossary-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCat = btn.dataset.cat;
+      renderGlossary();
+    });
+
+    document.addEventListener('DOMContentLoaded', renderGlossary);
+  </script>
+</body>
+</html>

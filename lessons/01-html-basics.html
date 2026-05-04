@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTMLの基礎 | CSS学習</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo">&lt;/CSS学習&gt;</a>
+      <div class="nav-links">
+        <a href="../index.html">ホーム</a>
+        <a href="../index.html#curriculum">カリキュラム</a>
+        <a href="../index.html#lessons">レッスン一覧</a>
+        <a href="../glossary.html">用語辞典</a>
+        <a href="../quiz.html">テスト</a>
+        <a href="../patchnotes.html">パッチノート</a>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <button class="share-nav-btn" onclick="openShareModal()" style="display:none">🔗 共有</button>
+        <button class="admin-login-btn" onclick="openAdminModal()">🔒 管理者</button>
+        <button class="menu-btn" id="menuBtn">☰</button>
+      </div>
+    </div>
+  </nav>
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="sidebar-overlay"></div>
+
+  <div class="lesson-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h3>カリキュラム</h3>
+        <div class="overall-progress">
+          <div class="overall-progress-label">
+            <span>進捗</span><span><span id="progressPct">0</span>%</span>
+          </div>
+          <div class="overall-progress-track">
+            <div class="overall-progress-fill" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="01-html-basics.html" class="sidebar-link" data-lesson-id="01-html-basics"><span class="sidebar-num">01</span><span>HTMLの基礎</span></a>
+        <a href="02-css-intro.html" class="sidebar-link" data-lesson-id="02-css-intro"><span class="sidebar-num">02</span><span>CSSとは何か</span></a>
+        <a href="03-selectors.html" class="sidebar-link" data-lesson-id="03-selectors"><span class="sidebar-num">03</span><span>セレクター完全ガイド</span></a>
+        <a href="04-box-model.html" class="sidebar-link" data-lesson-id="04-box-model"><span class="sidebar-num">04</span><span>ボックスモデル</span></a>
+        <a href="05-typography.html" class="sidebar-link" data-lesson-id="05-typography"><span class="sidebar-num">05</span><span>タイポグラフィ</span></a>
+        <a href="06-colors.html" class="sidebar-link" data-lesson-id="06-colors"><span class="sidebar-num">06</span><span>色と背景</span></a>
+        <a href="07-flexbox.html" class="sidebar-link" data-lesson-id="07-flexbox"><span class="sidebar-num">07</span><span>Flexbox完全ガイド</span></a>
+        <a href="08-grid.html" class="sidebar-link" data-lesson-id="08-grid"><span class="sidebar-num">08</span><span>CSS Grid完全ガイド</span></a>
+        <a href="09-positioning.html" class="sidebar-link" data-lesson-id="09-positioning"><span class="sidebar-num">09</span><span>ポジショニング</span></a>
+        <a href="10-responsive.html" class="sidebar-link" data-lesson-id="10-responsive"><span class="sidebar-num">10</span><span>レスポンシブデザイン</span></a>
+        <a href="11-transitions-animations.html" class="sidebar-link" data-lesson-id="11-transitions-animations"><span class="sidebar-num">11</span><span>トランジション・アニメーション</span></a>
+        <a href="12-css-variables.html" class="sidebar-link" data-lesson-id="12-css-variables"><span class="sidebar-num">12</span><span>CSS変数（カスタムプロパティ）</span></a>
+        <a href="13-pseudo.html" class="sidebar-link" data-lesson-id="13-pseudo"><span class="sidebar-num">13</span><span>疑似クラス・疑似要素</span></a>
+        <a href="14-design-principles.html" class="sidebar-link" data-lesson-id="14-design-principles"><span class="sidebar-num">14</span><span>デザイン原則</span></a>
+        <a href="15-color-theory.html" class="sidebar-link" data-lesson-id="15-color-theory"><span class="sidebar-num">15</span><span>色彩理論</span></a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="lesson-header">
+        <div class="lesson-meta">
+          <span class="badge badge-beginner">初級</span>
+          <span class="badge">⏱ 20分</span>
+          <span class="badge badge-primary">モジュール1: Webの基礎</span>
+        </div>
+        <h1>HTMLの基礎</h1>
+        <p class="lesson-intro">HTMLはWebページの構造を定義するマークアップ言語です。CSSでスタイルを適用する前に、まずHTMLの基本を理解しましょう。</p>
+      </div>
+
+      <section class="content-section">
+        <h2>HTMLとは何か</h2>
+        <p><strong>HTML（HyperText Markup Language）</strong>は、Webページの構造を作るためのマークアップ言語です。プログラミング言語ではなく、コンテンツの意味と構造を定義するための言語です。1989年にティム・バーナーズ=リーによって考案され、現在も進化し続けています。</p>
+        <p>ブラウザはHTMLを解釈して、見出し・段落・画像・リンクなどを画面に表示します。CSSで見た目を、JavaScriptで動きを追加することで、本格的なWebサイトが完成します。</p>
+
+        <div class="info-box note">
+          <div class="info-box-icon">💡</div>
+          <div class="info-box-content">
+            <h4>HTMLの役割</h4>
+            <p>HTML = 構造（骨格）、CSS = デザイン（見た目）、JavaScript = 動作（機能）</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>HTMLの基本構造</h2>
+        <p>すべてのHTMLドキュメントは以下の基本構造を持ちます。</p>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">HTML</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-comment">&lt;!-- ドキュメントタイプ宣言 --&gt;</span>
+<span class="token-tag">&lt;!DOCTYPE html&gt;</span>
+
+<span class="token-tag">&lt;html</span> <span class="token-attr">lang</span>=<span class="token-string">"ja"</span><span class="token-tag">&gt;</span>
+<span class="token-tag">&lt;head&gt;</span>
+  <span class="token-comment">&lt;!-- ブラウザへの指示（画面には表示されない） --&gt;</span>
+  <span class="token-tag">&lt;meta</span> <span class="token-attr">charset</span>=<span class="token-string">"UTF-8"</span><span class="token-tag">&gt;</span>
+  <span class="token-tag">&lt;meta</span> <span class="token-attr">name</span>=<span class="token-string">"viewport"</span> <span class="token-attr">content</span>=<span class="token-string">"width=device-width, initial-scale=1.0"</span><span class="token-tag">&gt;</span>
+  <span class="token-tag">&lt;title&gt;</span>ページのタイトル<span class="token-tag">&lt;/title&gt;</span>
+  <span class="token-tag">&lt;link</span> <span class="token-attr">rel</span>=<span class="token-string">"stylesheet"</span> <span class="token-attr">href</span>=<span class="token-string">"style.css"</span><span class="token-tag">&gt;</span>
+<span class="token-tag">&lt;/head&gt;</span>
+<span class="token-tag">&lt;body&gt;</span>
+  <span class="token-comment">&lt;!-- ここにページの内容を書く --&gt;</span>
+  <span class="token-tag">&lt;h1&gt;</span>こんにちは、World!<span class="token-tag">&lt;/h1&gt;</span>
+  <span class="token-tag">&lt;p&gt;</span>これは段落です。<span class="token-tag">&lt;/p&gt;</span>
+<span class="token-tag">&lt;/body&gt;</span>
+<span class="token-tag">&lt;/html&gt;</span></code></pre>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>タグ</th><th>役割</th></tr></thead>
+            <tbody>
+              <tr><td>&lt;!DOCTYPE html&gt;</td><td>HTML5文書であることをブラウザに伝える</td></tr>
+              <tr><td>&lt;html lang="ja"&gt;</td><td>HTMLドキュメントのルート要素。言語を指定</td></tr>
+              <tr><td>&lt;head&gt;</td><td>メタ情報（タイトル・CSS・文字コードなど）を格納</td></tr>
+              <tr><td>&lt;body&gt;</td><td>ページに表示される全コンテンツを格納</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>主要なHTMLタグ</h2>
+        <h3>見出しタグ（h1〜h6）</h3>
+        <p>見出しは重要度順に h1 から h6 まであります。1ページに h1 は1つが基本です。</p>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">HTML</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-tag">&lt;h1&gt;</span>ページの大見出し（最重要）<span class="token-tag">&lt;/h1&gt;</span>
+<span class="token-tag">&lt;h2&gt;</span>セクション見出し<span class="token-tag">&lt;/h2&gt;</span>
+<span class="token-tag">&lt;h3&gt;</span>小見出し<span class="token-tag">&lt;/h3&gt;</span>
+<span class="token-tag">&lt;h4&gt;</span>さらに小さい見出し<span class="token-tag">&lt;/h4&gt;</span></code></pre>
+        </div>
+
+        <h3>テキスト関連タグ</h3>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">HTML</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-tag">&lt;p&gt;</span>段落テキスト<span class="token-tag">&lt;/p&gt;</span>
+<span class="token-tag">&lt;strong&gt;</span>重要なテキスト（太字）<span class="token-tag">&lt;/strong&gt;</span>
+<span class="token-tag">&lt;em&gt;</span>強調テキスト（斜体）<span class="token-tag">&lt;/em&gt;</span>
+<span class="token-tag">&lt;br&gt;</span>  <span class="token-comment">&lt;!-- 改行 --&gt;</span>
+<span class="token-tag">&lt;span&gt;</span>インライン要素（スタイル適用に便利）<span class="token-tag">&lt;/span&gt;</span>
+<span class="token-tag">&lt;div&gt;</span>ブロック要素（グループ化に使用）<span class="token-tag">&lt;/div&gt;</span></code></pre>
+        </div>
+
+        <h3>リンクと画像</h3>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">HTML</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-comment">&lt;!-- リンク --&gt;</span>
+<span class="token-tag">&lt;a</span> <span class="token-attr">href</span>=<span class="token-string">"https://example.com"</span> <span class="token-attr">target</span>=<span class="token-string">"_blank"</span><span class="token-tag">&gt;</span>外部リンク<span class="token-tag">&lt;/a&gt;</span>
+<span class="token-tag">&lt;a</span> <span class="token-attr">href</span>=<span class="token-string">"about.html"</span><span class="token-tag">&gt;</span>内部リンク<span class="token-tag">&lt;/a&gt;</span>
+<span class="token-tag">&lt;a</span> <span class="token-attr">href</span>=<span class="token-string">"#section"</span><span class="token-tag">&gt;</span>ページ内ジャンプ<span class="token-tag">&lt;/a&gt;</span>
+
+<span class="token-comment">&lt;!-- 画像 --&gt;</span>
+<span class="token-tag">&lt;img</span> <span class="token-attr">src</span>=<span class="token-string">"photo.jpg"</span> <span class="token-attr">alt</span>=<span class="token-string">"写真の説明"</span> <span class="token-attr">width</span>=<span class="token-string">"400"</span><span class="token-tag">&gt;</span></code></pre>
+        </div>
+
+        <h3>リスト</h3>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">HTML</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-comment">&lt;!-- 順序なしリスト（ul）--&gt;</span>
+<span class="token-tag">&lt;ul&gt;</span>
+  <span class="token-tag">&lt;li&gt;</span>リンゴ<span class="token-tag">&lt;/li&gt;</span>
+  <span class="token-tag">&lt;li&gt;</span>バナナ<span class="token-tag">&lt;/li&gt;</span>
+  <span class="token-tag">&lt;li&gt;</span>オレンジ<span class="token-tag">&lt;/li&gt;</span>
+<span class="token-tag">&lt;/ul&gt;</span>
+
+<span class="token-comment">&lt;!-- 順序ありリスト（ol）--&gt;</span>
+<span class="token-tag">&lt;ol&gt;</span>
+  <span class="token-tag">&lt;li&gt;</span>HTMLを学ぶ<span class="token-tag">&lt;/li&gt;</span>
+  <span class="token-tag">&lt;li&gt;</span>CSSを学ぶ<span class="token-tag">&lt;/li&gt;</span>
+  <span class="token-tag">&lt;li&gt;</span>JavaScriptを学ぶ<span class="token-tag">&lt;/li&gt;</span>
+<span class="token-tag">&lt;/ol&gt;</span></code></pre>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>セマンティックHTML</h2>
+        <p><strong>セマンティック（意味的）</strong>なHTMLとは、コンテンツの意味をタグで表現することです。検索エンジンや支援技術（スクリーンリーダー）が内容を正しく理解できるようになります。</p>
+
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">HTML</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-tag">&lt;header&gt;</span>
+  <span class="token-comment">&lt;!-- サイトのヘッダー（ロゴ・ナビなど）--&gt;</span>
+  <span class="token-tag">&lt;nav&gt;</span>ナビゲーション<span class="token-tag">&lt;/nav&gt;</span>
+<span class="token-tag">&lt;/header&gt;</span>
+
+<span class="token-tag">&lt;main&gt;</span>
+  <span class="token-comment">&lt;!-- ページのメインコンテンツ --&gt;</span>
+  <span class="token-tag">&lt;article&gt;</span>
+    <span class="token-comment">&lt;!-- 独立したコンテンツ（ブログ記事など）--&gt;</span>
+    <span class="token-tag">&lt;section&gt;</span>セクション<span class="token-tag">&lt;/section&gt;</span>
+  <span class="token-tag">&lt;/article&gt;</span>
+  <span class="token-tag">&lt;aside&gt;</span>サイドバー・補足情報<span class="token-tag">&lt;/aside&gt;</span>
+<span class="token-tag">&lt;/main&gt;</span>
+
+<span class="token-tag">&lt;footer&gt;</span>フッター（著作権情報など）<span class="token-tag">&lt;/footer&gt;</span></code></pre>
+        </div>
+
+        <div class="demo-section">
+          <h3>🎯 セマンティックタグ vs divタグ</h3>
+          <div class="demo-preview" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div>
+              <p style="font-size:0.8rem; color:var(--secondary); font-weight:700; margin-bottom:0.5rem;">❌ 非セマンティック</p>
+              <div style="background:rgba(255,101,132,0.1); border:1px solid rgba(255,101,132,0.3); border-radius:8px; padding:0.75rem; font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">
+                &lt;div id="header"&gt;<br>
+                &nbsp;&lt;div id="nav"&gt;...&lt;/div&gt;<br>
+                &lt;/div&gt;<br>
+                &lt;div id="main"&gt;...&lt;/div&gt;<br>
+                &lt;div id="footer"&gt;...&lt;/div&gt;
+              </div>
+            </div>
+            <div>
+              <p style="font-size:0.8rem; color:var(--accent); font-weight:700; margin-bottom:0.5rem;">✓ セマンティック</p>
+              <div style="background:rgba(67,217,173,0.1); border:1px solid rgba(67,217,173,0.3); border-radius:8px; padding:0.75rem; font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">
+                &lt;header&gt;<br>
+                &nbsp;&lt;nav&gt;...&lt;/nav&gt;<br>
+                &lt;/header&gt;<br>
+                &lt;main&gt;...&lt;/main&gt;<br>
+                &lt;footer&gt;...&lt;/footer&gt;
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>HTML属性</h2>
+        <p>属性（アトリビュート）はタグに追加情報を与えます。<code>属性名="値"</code> の形式で記述します。</p>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">HTML</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-comment">&lt;!-- id: ページ内で一意の識別子 --&gt;</span>
+<span class="token-tag">&lt;div</span> <span class="token-attr">id</span>=<span class="token-string">"header"</span><span class="token-tag">&gt;&lt;/div&gt;</span>
+
+<span class="token-comment">&lt;!-- class: 複数要素に共通のスタイルを適用 --&gt;</span>
+<span class="token-tag">&lt;div</span> <span class="token-attr">class</span>=<span class="token-string">"card active"</span><span class="token-tag">&gt;&lt;/div&gt;</span>
+
+<span class="token-comment">&lt;!-- style: インラインCSS（基本的には避ける）--&gt;</span>
+<span class="token-tag">&lt;p</span> <span class="token-attr">style</span>=<span class="token-string">"color: red;"</span><span class="token-tag">&gt;</span>赤いテキスト<span class="token-tag">&lt;/p&gt;</span>
+
+<span class="token-comment">&lt;!-- data-*: カスタムデータ属性 --&gt;</span>
+<span class="token-tag">&lt;button</span> <span class="token-attr">data-id</span>=<span class="token-string">"42"</span> <span class="token-attr">data-action</span>=<span class="token-string">"delete"</span><span class="token-tag">&gt;</span>削除<span class="token-tag">&lt;/button&gt;</span></code></pre>
+        </div>
+      </section>
+
+      <div class="lesson-complete-section" id="complete-section">
+        <h3>🎉 このレッスンを完了しましたか？</h3>
+        <p>理解できたら完了ボタンを押して進捗を記録しましょう。</p>
+        <button class="btn btn-accent btn-lg" id="complete-btn" onclick="markComplete()">✓ このレッスンを完了にする</button>
+      </div>
+
+      <section class="content-section">
+        <h2>📝 このレッスンの重要用語</h2>
+        <p>青くなった用語をクリックすると詳細な説明が表示されます。<a href="../glossary.html">用語辞典</a>でまとめて確認することもできます。</p>
+        <p class="lesson-term-index">DOM、ブロック要素、インライン要素、head要素、body要素、DOCTYPE宣言、lang属性、charset（文字コード）、meta要素、link要素、見出し要素（h1〜h6）、p要素、strong / em要素、a要素（アンカー）、img要素、alt属性、ul / ol / li要素、form要素、input要素、textarea、button要素、table要素、インデント</p>
+      </section>
+
+      <div class="lesson-navigation">
+        <span></span>
+        <a href="02-css-intro.html" class="btn btn-primary">次のレッスン →</a>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/main.js"></script>
+
+  <footer style="border-top:1px solid rgba(255,255,255,0.06);padding:1.5rem 2rem;text-align:center;color:var(--text-dim);font-size:0.82rem;">
+    <a href="../index.html" style="color:var(--primary);text-decoration:none;">&lt;/CSS学習&gt;</a> &nbsp;|&nbsp; <span class="footer-producer">Produced by Sumeragi</span>
+  </footer>
+</body>
+</html>

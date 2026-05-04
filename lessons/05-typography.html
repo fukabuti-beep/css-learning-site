@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>タイポグラフィ | CSS学習</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo">&lt;/CSS学習&gt;</a>
+      <div class="nav-links">
+        <a href="../index.html">ホーム</a>
+        <a href="../index.html#curriculum">カリキュラム</a>
+        <a href="../index.html#lessons">レッスン一覧</a>
+        <a href="../glossary.html">用語辞典</a>
+        <a href="../quiz.html">テスト</a>
+        <a href="../patchnotes.html">パッチノート</a>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <button class="share-nav-btn" onclick="openShareModal()" style="display:none">🔗 共有</button>
+        <button class="admin-login-btn" onclick="openAdminModal()">🔒 管理者</button>
+        <button class="menu-btn" id="menuBtn">☰</button>
+      </div>
+    </div>
+  </nav>
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="sidebar-overlay"></div>
+  <div class="lesson-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h3>カリキュラム</h3>
+        <div class="overall-progress">
+          <div class="overall-progress-label"><span>進捗</span><span><span id="progressPct">0</span>%</span></div>
+          <div class="overall-progress-track"><div class="overall-progress-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="01-html-basics.html" class="sidebar-link" data-lesson-id="01-html-basics"><span class="sidebar-num">01</span><span>HTMLの基礎</span></a>
+        <a href="02-css-intro.html" class="sidebar-link" data-lesson-id="02-css-intro"><span class="sidebar-num">02</span><span>CSSとは何か</span></a>
+        <a href="03-selectors.html" class="sidebar-link" data-lesson-id="03-selectors"><span class="sidebar-num">03</span><span>セレクター完全ガイド</span></a>
+        <a href="04-box-model.html" class="sidebar-link" data-lesson-id="04-box-model"><span class="sidebar-num">04</span><span>ボックスモデル</span></a>
+        <a href="05-typography.html" class="sidebar-link" data-lesson-id="05-typography"><span class="sidebar-num">05</span><span>タイポグラフィ</span></a>
+        <a href="06-colors.html" class="sidebar-link" data-lesson-id="06-colors"><span class="sidebar-num">06</span><span>色と背景</span></a>
+        <a href="07-flexbox.html" class="sidebar-link" data-lesson-id="07-flexbox"><span class="sidebar-num">07</span><span>Flexbox完全ガイド</span></a>
+        <a href="08-grid.html" class="sidebar-link" data-lesson-id="08-grid"><span class="sidebar-num">08</span><span>CSS Grid完全ガイド</span></a>
+        <a href="09-positioning.html" class="sidebar-link" data-lesson-id="09-positioning"><span class="sidebar-num">09</span><span>ポジショニング</span></a>
+        <a href="10-responsive.html" class="sidebar-link" data-lesson-id="10-responsive"><span class="sidebar-num">10</span><span>レスポンシブデザイン</span></a>
+        <a href="11-transitions-animations.html" class="sidebar-link" data-lesson-id="11-transitions-animations"><span class="sidebar-num">11</span><span>トランジション・アニメーション</span></a>
+        <a href="12-css-variables.html" class="sidebar-link" data-lesson-id="12-css-variables"><span class="sidebar-num">12</span><span>CSS変数（カスタムプロパティ）</span></a>
+        <a href="13-pseudo.html" class="sidebar-link" data-lesson-id="13-pseudo"><span class="sidebar-num">13</span><span>疑似クラス・疑似要素</span></a>
+        <a href="14-design-principles.html" class="sidebar-link" data-lesson-id="14-design-principles"><span class="sidebar-num">14</span><span>デザイン原則</span></a>
+        <a href="15-color-theory.html" class="sidebar-link" data-lesson-id="15-color-theory"><span class="sidebar-num">15</span><span>色彩理論</span></a>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <div class="lesson-header">
+        <div class="lesson-meta">
+          <span class="badge badge-beginner">初級</span>
+          <span class="badge">⏱ 25分</span>
+          <span class="badge badge-primary">モジュール2: CSSの基礎</span>
+        </div>
+        <h1>タイポグラフィ</h1>
+        <p class="lesson-intro">フォントの種類・サイズ単位（px/em/rem）・テキストプロパティを学び、読みやすく美しいタイポグラフィを実現しましょう。</p>
+      </div>
+
+      <section class="content-section">
+        <h2>フォントファミリー</h2>
+        <p>CSSでフォントを指定する際は、<strong>フォントスタック</strong>を使って複数のフォントを優先順に指定します。</p>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-selector">body</span> {
+  <span class="token-comment">/* フォントスタック: 左から優先順位 */</span>
+  <span class="token-property">font-family</span>: <span class="token-value">'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif</span>;
+}
+
+<span class="token-comment">/* 3種類の汎用フォントファミリー */</span>
+<span class="token-selector">.serif</span>    { <span class="token-property">font-family</span>: <span class="token-value">Georgia, serif</span>; }       <span class="token-comment">/* 明朝体系 */</span>
+<span class="token-selector">.sans</span>     { <span class="token-property">font-family</span>: <span class="token-value">Arial, sans-serif</span>; }    <span class="token-comment">/* ゴシック体系 */</span>
+<span class="token-selector">.mono</span>     { <span class="token-property">font-family</span>: <span class="token-value">'Courier New', monospace</span>; } <span class="token-comment">/* 等幅フォント */</span></code></pre>
+        </div>
+
+        <h3>Google Fontsの使い方</h3>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">HTML</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-comment">&lt;!-- 1. headタグ内でフォントを読み込む --&gt;</span>
+<span class="token-tag">&lt;link</span> <span class="token-attr">href</span>=<span class="token-string">"https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap"</span> <span class="token-attr">rel</span>=<span class="token-string">"stylesheet"</span><span class="token-tag">&gt;</span></code></pre>
+        </div>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-comment">/* 2. CSSで使用する */</span>
+<span class="token-selector">body</span> {
+  <span class="token-property">font-family</span>: <span class="token-value">'Noto Sans JP', sans-serif</span>;
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>font-sizeの単位</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>単位</th><th>説明</th><th>用途</th></tr></thead>
+            <tbody>
+              <tr><td>px</td><td>ピクセル（絶対単位）</td><td>ボーダー幅など固定値</td></tr>
+              <tr><td>em</td><td>親要素のfont-sizeに対する相対値</td><td>padding・marginなど</td></tr>
+              <tr><td>rem</td><td>ルート要素(html)のfont-sizeに対する相対値</td><td>フォントサイズ全般</td></tr>
+              <tr><td>%</td><td>親要素に対するパーセンテージ</td><td>幅・高さの指定</td></tr>
+              <tr><td>vw/vh</td><td>ビューポートの幅・高さに対する割合</td><td>全画面レイアウト</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-selector">html</span> { <span class="token-property">font-size</span>: <span class="token-value">16px</span>; } <span class="token-comment">/* ベースサイズ */</span>
+
+<span class="token-selector">h1</span> { <span class="token-property">font-size</span>: <span class="token-value">2.5rem</span>; }  <span class="token-comment">/* 16px × 2.5 = 40px */</span>
+<span class="token-selector">h2</span> { <span class="token-property">font-size</span>: <span class="token-value">2rem</span>; }    <span class="token-comment">/* 16px × 2 = 32px */</span>
+<span class="token-selector">p</span>  { <span class="token-property">font-size</span>: <span class="token-value">1rem</span>; }    <span class="token-comment">/* 16px × 1 = 16px */</span>
+<span class="token-selector">small</span> { <span class="token-property">font-size</span>: <span class="token-value">0.875rem</span>; } <span class="token-comment">/* 14px */</span>
+
+<span class="token-comment">/* clamp(): 最小値・推奨値・最大値で流動的サイズ */</span>
+<span class="token-selector">h1</span> { <span class="token-property">font-size</span>: <span class="token-value">clamp(1.5rem, 5vw, 3rem)</span>; }</code></pre>
+        </div>
+
+        <div class="info-box tip">
+          <div class="info-box-icon">💡</div>
+          <div class="info-box-content">
+            <h4>rem を使う理由</h4>
+            <p>remはhtmlのfont-sizeを基準にするため、ユーザーがブラウザのフォントサイズを変更しても対応できます。アクセシビリティの観点からもremの使用が推奨されます。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>テキストプロパティ一覧</h2>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-selector">p</span> {
+  <span class="token-comment">/* 太さ: 100〜900または名前 */</span>
+  <span class="token-property">font-weight</span>: <span class="token-value">700</span>;        <span class="token-comment">/* bold */</span>
+
+  <span class="token-comment">/* スタイル */</span>
+  <span class="token-property">font-style</span>: <span class="token-value">italic</span>;     <span class="token-comment">/* 斜体 */</span>
+
+  <span class="token-comment">/* 行の高さ（可読性に重要）*/</span>
+  <span class="token-property">line-height</span>: <span class="token-value">1.7</span>;        <span class="token-comment">/* font-sizeの1.7倍 */</span>
+
+  <span class="token-comment">/* 文字間隔 */</span>
+  <span class="token-property">letter-spacing</span>: <span class="token-value">0.05em</span>; <span class="token-comment">/* 少し広げる */</span>
+
+  <span class="token-comment">/* 単語間隔 */</span>
+  <span class="token-property">word-spacing</span>: <span class="token-value">0.1em</span>;
+
+  <span class="token-comment">/* テキスト揃え */</span>
+  <span class="token-property">text-align</span>: <span class="token-value">left</span>;       <span class="token-comment">/* center / right / justify */</span>
+
+  <span class="token-comment">/* 下線・打ち消し線など */</span>
+  <span class="token-property">text-decoration</span>: <span class="token-value">none</span>;  <span class="token-comment">/* underline / line-through */</span>
+
+  <span class="token-comment">/* 大文字・小文字変換 */</span>
+  <span class="token-property">text-transform</span>: <span class="token-value">uppercase</span>; <span class="token-comment">/* lowercase / capitalize */</span>
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>タイポグラフィスケール</h2>
+        <p>見出しと本文のサイズ比を統一することで、視覚的な一貫性が生まれます。</p>
+        <div class="demo-section">
+          <h3>🎯 スケールのデモ</h3>
+          <div class="demo-preview">
+            <p style="font-size:2.5rem; font-weight:900; line-height:1.2; color:var(--text); margin-bottom:0.5rem;">h1 / 2.5rem / 40px</p>
+            <p style="font-size:2rem; font-weight:700; line-height:1.3; color:var(--text); margin-bottom:0.5rem;">h2 / 2rem / 32px</p>
+            <p style="font-size:1.5rem; font-weight:700; line-height:1.4; color:var(--text); margin-bottom:0.5rem;">h3 / 1.5rem / 24px</p>
+            <p style="font-size:1.125rem; font-weight:600; color:var(--text); margin-bottom:0.5rem;">h4 / 1.125rem / 18px</p>
+            <p style="font-size:1rem; color:var(--text-muted); line-height:1.7; margin-bottom:0.5rem;">本文テキスト / 1rem / 16px — line-height: 1.7 で読みやすく</p>
+            <p style="font-size:0.875rem; color:var(--text-dim);">補足テキスト / 0.875rem / 14px</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="lesson-complete-section" id="complete-section">
+        <h3>🎉 このレッスンを完了しましたか？</h3>
+        <p>理解できたら完了ボタンを押して進捗を記録しましょう。</p>
+        <button class="btn btn-accent btn-lg" id="complete-btn" onclick="markComplete()">✓ このレッスンを完了にする</button>
+      </div>
+
+      <section class="content-section">
+        <h2>📝 このレッスンの重要用語</h2>
+        <p>青くなった用語をクリックすると詳細な説明が表示されます。<a href="../glossary.html">用語辞典</a>でまとめて確認することもできます。</p>
+        <p class="lesson-term-index">font-family、font-weight、font-style、text-align、letter-spacing、word-spacing、text-decoration、text-transform、Webフォント、serif / sans-serif / monospace、タイポグラフィスケール</p>
+      </section>
+
+      <div class="lesson-navigation">
+        <a href="04-box-model.html" class="btn btn-ghost">← 前のレッスン</a>
+        <a href="06-colors.html" class="btn btn-primary">次のレッスン →</a>
+      </div>
+    </main>
+  </div>
+  <script src="../js/main.js"></script>
+
+  <footer style="border-top:1px solid rgba(255,255,255,0.06);padding:1.5rem 2rem;text-align:center;color:var(--text-dim);font-size:0.82rem;">
+    <a href="../index.html" style="color:var(--primary);text-decoration:none;">&lt;/CSS学習&gt;</a> &nbsp;|&nbsp; <span class="footer-producer">Produced by Sumeragi</span>
+  </footer>
+</body>
+</html>

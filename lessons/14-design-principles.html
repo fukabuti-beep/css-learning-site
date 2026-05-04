@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>デザイン原則 | CSS学習</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo">&lt;/CSS学習&gt;</a>
+      <div class="nav-links">
+        <a href="../index.html">ホーム</a>
+        <a href="../index.html#curriculum">カリキュラム</a>
+        <a href="../index.html#lessons">レッスン一覧</a>
+        <a href="../glossary.html">用語辞典</a>
+        <a href="../quiz.html">テスト</a>
+        <a href="../patchnotes.html">パッチノート</a>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <button class="share-nav-btn" onclick="openShareModal()" style="display:none">🔗 共有</button>
+        <button class="admin-login-btn" onclick="openAdminModal()">🔒 管理者</button>
+        <button class="menu-btn" id="menuBtn">☰</button>
+      </div>
+    </div>
+  </nav>
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="sidebar-overlay"></div>
+  <div class="lesson-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h3>カリキュラム</h3>
+        <div class="overall-progress">
+          <div class="overall-progress-label"><span>進捗</span><span><span id="progressPct">0</span>%</span></div>
+          <div class="overall-progress-track"><div class="overall-progress-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="01-html-basics.html" class="sidebar-link" data-lesson-id="01-html-basics"><span class="sidebar-num">01</span><span>HTMLの基礎</span></a>
+        <a href="02-css-intro.html" class="sidebar-link" data-lesson-id="02-css-intro"><span class="sidebar-num">02</span><span>CSSとは何か</span></a>
+        <a href="03-selectors.html" class="sidebar-link" data-lesson-id="03-selectors"><span class="sidebar-num">03</span><span>セレクター完全ガイド</span></a>
+        <a href="04-box-model.html" class="sidebar-link" data-lesson-id="04-box-model"><span class="sidebar-num">04</span><span>ボックスモデル</span></a>
+        <a href="05-typography.html" class="sidebar-link" data-lesson-id="05-typography"><span class="sidebar-num">05</span><span>タイポグラフィ</span></a>
+        <a href="06-colors.html" class="sidebar-link" data-lesson-id="06-colors"><span class="sidebar-num">06</span><span>色と背景</span></a>
+        <a href="07-flexbox.html" class="sidebar-link" data-lesson-id="07-flexbox"><span class="sidebar-num">07</span><span>Flexbox完全ガイド</span></a>
+        <a href="08-grid.html" class="sidebar-link" data-lesson-id="08-grid"><span class="sidebar-num">08</span><span>CSS Grid完全ガイド</span></a>
+        <a href="09-positioning.html" class="sidebar-link" data-lesson-id="09-positioning"><span class="sidebar-num">09</span><span>ポジショニング</span></a>
+        <a href="10-responsive.html" class="sidebar-link" data-lesson-id="10-responsive"><span class="sidebar-num">10</span><span>レスポンシブデザイン</span></a>
+        <a href="11-transitions-animations.html" class="sidebar-link" data-lesson-id="11-transitions-animations"><span class="sidebar-num">11</span><span>トランジション・アニメーション</span></a>
+        <a href="12-css-variables.html" class="sidebar-link" data-lesson-id="12-css-variables"><span class="sidebar-num">12</span><span>CSS変数（カスタムプロパティ）</span></a>
+        <a href="13-pseudo.html" class="sidebar-link" data-lesson-id="13-pseudo"><span class="sidebar-num">13</span><span>疑似クラス・疑似要素</span></a>
+        <a href="14-design-principles.html" class="sidebar-link" data-lesson-id="14-design-principles"><span class="sidebar-num">14</span><span>デザイン原則</span></a>
+        <a href="15-color-theory.html" class="sidebar-link" data-lesson-id="15-color-theory"><span class="sidebar-num">15</span><span>色彩理論</span></a>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <div class="lesson-header">
+        <div class="lesson-meta">
+          <span class="badge badge-advanced">上級</span>
+          <span class="badge">⏱ 40分</span>
+          <span class="badge badge-primary">モジュール7: デザイン原則</span>
+        </div>
+        <h1>デザイン原則</h1>
+        <p class="lesson-intro">CRAPデザイン原則・視覚的ヒエラルキー・カラー理論・アクセシビリティ・余白設計など、プロのWebデザイナーが実践するデザイン原則を学びます。</p>
+      </div>
+
+      <section class="content-section">
+        <h2>CRAPデザイン原則</h2>
+        <p>Robin Williamが提唱した<strong>CRAP</strong>は、4つのデザイン原則の頭文字です。この原則を理解することで、見やすく美しいデザインが作れます。</p>
+        <div class="grid-2" style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin:1.5rem 0;">
+          <div class="info-box">
+            <div class="info-box-icon">🔗</div>
+            <div class="info-box-content">
+              <h4>C — 近接（Contrast）<br><small style="font-weight:normal; font-size:0.8em;">※近接=Proximity</small></h4>
+              <p>関連する要素をグループ化し、無関係な要素は離す。ページの構造を明確にする。</p>
+            </div>
+          </div>
+          <div class="info-box tip">
+            <div class="info-box-icon">📐</div>
+            <div class="info-box-content">
+              <h4>R — 整列（Repetition）<br><small style="font-weight:normal; font-size:0.8em;">※整列=Alignment</small></h4>
+              <p>すべての要素をグリッドや見えない線に沿って配置。ランダムな配置を避ける。</p>
+            </div>
+          </div>
+          <div class="info-box warning">
+            <div class="info-box-icon">🔄</div>
+            <div class="info-box-content">
+              <h4>A — 反復（Alignment）<br><small style="font-weight:normal; font-size:0.8em;">※反復=Repetition</small></h4>
+              <p>デザイン要素（色、フォント、形）を繰り返して一貫性を生む。スタイルガイドの基本。</p>
+            </div>
+          </div>
+          <div class="info-box danger">
+            <div class="info-box-icon">⚡</div>
+            <div class="info-box-content">
+              <h4>P — コントラスト（Proximity）<br><small style="font-weight:normal; font-size:0.8em;">※コントラスト=Contrast</small></h4>
+              <p>異なる要素を明確に区別する。色・サイズ・フォント・形で差をつける。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>視覚的ヒエラルキー</h2>
+        <p>視覚的ヒエラルキーとは、情報の重要度を視覚的に伝える技術です。ユーザーの目が自然に重要な情報へ誘導されます。</p>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-comment">/* タイポグラフィスケール（モジュラースケール）*/</span>
+<span class="token-selector">:root</span> {
+  <span class="token-property">--ratio</span>: <span class="token-value">1.25</span>;     <span class="token-comment">/* Major Third */</span>
+  <span class="token-property">--base</span>: <span class="token-value">1rem</span>;
+
+  <span class="token-property">--text-sm</span>:   <span class="token-value">0.8rem</span>;    <span class="token-comment">/* 12.8px */</span>
+  <span class="token-property">--text-base</span>: <span class="token-value">1rem</span>;      <span class="token-comment">/* 16px */</span>
+  <span class="token-property">--text-lg</span>:   <span class="token-value">1.25rem</span>;   <span class="token-comment">/* 20px */</span>
+  <span class="token-property">--text-xl</span>:   <span class="token-value">1.5625rem</span>; <span class="token-comment">/* 25px */</span>
+  <span class="token-property">--text-2xl</span>:  <span class="token-value">1.953rem</span>;  <span class="token-comment">/* 31px */</span>
+  <span class="token-property">--text-3xl</span>:  <span class="token-value">2.441rem</span>;  <span class="token-comment">/* 39px */</span>
+  <span class="token-property">--text-4xl</span>:  <span class="token-value">3.052rem</span>;  <span class="token-comment">/* 49px */</span>
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>60-30-10カラールール</h2>
+        <p>プロのデザイナーが使う配色の基本ルールです。</p>
+        <div style="display:flex; gap:1rem; margin:1.5rem 0; flex-wrap:wrap;">
+          <div style="flex:1; min-width:180px; padding:1.5rem; border-radius:12px; background:var(--bg-card); border:1px solid var(--border);">
+            <div style="width:100%; height:80px; border-radius:8px; background:#1e2035; margin-bottom:1rem;"></div>
+            <strong>60% — ベースカラー</strong>
+            <p style="font-size:0.85rem; color:var(--text-dim); margin-top:0.25rem;">背景、大きなエリア。落ち着いた色。</p>
+          </div>
+          <div style="flex:1; min-width:180px; padding:1.5rem; border-radius:12px; background:var(--bg-card); border:1px solid var(--border);">
+            <div style="width:100%; height:80px; border-radius:8px; background:#2a2d4a; margin-bottom:1rem;"></div>
+            <strong>30% — サブカラー</strong>
+            <p style="font-size:0.85rem; color:var(--text-dim); margin-top:0.25rem;">サイドバー、カード。ベースと同系色。</p>
+          </div>
+          <div style="flex:1; min-width:180px; padding:1.5rem; border-radius:12px; background:var(--bg-card); border:1px solid var(--border);">
+            <div style="width:100%; height:80px; border-radius:8px; background:#6C63FF; margin-bottom:1rem;"></div>
+            <strong>10% — アクセントカラー</strong>
+            <p style="font-size:0.85rem; color:var(--text-dim); margin-top:0.25rem;">ボタン、リンク、強調。目立つ色。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>アクセシビリティ（WCAG）</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>基準</th><th>コントラスト比</th><th>対象</th></tr></thead>
+            <tbody>
+              <tr><td>AA（最低基準）</td><td>4.5:1以上</td><td>通常テキスト</td></tr>
+              <tr><td>AA（大きなテキスト）</td><td>3:1以上</td><td>18pt/14pt Bold以上</td></tr>
+              <tr><td>AAA（推奨）</td><td>7:1以上</td><td>通常テキスト</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-comment">/* アクセシビリティ対応のfocus */</span>
+<span class="token-selector">:focus-visible</span> {
+  <span class="token-property">outline</span>: <span class="token-value">3px solid #6C63FF</span>;
+  <span class="token-property">outline-offset</span>: <span class="token-value">3px</span>;
+  <span class="token-property">border-radius</span>: <span class="token-value">4px</span>;
+}
+
+<span class="token-comment">/* スクリーンリーダー専用テキスト */</span>
+<span class="token-selector">.visually-hidden</span> {
+  <span class="token-property">position</span>: <span class="token-value">absolute</span>;
+  <span class="token-property">width</span>: <span class="token-value">1px</span>;
+  <span class="token-property">height</span>: <span class="token-value">1px</span>;
+  <span class="token-property">padding</span>: <span class="token-value">0</span>;
+  <span class="token-property">margin</span>: <span class="token-value">-1px</span>;
+  <span class="token-property">overflow</span>: <span class="token-value">hidden</span>;
+  <span class="token-property">clip</span>: <span class="token-value">rect(0, 0, 0, 0)</span>;
+  <span class="token-property">white-space</span>: <span class="token-value">nowrap</span>;
+  <span class="token-property">border</span>: <span class="token-value">0</span>;
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>ホワイトスペース（余白）の重要性</h2>
+        <div class="info-box tip">
+          <div class="info-box-icon">💡</div>
+          <div class="info-box-content">
+            <h4>余白は「デザインの呼吸」</h4>
+            <p>余白は何もない空間ではなく、レイアウトの重要な構成要素です。要素間の余白を統一することで、整然とした美しいデザインが生まれます。余白が少なすぎると窮屈に、多すぎると間が抜けた印象になります。</p>
+          </div>
+        </div>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-comment">/* スペーシングシステム（8pxベース）*/</span>
+<span class="token-selector">:root</span> {
+  <span class="token-property">--space-1</span>:  <span class="token-value">0.25rem</span>;  <span class="token-comment">/*  4px */</span>
+  <span class="token-property">--space-2</span>:  <span class="token-value">0.5rem</span>;   <span class="token-comment">/*  8px */</span>
+  <span class="token-property">--space-3</span>:  <span class="token-value">0.75rem</span>;  <span class="token-comment">/* 12px */</span>
+  <span class="token-property">--space-4</span>:  <span class="token-value">1rem</span>;     <span class="token-comment">/* 16px */</span>
+  <span class="token-property">--space-6</span>:  <span class="token-value">1.5rem</span>;   <span class="token-comment">/* 24px */</span>
+  <span class="token-property">--space-8</span>:  <span class="token-value">2rem</span>;     <span class="token-comment">/* 32px */</span>
+  <span class="token-property">--space-12</span>: <span class="token-value">3rem</span>;     <span class="token-comment">/* 48px */</span>
+  <span class="token-property">--space-16</span>: <span class="token-value">4rem</span>;     <span class="token-comment">/* 64px */</span>
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>おめでとうございます！🎉</h2>
+        <p>全14レッスンを通じて、Webデザイナーに必要なCSSの知識を学びました。実際にプロジェクトを作りながら、これらの技術を組み合わせて練習しましょう。</p>
+        <div class="info-box tip">
+          <div class="info-box-icon">🚀</div>
+          <div class="info-box-content">
+            <h4>次のステップ</h4>
+            <ul>
+              <li>ポートフォリオサイトを作成する</li>
+              <li>CSS Animations / Web Animations APIを学ぶ</li>
+              <li>Sass / PostCSSなどのCSSプリプロセッサを試す</li>
+              <li>Tailwind CSSなどのユーティリティファーストCSSを学ぶ</li>
+              <li>実際のデザインツール（Figma）と連携する</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <div class="lesson-complete-section" id="complete-section">
+        <h3>🎉 このレッスンを完了しましたか？</h3>
+        <p>理解できたら完了ボタンを押して進捗を記録しましょう。</p>
+        <button class="btn btn-accent btn-lg" id="complete-btn" onclick="markComplete()">✓ このレッスンを完了にする</button>
+      </div>
+
+      <section class="content-section">
+        <h2>📝 このレッスンの重要用語</h2>
+        <p>青くなった用語をクリックすると詳細な説明が表示されます。<a href="../glossary.html">用語辞典</a>でまとめて確認することもできます。</p>
+        <p class="lesson-term-index">:focus-visible、タイポグラフィスケール、visually-hidden、CRAPデザイン原則、視覚的ヒエラルキー、ホワイトスペース（余白）、スクリーンリーダー、60-30-10カラールール、WCAG</p>
+      </section>
+
+      <div class="lesson-navigation">
+        <a href="13-pseudo.html" class="btn btn-ghost">← 前のレッスン</a>
+        <span></span>
+      </div>
+    </main>
+  </div>
+  <script src="../js/main.js"></script>
+
+  <footer style="border-top:1px solid rgba(255,255,255,0.06);padding:1.5rem 2rem;text-align:center;color:var(--text-dim);font-size:0.82rem;">
+    <a href="../index.html" style="color:var(--primary);text-decoration:none;">&lt;/CSS学習&gt;</a> &nbsp;|&nbsp; <span class="footer-producer">Produced by Sumeragi</span>
+  </footer>
+</body>
+</html>

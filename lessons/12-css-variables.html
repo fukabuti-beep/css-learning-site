@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS変数（カスタムプロパティ） | CSS学習</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo">&lt;/CSS学習&gt;</a>
+      <div class="nav-links">
+        <a href="../index.html">ホーム</a>
+        <a href="../index.html#curriculum">カリキュラム</a>
+        <a href="../index.html#lessons">レッスン一覧</a>
+        <a href="../glossary.html">用語辞典</a>
+        <a href="../quiz.html">テスト</a>
+        <a href="../patchnotes.html">パッチノート</a>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <button class="share-nav-btn" onclick="openShareModal()" style="display:none">🔗 共有</button>
+        <button class="admin-login-btn" onclick="openAdminModal()">🔒 管理者</button>
+        <button class="menu-btn" id="menuBtn">☰</button>
+      </div>
+    </div>
+  </nav>
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="sidebar-overlay"></div>
+  <div class="lesson-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h3>カリキュラム</h3>
+        <div class="overall-progress">
+          <div class="overall-progress-label"><span>進捗</span><span><span id="progressPct">0</span>%</span></div>
+          <div class="overall-progress-track"><div class="overall-progress-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="01-html-basics.html" class="sidebar-link" data-lesson-id="01-html-basics"><span class="sidebar-num">01</span><span>HTMLの基礎</span></a>
+        <a href="02-css-intro.html" class="sidebar-link" data-lesson-id="02-css-intro"><span class="sidebar-num">02</span><span>CSSとは何か</span></a>
+        <a href="03-selectors.html" class="sidebar-link" data-lesson-id="03-selectors"><span class="sidebar-num">03</span><span>セレクター完全ガイド</span></a>
+        <a href="04-box-model.html" class="sidebar-link" data-lesson-id="04-box-model"><span class="sidebar-num">04</span><span>ボックスモデル</span></a>
+        <a href="05-typography.html" class="sidebar-link" data-lesson-id="05-typography"><span class="sidebar-num">05</span><span>タイポグラフィ</span></a>
+        <a href="06-colors.html" class="sidebar-link" data-lesson-id="06-colors"><span class="sidebar-num">06</span><span>色と背景</span></a>
+        <a href="07-flexbox.html" class="sidebar-link" data-lesson-id="07-flexbox"><span class="sidebar-num">07</span><span>Flexbox完全ガイド</span></a>
+        <a href="08-grid.html" class="sidebar-link" data-lesson-id="08-grid"><span class="sidebar-num">08</span><span>CSS Grid完全ガイド</span></a>
+        <a href="09-positioning.html" class="sidebar-link" data-lesson-id="09-positioning"><span class="sidebar-num">09</span><span>ポジショニング</span></a>
+        <a href="10-responsive.html" class="sidebar-link" data-lesson-id="10-responsive"><span class="sidebar-num">10</span><span>レスポンシブデザイン</span></a>
+        <a href="11-transitions-animations.html" class="sidebar-link" data-lesson-id="11-transitions-animations"><span class="sidebar-num">11</span><span>トランジション・アニメーション</span></a>
+        <a href="12-css-variables.html" class="sidebar-link" data-lesson-id="12-css-variables"><span class="sidebar-num">12</span><span>CSS変数（カスタムプロパティ）</span></a>
+        <a href="13-pseudo.html" class="sidebar-link" data-lesson-id="13-pseudo"><span class="sidebar-num">13</span><span>疑似クラス・疑似要素</span></a>
+        <a href="14-design-principles.html" class="sidebar-link" data-lesson-id="14-design-principles"><span class="sidebar-num">14</span><span>デザイン原則</span></a>
+        <a href="15-color-theory.html" class="sidebar-link" data-lesson-id="15-color-theory"><span class="sidebar-num">15</span><span>色彩理論</span></a>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <div class="lesson-header">
+        <div class="lesson-meta">
+          <span class="badge badge-advanced">上級</span>
+          <span class="badge">⏱ 30分</span>
+          <span class="badge badge-primary">モジュール6: モダンCSS</span>
+        </div>
+        <h1>CSS変数（カスタムプロパティ）</h1>
+        <p class="lesson-intro">CSS変数（カスタムプロパティ）を使ってデザイントークンを管理し、ダークモードやテーマ切り替えを実装する方法を学びます。</p>
+      </div>
+
+      <section class="content-section">
+        <h2>CSS変数（カスタムプロパティ）とは</h2>
+        <p><strong>CSS変数</strong>はCSSの中で値を再利用できる仕組みです。<code>--変数名</code>で定義し、<code>var(--変数名)</code>で参照します。デザイントークンの管理に最適です。</p>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-comment">/* :root でグローバル変数を定義 */</span>
+<span class="token-selector">:root</span> {
+  <span class="token-property">--color-primary</span>: <span class="token-value">#6C63FF</span>;
+  <span class="token-property">--color-secondary</span>: <span class="token-value">#FF6584</span>;
+  <span class="token-property">--font-size-base</span>: <span class="token-value">16px</span>;
+  <span class="token-property">--spacing-md</span>: <span class="token-value">1rem</span>;
+  <span class="token-property">--radius</span>: <span class="token-value">8px</span>;
+}
+
+<span class="token-comment">/* var() で参照 */</span>
+<span class="token-selector">.btn</span> {
+  <span class="token-property">background</span>: <span class="token-value">var(--color-primary)</span>;
+  <span class="token-property">padding</span>: <span class="token-value">var(--spacing-md)</span>;
+  <span class="token-property">border-radius</span>: <span class="token-value">var(--radius)</span>;
+}
+
+<span class="token-comment">/* フォールバック値（変数が未定義の場合）*/</span>
+<span class="token-property">color</span>: <span class="token-value">var(--color-accent, #43D9AD)</span>;</code></pre>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>スコープとカスケード</h2>
+        <p>CSS変数はカスケードと継承に従います。より具体的なセレクターで定義すると、その要素のスコープ内でのみ有効になります。</p>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-selector">:root</span> {
+  <span class="token-property">--color</span>: <span class="token-value">blue</span>; <span class="token-comment">/* グローバル */</span>
+}
+
+<span class="token-selector">.card</span> {
+  <span class="token-property">--color</span>: <span class="token-value">red</span>;  <span class="token-comment">/* .card内のみ赤 */</span>
+  <span class="token-property">color</span>: <span class="token-value">var(--color)</span>; <span class="token-comment">/* 赤 */</span>
+}
+
+<span class="token-selector">.card.highlight</span> {
+  <span class="token-property">--color</span>: <span class="token-value">gold</span>; <span class="token-comment">/* さらに上書き */</span>
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>ダークモードの実装</h2>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-comment">/* ライトモード（デフォルト）*/</span>
+<span class="token-selector">:root</span> {
+  <span class="token-property">--bg</span>: <span class="token-value">#ffffff</span>;
+  <span class="token-property">--text</span>: <span class="token-value">#1a1a1a</span>;
+  <span class="token-property">--card-bg</span>: <span class="token-value">#f8f9fa</span>;
+}
+
+<span class="token-comment">/* ダークモード: OS設定に従う */</span>
+<span class="token-at">@media</span> <span class="token-value">(prefers-color-scheme: dark)</span> {
+  <span class="token-selector">:root</span> {
+    <span class="token-property">--bg</span>: <span class="token-value">#0f0e17</span>;
+    <span class="token-property">--text</span>: <span class="token-value">#fffffe</span>;
+    <span class="token-property">--card-bg</span>: <span class="token-value">#1e2035</span>;
+  }
+}
+
+<span class="token-comment">/* ダークモード: クラスで手動切り替え */</span>
+<span class="token-selector">[data-theme="dark"]</span> {
+  <span class="token-property">--bg</span>: <span class="token-value">#0f0e17</span>;
+  <span class="token-property">--text</span>: <span class="token-value">#fffffe</span>;
+}
+
+<span class="token-selector">body</span> {
+  <span class="token-property">background</span>: <span class="token-value">var(--bg)</span>;
+  <span class="token-property">color</span>: <span class="token-value">var(--text)</span>;
+  <span class="token-property">transition</span>: <span class="token-value">background 0.3s, color 0.3s</span>;
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>JavaScriptからの操作</h2>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-comment">// CSS変数を取得</span>
+<span class="token-keyword">const</span> root = document.documentElement;
+<span class="token-keyword">const</span> color = getComputedStyle(root)
+  .getPropertyValue(<span class="token-string">'--color-primary'</span>).trim();
+
+<span class="token-comment">// CSS変数を変更</span>
+root.style.setProperty(<span class="token-string">'--color-primary'</span>, <span class="token-string">'#FF6584'</span>);
+
+<span class="token-comment">// テーマ切り替え</span>
+<span class="token-keyword">function</span> toggleTheme() {
+  document.documentElement.setAttribute(
+    <span class="token-string">'data-theme'</span>,
+    document.documentElement.dataset.theme === <span class="token-string">'dark'</span> ? <span class="token-string">'light'</span> : <span class="token-string">'dark'</span>
+  );
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>calc()との組み合わせ</h2>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-selector">:root</span> {
+  <span class="token-property">--spacing</span>: <span class="token-value">8px</span>;
+  <span class="token-property">--nav-height</span>: <span class="token-value">64px</span>;
+}
+
+<span class="token-selector">.main</span> {
+  <span class="token-comment">/* ナビバーの高さを除いた残り */</span>
+  <span class="token-property">min-height</span>: <span class="token-value">calc(100vh - var(--nav-height))</span>;
+  <span class="token-property">padding</span>: <span class="token-value">calc(var(--spacing) * 3)</span>; <span class="token-comment">/* 24px */</span>
+}</code></pre>
+        </div>
+      </section>
+
+      <div class="lesson-complete-section" id="complete-section">
+        <h3>🎉 このレッスンを完了しましたか？</h3>
+        <p>理解できたら完了ボタンを押して進捗を記録しましょう。</p>
+        <button class="btn btn-accent btn-lg" id="complete-btn" onclick="markComplete()">✓ このレッスンを完了にする</button>
+      </div>
+
+      <section class="content-section">
+        <h2>📝 このレッスンの重要用語</h2>
+        <p>青くなった用語をクリックすると詳細な説明が表示されます。<a href="../glossary.html">用語辞典</a>でまとめて確認することもできます。</p>
+        <p class="lesson-term-index">var()、prefers-color-scheme、:root、calc()</p>
+      </section>
+
+      <div class="lesson-navigation">
+        <a href="11-transitions-animations.html" class="btn btn-ghost">← 前のレッスン</a>
+        <a href="13-pseudo.html" class="btn btn-primary">次のレッスン →</a>
+      </div>
+    </main>
+  </div>
+  <script src="../js/main.js"></script>
+
+  <footer style="border-top:1px solid rgba(255,255,255,0.06);padding:1.5rem 2rem;text-align:center;color:var(--text-dim);font-size:0.82rem;">
+    <a href="../index.html" style="color:var(--primary);text-decoration:none;">&lt;/CSS学習&gt;</a> &nbsp;|&nbsp; <span class="footer-producer">Produced by Sumeragi</span>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS完全マスター | Webデザイナー向け学習サイト</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* トップページ固有スタイル */
+    .home-hero { padding-top: var(--nav-height); }
+  </style>
+</head>
+<body>
+
+  <!-- ナビゲーション -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">&lt;/CSS学習&gt;</a>
+      <div class="nav-links">
+        <a href="index.html" class="active">ホーム</a>
+        <a href="#curriculum">カリキュラム</a>
+        <a href="#lessons">レッスン一覧</a>
+        <a href="glossary.html">用語辞典</a>
+        <a href="quiz.html">テスト</a>
+        <a href="patchnotes.html">パッチノート</a>
+        <a href="lessons/01-html-basics.html" class="nav-cta">学習開始 →</a>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <button class="share-nav-btn" onclick="openShareModal()" style="display:none">🔗 共有</button>
+        <button class="admin-login-btn" onclick="openAdminModal()">🔒 管理者</button>
+        <button class="menu-btn" id="menuBtn" style="display:none">☰</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ヒーロー -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-label">
+          <span>✦</span> Webデザイナー向け無料学習サイト
+        </div>
+        <h1>
+          Webデザイナーへの<br>
+          <span>CSS完全マスター</span>
+        </h1>
+        <p class="hero-desc">
+          CSSを基礎から応用まで体系的に学べる無料の学習サイト。
+          セレクター・レイアウト・アニメーションから、
+          モダンCSSとデザイン原則まで、プロになるための知識をすべて網羅しています。
+        </p>
+        <div class="hero-actions">
+          <a href="lessons/01-html-basics.html" class="btn btn-primary btn-lg">学習をはじめる →</a>
+          <a href="#curriculum" class="btn btn-ghost btn-lg">カリキュラムを見る</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span class="hero-stat-num">15</span>
+            <span class="hero-stat-label">レッスン</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num">100+</span>
+            <span class="hero-stat-label">コード例</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num">0円</span>
+            <span class="hero-stat-label">完全無料</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num" id="index-progress-pct">0</span><span class="hero-stat-num">%</span>
+            <span class="hero-stat-label">あなたの進捗</span>
+          </div>
+        </div>
+      </div>
+      <!-- コードデモ -->
+      <div class="hero-code-demo float-animation">
+        <div class="code-header">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-lang">style.css</span>
+          <button class="copy-btn" onclick="copyCode(this)">コピー</button>
+        </div>
+        <pre><code><span class="token-selector">.card</span> {
+  <span class="token-property">display</span>: <span class="token-value">flex</span>;
+  <span class="token-property">flex-direction</span>: <span class="token-value">column</span>;
+  <span class="token-property">gap</span>: <span class="token-value">1rem</span>;
+  <span class="token-property">padding</span>: <span class="token-value">2rem</span>;
+  <span class="token-property">background</span>: <span class="token-value">var(--surface)</span>;
+  <span class="token-property">border-radius</span>: <span class="token-value">var(--radius)</span>;
+  <span class="token-property">border</span>: <span class="token-value">1px solid var(--border)</span>;
+  <span class="token-property">transition</span>: <span class="token-value">all 0.3s ease</span>;
+}
+
+<span class="token-selector">.card:hover</span> {
+  <span class="token-property">transform</span>: <span class="token-value">translateY(-4px)</span>;
+  <span class="token-property">box-shadow</span>: <span class="token-value">0 8px 32px</span>
+    <span class="token-value">rgba(108, 99, 255, 0.3)</span>;
+}
+
+<span class="token-at">@keyframes</span> <span class="token-selector">fadeInUp</span> {
+  <span class="token-selector">from</span> {
+    <span class="token-property">opacity</span>: <span class="token-value">0</span>;
+    <span class="token-property">transform</span>: <span class="token-value">translateY(20px)</span>;
+  }
+  <span class="token-selector">to</span> {
+    <span class="token-property">opacity</span>: <span class="token-value">1</span>;
+    <span class="token-property">transform</span>: <span class="token-value">translateY(0)</span>;
+  }
+}</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 進捗バー（トップページ） -->
+  <div class="section" style="padding: 2rem; background: var(--dark-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div style="max-width:1200px; margin:0 auto; display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
+      <span style="font-size:0.9rem; color:var(--text-muted); white-space:nowrap;">📊 あなたの学習進捗</span>
+      <div style="flex:1; min-width:200px; height:8px; background:var(--surface-3); border-radius:4px; overflow:hidden;">
+        <div id="index-progress-fill" style="height:100%; background:linear-gradient(90deg, var(--primary), var(--accent)); border-radius:4px; width:0%; transition:width 0.5s ease;"></div>
+      </div>
+      <span style="font-size:0.9rem; color:var(--text-muted); white-space:nowrap;"><span id="index-progress-pct2">0</span>% 完了</span>
+      <a href="#lessons" class="btn btn-sm btn-secondary">続きから学ぶ</a>
+    </div>
+  </div>
+
+  <!-- カリキュラム概要 -->
+  <section class="section" id="curriculum">
+    <div class="section-inner">
+      <div class="section-header animate-on-scroll">
+        <span class="section-label">CURRICULUM</span>
+        <h2>8つのモジュールで<span class="text-gradient">体系的に学ぶ</span></h2>
+        <p>HTMLの基礎からデザイン原則まで、Webデザイナーに必要な知識をすべてカバーしています。</p>
+      </div>
+
+      <div class="modules-grid">
+        <!-- モジュール1 -->
+        <a href="lessons/01-html-basics.html" class="module-card animate-on-scroll animate-delay-1">
+          <span class="module-icon">🌐</span>
+          <h3>Webの基礎</h3>
+          <p>HTMLとCSSの概要、マークアップ言語の基礎を学び、Web制作の土台を作ります。</p>
+          <div class="module-meta">
+            <div class="badge badge-beginner">初級</div>
+            <span>2レッスン</span>
+          </div>
+        </a>
+
+        <!-- モジュール2 -->
+        <a href="lessons/03-selectors.html" class="module-card animate-on-scroll animate-delay-2">
+          <span class="module-icon">🎨</span>
+          <h3>CSSの基礎</h3>
+          <p>セレクター、ボックスモデル、タイポグラフィ、色の指定方法など、CSSの根幹を理解します。</p>
+          <div class="module-meta">
+            <div class="badge badge-beginner">初級</div>
+            <span>4レッスン</span>
+          </div>
+        </a>
+
+        <!-- モジュール3 -->
+        <a href="lessons/07-flexbox.html" class="module-card animate-on-scroll animate-delay-3">
+          <span class="module-icon">📐</span>
+          <h3>レイアウト</h3>
+          <p>Flexbox・CSS Grid・ポジショニングを使ったモダンなレイアウト設計を習得します。</p>
+          <div class="module-meta">
+            <div class="badge badge-intermediate">中級</div>
+            <span>3レッスン</span>
+          </div>
+        </a>
+
+        <!-- モジュール4 -->
+        <a href="lessons/10-responsive.html" class="module-card animate-on-scroll animate-delay-1">
+          <span class="module-icon">📱</span>
+          <h3>レスポンシブデザイン</h3>
+          <p>メディアクエリとモバイルファーストの考え方で、あらゆる画面サイズに対応します。</p>
+          <div class="module-meta">
+            <div class="badge badge-intermediate">中級</div>
+            <span>1レッスン</span>
+          </div>
+        </a>
+
+        <!-- モジュール5 -->
+        <a href="lessons/11-transitions-animations.html" class="module-card animate-on-scroll animate-delay-2">
+          <span class="module-icon">✨</span>
+          <h3>アニメーション</h3>
+          <p>transitionとanimationで、ユーザー体験を豊かにするインタラクションを実装します。</p>
+          <div class="module-meta">
+            <div class="badge badge-intermediate">中級</div>
+            <span>1レッスン</span>
+          </div>
+        </a>
+
+        <!-- 色彩理論（中級） -->
+        <a href="lessons/15-color-theory.html" class="module-card animate-on-scroll animate-delay-1">
+          <span class="module-icon">🎨</span>
+          <h3>色彩理論</h3>
+          <p>色相環・配色ルール・アクセシビリティ・ブランドカラーまで、デザイナー必須の色の知識を体系化。</p>
+          <div class="module-meta">
+            <div class="badge badge-intermediate">中級</div>
+            <span>1レッスン</span>
+          </div>
+        </a>
+
+        <!-- モジュール6 -->
+        <a href="lessons/12-css-variables.html" class="module-card animate-on-scroll animate-delay-2">
+          <span class="module-icon">⚙️</span>
+          <h3>モダンCSS</h3>
+          <p>CSS変数（カスタムプロパティ）と疑似クラス・疑似要素で、効率的なCSS設計を学びます。</p>
+          <div class="module-meta">
+            <div class="badge badge-advanced">上級</div>
+            <span>2レッスン</span>
+          </div>
+        </a>
+
+        <!-- モジュール7 -->
+        <a href="lessons/14-design-principles.html" class="module-card animate-on-scroll animate-delay-3">
+          <span class="module-icon">🎯</span>
+          <h3>デザイン原則</h3>
+          <p>近接・整列・反復・コントラストの4原則と、アクセシビリティの基礎を学びます。</p>
+          <div class="module-meta">
+            <div class="badge badge-advanced">上級</div>
+            <span>1レッスン</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- レッスン一覧 -->
+  <section class="section section-alt" id="lessons">
+    <div class="section-inner">
+      <div class="section-header animate-on-scroll">
+        <span class="section-label">ALL LESSONS</span>
+        <h2>全<span class="text-gradient">15レッスン</span>一覧</h2>
+        <p>順番に学習することをおすすめしますが、知りたいところから始めることもできます。</p>
+      </div>
+
+      <div class="lessons-list">
+        <a href="lessons/01-html-basics.html" class="lesson-item animate-on-scroll" data-lesson-id="01-html-basics">
+          <div class="lesson-num">01</div>
+          <div class="lesson-item-info">
+            <h3>HTMLの基礎</h3>
+            <p>マークアップ言語の基本、セマンティックHTML、CSSとの連携</p>
+          </div>
+          <div class="lesson-item-meta">
+            <span class="badge badge-beginner">初級</span>
+            <span class="badge">⏱ 20分</span>
+          </div>
+        </a>
+
+        <a href="lessons/02-css-intro.html" class="lesson-item animate-on-scroll" data-lesson-id="02-css-intro">
+          <div class="lesson-num">02</div>
+          <div class="lesson-item-info">
+            <h3>CSSとは何か</h3>
+            <p>CSSの役割、書き方3種類、カスケード・継承・詳細度の基本</p>
+          </div>
+          <div class="lesson-item-meta">
+            <span class="badge badge-beginner">初級</span>
+            <span class="badge">⏱ 25分</span>
+          </div>
+        </a>
+
+        <a href="lessons/03-selectors.html" class="lesson-item animate-on-scroll" data-lesson-id="03-selectors">
+          <div class="lesson-num">03</div>
+          <div class="lesson-item-info">
+            <h3>セレクター完全ガイド</h3>
+            <p>基本〜属性・疑似クラスセレクター、詳細度の計算方法</p>
+          </div>
+          <div class="lesson-item-meta">
+            <span class="badge badge-beginner">初級</span>
+            <span class="badge">⏱ 30分</span>
+          </div>
+        </a>
+
+        <a href="lessons/04-box-model.html" class="lesson-item animate-on-scroll" data-lesson-id="04-box-model">
+          <div class="lesson-num">04</div>
+          <div class="lesson-item-info">
+            <h3>ボックスモデル</h3>
+            <p>content・padding・border・margin、box-sizing、display</p>
+          </div>
+          <div class="lesson-item-meta">
+            <span class="badge badge-beginner">初級</span>
+            <span class="badge">⏱ 25分</span>
+          </div>
+        </a>
+
+        <a href="lessons/05-typography.html" class="lesson-item animate-on-scroll" data-lesson-id="05-typography">
+          <div class="lesson-num">05</div>
+          <div class="lesson-item-info">
+            <h3>タイポグラフィ</h3>
+            <p>フォント、font-size単位（px/em/rem）、line-height、Google Fonts</p>
+          </div>
+          <div class="lesson-item-meta">
+            <span class="badge badge-beginner">初級</span>
+            <span class="badge">⏱ 25分</span>
+          </div>
+        </a>
+
+        <a href="lessons/06-colors.html" class="lesson-item animate-on-scroll" data-lesson-id="06-colors">
+          <div class="lesson-num">06</div>
+          <div class="lesson-item-info">
+            <h3>色と背景</h3>
+            <p>色の指定方法（hex/rgb/hsl）、グラデーション、フィルター</p>
+          </div>
+          <div class="lesson-item-meta">
+            <span class="badge badge-beginner">初級</span>
+            <span class="badge">⏱ 30分</span>
+          </div>
+        </a>
+
+        <a href="lessons/07-flexbox.html" class="lesson-item animate-on-scroll" data-lesson-id="07-flexbox">
+          <div class="lesson-num">07</div>
+          <div class="lesson-item-info">
+            <h3>Flexbox完全ガイド</h3>
+            <p>justify-content、align-items、flex-grow/shrink/basis、実践例</p>
+          </div>
+          <div class="lesson-item-meta">
+            <span class="badge badge-intermediate">中級</span>
+            <span class="badge">⏱ 40分</span>
+          </div>
+        </a>
+
+        <a href="lessons/08-grid.html" class="lesson-item animate-on-scroll" data-lesson-id="08-grid">
+          <div class="lesson-num">08</div>
+          <div class="lesson-item-info">
+            <h3>CSS Grid完全ガイド</h3>
+            <p>grid-template-columns/rows、fr単位、grid-template-areas、実践例</p>
+          </div>
+          <div class="lesson-item-meta">
+            <span class="badge badge-intermediate">中級</span>
+            <span class="badge">⏱ 40分</span>
+          </div>
+        </a>
+
+        <a href="lessons/09-positioning.html" class="lesson-item animate-on-scroll" data-lesson-id="09-positioning">
+          <div class="lesson-num">09</div>
+          <div class="lesson-item-info">
+            <h3>ポジショニング</h3>
+            <p>static・relative・absolute・fixed・sticky・z-index</p>
+          </div>
+          <div class="lesson-item-meta">
+            <span class="badge badge-intermediate">中級</span>
+            <span class="badge">⏱ 30分</span>
+          </div>
+        </a>
+
+        <a href="lessons/10-responsive.html" class="lesson-item animate-on-scroll" data-lesson-id="10-responsive">
+          <div class="lesson-num">10</div>
+          <div class="lesson-item-info">
+            <h3>レスポンシブデザイン</h3>
+            <p>メディアクエリ、モバイルファースト、clamp()、相対単位</p>
+          </div>
+          <div class="lesson-item-meta">
+            <span class="badge badge-intermediate">中級</span>
+            <span class="badge">⏱ 35分</span>
+          </div>
+        </a>
+
+        <a href="lessons/11-transitions-animations.html" class="lesson-item animate-on-scroll" data-lesson-id="11-transitions-animations">
+          <div class="lesson-num">11</div>
+          <div class="lesson-item-info">
+            <h3>トランジション・アニメーション</h3>
+            <p>transition、transform、@keyframes、timing-function</p>
+          </div>
+          <div class="lesson-item-meta">
+            <span class="badge badge-intermediate">中級</span>
+            <span class="badge">⏱ 35分</span>
+          </div>
+        </a>
+
+        <a href="lessons/15-color-theory.html" class="lesson-item animate-on-scroll" data-lesson-id="15-color-theory">
+          <div class="lesson-num">15</div>
+          <div class="lesson-item-info">
+            <h3>色彩理論</h3>
+            <p>色相環・配色ルール・心理効果・アクセシビリティ・カラーパレット設計</p>
+          </div>
+          <div class="lesson-item-meta">
+            <span class="badge badge-intermediate">中級</span>
+            <span class="badge">⏱ 50分</span>
+          </div>
+        </a>
+
+        <a href="lessons/12-css-variables.html" class="lesson-item animate-on-scroll" data-lesson-id="12-css-variables">
+          <div class="lesson-num">12</div>
+          <div class="lesson-item-info">
+            <h3>CSS変数（カスタムプロパティ）</h3>
+            <p>--変数名、var()、ダークモード実装、テーマ管理</p>
+          </div>
+          <div class="lesson-item-meta">
+            <span class="badge badge-advanced">上級</span>
+            <span class="badge">⏱ 30分</span>
+          </div>
+        </a>
+
+        <a href="lessons/13-pseudo.html" class="lesson-item animate-on-scroll" data-lesson-id="13-pseudo">
+          <div class="lesson-num">13</div>
+          <div class="lesson-item-info">
+            <h3>疑似クラス・疑似要素</h3>
+            <p>::before/:after、:nth-child、:not()、::placeholder、::selection</p>
+          </div>
+          <div class="lesson-item-meta">
+            <span class="badge badge-advanced">上級</span>
+            <span class="badge">⏱ 30分</span>
+          </div>
+        </a>
+
+        <a href="lessons/14-design-principles.html" class="lesson-item animate-on-scroll" data-lesson-id="14-design-principles">
+          <div class="lesson-num">14</div>
+          <div class="lesson-item-info">
+            <h3>デザイン原則</h3>
+            <p>CRAP原則、視覚的階層、カラーパレット、アクセシビリティ</p>
+          </div>
+          <div class="lesson-item-meta">
+            <span class="badge badge-advanced">上級</span>
+            <span class="badge">⏱ 40分</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA セクション -->
+  <section class="section" style="text-align:center;">
+    <div class="section-inner" style="max-width:640px;">
+      <div class="animate-on-scroll">
+        <span class="section-label">GET STARTED</span>
+        <h2>今すぐ<span class="text-gradient">学習を始めよう</span></h2>
+        <p style="margin-bottom:2rem;">登録不要・完全無料。ブラウザだけで学習を進められます。進捗は自動的に保存されます。</p>
+        <a href="lessons/01-html-basics.html" class="btn btn-primary btn-lg">最初のレッスンへ →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- フッター -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">&lt;/CSS学習&gt;</div>
+      <p class="footer-text">Webデザイナーを目指すすべての人へ。無料で学べるCSS学習サイト。</p>
+      <p class="footer-text">© 2024 CSS学習. All rights reserved. &nbsp;|&nbsp; <span class="footer-producer">Produced by Sumeragi</span></p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // トップページ用：進捗2箇所に反映
+    document.addEventListener('DOMContentLoaded', () => {
+      const pct = Math.round((getCompletionCount() / 15) * 100);
+      const el2 = document.getElementById('index-progress-pct2');
+      if (el2) el2.textContent = pct;
+    });
+  </script>
+</body>
+</html>

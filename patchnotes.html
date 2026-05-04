@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>パッチノート | CSS完全マスター</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .patchnotes-hero {
+      padding: calc(var(--nav-height) + 4rem) 0 3rem;
+      text-align: center;
+    }
+    .patchnotes-hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.75rem;
+    }
+    .patchnotes-hero h1 span { color: var(--primary); }
+    .patchnotes-hero p {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .patch-timeline {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 1.5rem 6rem;
+      position: relative;
+    }
+    .patch-timeline::before {
+      content: '';
+      position: absolute;
+      left: calc(1.5rem + 20px);
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--primary), transparent);
+      opacity: 0.25;
+    }
+
+    .patch-entry {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+    .patch-dot {
+      flex-shrink: 0;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      border: 2px solid;
+      position: relative;
+      z-index: 1;
+    }
+    .patch-dot.major {
+      background: rgba(99,102,241,0.15);
+      border-color: rgba(99,102,241,0.5);
+    }
+    .patch-dot.feature {
+      background: rgba(6,182,212,0.12);
+      border-color: rgba(6,182,212,0.4);
+    }
+    .patch-dot.fix {
+      background: rgba(34,197,94,0.1);
+      border-color: rgba(34,197,94,0.35);
+    }
+    .patch-dot.infra {
+      background: rgba(245,158,11,0.1);
+      border-color: rgba(245,158,11,0.35);
+    }
+
+    .patch-card {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: border-color 0.2s;
+    }
+    .patch-card:hover { border-color: rgba(99,102,241,0.3); }
+
+    .patch-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .patch-version {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.2rem 0.65rem;
+      border-radius: 6px;
+      background: rgba(99,102,241,0.12);
+      color: var(--primary);
+      border: 1px solid rgba(99,102,241,0.25);
+    }
+    .patch-date {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-family: 'Fira Code', monospace;
+    }
+    .patch-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+    .patch-summary {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.65;
+      margin-bottom: 1rem;
+    }
+
+    .patch-changes {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .patch-change {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+    .change-badge {
+      flex-shrink: 0;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 0.1rem;
+    }
+    .badge-new    { background: rgba(99,102,241,0.15); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.3); }
+    .badge-fix    { background: rgba(34,197,94,0.12);  color: #86efac; border: 1px solid rgba(34,197,94,0.3); }
+    .badge-change { background: rgba(6,182,212,0.12);  color: #67e8f9; border: 1px solid rgba(6,182,212,0.3); }
+    .badge-infra  { background: rgba(245,158,11,0.12); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
+    .badge-remove { background: rgba(239,68,68,0.1);   color: #fca5a5; border: 1px solid rgba(239,68,68,0.25); }
+
+    .patch-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .patch-tag {
+      font-size: 0.72rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 100px;
+      background: var(--surface2);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ナビゲーション -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">&lt;/CSS学習&gt;</a>
+      <div class="nav-links">
+        <a href="index.html">ホーム</a>
+        <a href="#curriculum">カリキュラム</a>
+        <a href="glossary.html">用語辞典</a>
+        <a href="quiz.html">テスト</a>
+        <a href="patchnotes.html" class="active">パッチノート</a>
+        <a href="lessons/01-html-basics.html" class="nav-cta">学習開始 →</a>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <button class="share-nav-btn" onclick="openShareModal()" style="display:none">🔗 共有</button>
+        <button class="admin-login-btn" onclick="openAdminModal()">🔒 管理者</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ヒーロー -->
+  <section class="patchnotes-hero">
+    <div class="container">
+      <h1>📋 <span>パッチノート</span></h1>
+      <p>CSS完全マスター — 修正・改善・追加機能の履歴</p>
+    </div>
+  </section>
+
+  <!-- 凡例 -->
+  <div class="container">
+    <div class="legend">
+      <span class="change-badge badge-new">NEW — 新機能・追加</span>
+      <span class="change-badge badge-change">CHANGE — 変更・改善</span>
+      <span class="change-badge badge-fix">FIX — バグ修正</span>
+      <span class="change-badge badge-infra">INFRA — インフラ・配信</span>
+      <span class="change-badge badge-remove">REMOVE — 削除</span>
+    </div>
+  </div>
+
+  <!-- タイムライン -->
+  <div class="patch-timeline">
+
+    <!-- v1.9 -->
+    <div class="patch-entry">
+      <div class="patch-dot feature">🔗</div>
+      <div class="patch-card">
+        <div class="patch-header">
+          <div>
+            <div class="patch-version">v1.9.0</div>
+          </div>
+          <span class="patch-date">2026-05-04</span>
+        </div>
+        <div class="patch-title">全レッスンへの用語ツールチップ完全対応</div>
+        <div class="patch-summary">
+          用語辞典に登録された用語がコードブロック内にしか存在しない問題を修正。全15レッスンに「このレッスンの重要用語」セクションを追加し、すべての専門用語にツールチップが表示されるようになりました。
+        </div>
+        <div class="patch-changes">
+          <div class="patch-change">
+            <span class="change-badge badge-fix">FIX</span>
+            <span>全15レッスンに📝「このレッスンの重要用語」セクションを追加 — 用語辞典の全用語が各レッスンページでクリック可能に</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-change">CHANGE</span>
+            <span>レッスン01（HTML基礎）— DOM・ブロック要素・インライン要素・head/body・lang属性・charset・meta・link・h1〜h6・p・strong/em・a・img・alt・ul/ol/li・form・input・textarea・button・table 計22用語を追記</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-change">CHANGE</span>
+            <span>レッスン05・06（タイポグラフィ・色）— font-family/weight/style・text-align・letter/word-spacing・Webフォント・rgb/hsl/hex・opacity・background系プロパティ・oklch 計20用語を追記</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-change">CHANGE</span>
+            <span>レッスン07〜15 — flex-wrap・grid-column/row・auto-fill/fit・float・inset・sticky・viewport・min/max関数・cubic-bezier・will-change・prefers-*・var()・疑似クラス/疑似要素・デザイン原則・色彩理論用語を追記</span>
+          </div>
+        </div>
+        <div class="patch-tags">
+          <span class="patch-tag">全レッスン</span>
+          <span class="patch-tag">用語ツールチップ</span>
+          <span class="patch-tag">学習体験向上</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- v1.9.1 -->
+    <div class="patch-entry">
+      <div class="patch-dot fix">🔧</div>
+      <div class="patch-card">
+        <div class="patch-header">
+          <div>
+            <div class="patch-version">v1.9.1</div>
+          </div>
+          <span class="patch-date">2026-05-04</span>
+        </div>
+        <div class="patch-title">用語ツールチップ — 追加漏れ修正</div>
+        <div class="patch-summary">
+          v1.9.0 で追加した「このレッスンの重要用語」セクションに漏れていた用語を各レッスンに補完しました。
+        </div>
+        <div class="patch-changes">
+          <div class="patch-change">
+            <span class="change-badge badge-fix">FIX</span>
+            <span>レッスン02 — スタイルシート・ルールセット を追記</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-fix">FIX</span>
+            <span>レッスン07 — flex-basis・flex-shrink を追記</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-fix">FIX</span>
+            <span>レッスン08 — minmax() を追記</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-fix">FIX</span>
+            <span>レッスン10 — clamp()・ブレークポイント を追記</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-fix">FIX</span>
+            <span>レッスン11 — timing-function（イージング）を追記</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-fix">FIX</span>
+            <span>レッスン12 — :root を追記</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-fix">FIX</span>
+            <span>レッスン13 — ::before / ::after を追記</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-fix">FIX</span>
+            <span>レッスン14 — 60-30-10カラールール・WCAG を追記</span>
+          </div>
+        </div>
+        <div class="patch-tags">
+          <span class="patch-tag">8レッスン修正</span>
+          <span class="patch-tag">用語ツールチップ</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- v1.9.2 -->
+    <div class="patch-entry">
+      <div class="patch-dot fix">🐛</div>
+      <div class="patch-card">
+        <div class="patch-header">
+          <div>
+            <div class="patch-version">v1.9.2</div>
+          </div>
+          <span class="patch-date">2026-05-05</span>
+        </div>
+        <div class="patch-title">ツールチップ干渉バグ修正・全161用語を完全反映・共有機能を常時表示</div>
+        <div class="patch-summary">
+          部分一致による用語ツールチップの干渉バグ（CSS・em・position・animation・filter 等が他の長い用語内にマッチして崩壊する問題）を根本修正しました。またオフライン共有ボタンを常時表示に変更し、管理者セッションをブラウザを閉じても維持されるよう改善しました。
+        </div>
+        <div class="patch-changes">
+          <div class="patch-change">
+            <span class="change-badge badge-fix">FIX</span>
+            <span>ツールチップエンジン（initTermTooltips）を完全書き直し — 元テキストで全マッチを検索後にDOMフラグメントを構築する方式に変更し、短い用語が長い用語プレースホルダ内に誤マッチする干渉バグを解消（影響: CSS・em・position・animation・transform・filter・プロパティ・属性・宣言 等）</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-fix">FIX</span>
+            <span>全161用語を全レッスンで確認・補完 — overflow・cursor・インデント・%（パーセント）・vw / vh・calc()・aspect-ratio・コンテナクエリ の8用語をそれぞれ適切なレッスンに追記</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-fix">FIX</span>
+            <span>オフライン共有ボタン（🔗 共有）を常時表示に変更 — 管理者以外がクリックした場合もログイン誘導で対応</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-change">CHANGE</span>
+            <span>管理者セッションを localStorage 保存に変更 — ブラウザを閉じ・再起動しても管理者ログイン状態を維持</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-change">CHANGE</span>
+            <span>lesson-term-index 段落を CSS で非表示に — ユーザーには見えない用語マッチング用の内部ヘルパー要素として最適化</span>
+          </div>
+        </div>
+        <div class="patch-tags">
+          <span class="patch-tag">バグ修正</span>
+          <span class="patch-tag">全161用語対応</span>
+          <span class="patch-tag">共有機能改善</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- v1.8 -->
+    <div class="patch-entry">
+      <div class="patch-dot feature">📚</div>
+      <div class="patch-card">
+        <div class="patch-header">
+          <div>
+            <div class="patch-version">v1.8.0</div>
+          </div>
+          <span class="patch-date">2026-05-04</span>
+        </div>
+        <div class="patch-title">用語辞典 全ページ完全網羅（80語追加）</div>
+        <div class="patch-summary">
+          全15レッスンのすべての専門用語を用語辞典に追加。HTML基礎・タイポグラフィ・色・背景・レイアウト・レスポンシブ・アニメーション・モダンCSS・デザイン原則・色彩理論の各カテゴリを完全網羅しました。
+        </div>
+        <div class="patch-changes">
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>HTML基礎 — DOCTYPE・lang属性・charset・meta・link・h1〜h6・p・strong/em・a・img・alt・ul/ol/li・form・input・textarea・button・table要素を追加</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>タイポグラフィ — font-style・text-decoration・text-transform・word-spacing・フォントスタック・serif/sans-serif/monospace・タイポグラフィスケールを追加</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>色・背景 — background-image・background-size・background-position・background-repeat・background-attachment・filter・backdrop-filter・oklchを追加</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>レイアウト — flex-direction・flex-grow・flex-shrink・flex-basis・grid-column/row・grid-template-areas・auto-fill/fit・minmax()・inset・position: stickyを追加</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>レスポンシブ — ブレークポイント・prefers-color-scheme・min()/max()・コンテナクエリを追加</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>アニメーション — timing-function・cubic-bezier()・will-change・animation-fill-modeを追加</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>モダンCSS — デザイントークン・ダークモード・:not()・:is()/:where()・:has()・:nth-child()・::before/after・::placeholder・::selectionを追加</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>色彩理論 — 色相・彩度・明度・色相環・補色・類似色・単色配色・HSBを追加</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>アクセシビリティ — prefers-reduced-motion・:focus-visible・CRAPデザイン原則・視覚的ヒエラルキー・ホワイトスペース・visually-hidden・スクリーンリーダーを追加</span>
+          </div>
+        </div>
+        <div class="patch-tags">
+          <span class="patch-tag">用語辞典</span>
+          <span class="patch-tag">全ページ対応</span>
+          <span class="patch-tag">HTML基礎</span>
+          <span class="patch-tag">色彩理論</span>
+          <span class="patch-tag">アクセシビリティ</span>
+          <span class="patch-tag">モダンCSS</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- v1.7 -->
+    <div class="patch-entry">
+      <div class="patch-dot feature">📖</div>
+      <div class="patch-card">
+        <div class="patch-header">
+          <div>
+            <div class="patch-version">v1.7.0</div>
+          </div>
+          <span class="patch-date">2026-05-03</span>
+        </div>
+        <div class="patch-title">コード注釈UI・用語辞典拡充・初心者対応強化</div>
+        <div class="patch-summary">
+          「このコードの意味が分からない」という声に応え、各レッスンにコード解説パネルを追加。用語辞典も約50語拡充し、初心者がコードを読みながら意味と役割を理解できるよう全面改善。
+        </div>
+        <div class="patch-changes">
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>コード注釈UIコンポーネント追加 — セレクター・プロパティ・値をカラーで識別、「コード→意味」の対訳パネル</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-change">CHANGE</span>
+            <span>レッスン02（CSSとは何か）— CSS構文の解剖図・番号付き注釈・意味一覧表を追加</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-change">CHANGE</span>
+            <span>レッスン03（セレクター）— 種類の見分け方チートシート・結合子読み方・属性・疑似クラス解説パネル追加</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-change">CHANGE</span>
+            <span>レッスン04（ボックスモデル）— 4層コード解説・box-sizing図解・ショートハンド読み方（TRouBLe）追加</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-change">CHANGE</span>
+            <span>レッスン07（Flexbox）— コンテナ/アイテム区別解説・主軸vs交差軸・flexショートハンド読み方追加</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-change">CHANGE</span>
+            <span>レッスン08（Grid）— fr単位・repeat()・auto-fill/minmax・grid-areas読み方解説追加</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>用語辞典に約50語追加 — プロパティ・値・宣言・px・rem・vw・vh・display・border・box-sizing・gap・fr単位・calc()・var()等</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>自動デプロイシステム — ファイル変更を検知してNetlifyへ自動アップロード（<code>auto_deploy.py</code>）</span>
+          </div>
+        </div>
+        <div class="patch-tags">
+          <span class="patch-tag">コード注釈</span>
+          <span class="patch-tag">用語辞典</span>
+          <span class="patch-tag">初心者対応</span>
+          <span class="patch-tag">レッスン04</span>
+          <span class="patch-tag">レッスン07</span>
+          <span class="patch-tag">レッスン08</span>
+          <span class="patch-tag">自動デプロイ</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- v1.6 -->
+    <div class="patch-entry">
+      <div class="patch-dot infra">🌐</div>
+      <div class="patch-card">
+        <div class="patch-header">
+          <div>
+            <div class="patch-version">v1.6.0</div>
+          </div>
+          <span class="patch-date">2026-05-03</span>
+        </div>
+        <div class="patch-title">Netlifyデプロイ・固定URL公開対応</div>
+        <div class="patch-summary">
+          PCの電源に左右されない常時稼働環境を整備。Netlify静的ホスティングへのデプロイと、ngrokによる固定トンネルURLの設定を実施。
+        </div>
+        <div class="patch-changes">
+          <div class="patch-change">
+            <span class="change-badge badge-infra">INFRA</span>
+            <span>Netlify静的ホスティングにデプロイ — PC電源OFF時も24時間365日アクセス可能に</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-infra">INFRA</span>
+            <span>固定公開URL確立: <code style="font-size:0.78rem;color:var(--accent);">https://profound-queijadas-32e7ac.netlify.app/</code></span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>ngrokによるトンネル固定ドメイン設定 (<code style="font-size:0.78rem;color:var(--accent);">grumpily-dandruff-envious.ngrok-free.dev</code>)</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span><code>open_tunnel.bat</code> — ワンクリックでngrok固定URLトンネル起動</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span><code>deploy_netlify.zip</code> — Netlify再デプロイ用パッケージを生成</span>
+          </div>
+        </div>
+        <div class="patch-tags">
+          <span class="patch-tag">Netlify</span>
+          <span class="patch-tag">ngrok</span>
+          <span class="patch-tag">常時稼働</span>
+          <span class="patch-tag">固定URL</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- v1.5 -->
+    <div class="patch-entry">
+      <div class="patch-dot infra">📱</div>
+      <div class="patch-card">
+        <div class="patch-header">
+          <div>
+            <div class="patch-version">v1.5.0</div>
+          </div>
+          <span class="patch-date">2026-05-03</span>
+        </div>
+        <div class="patch-title">スマートフォン接続・外部公開対応</div>
+        <div class="patch-summary">
+          同一Wi-Fi不要の外部公開と、ファイアウォール設定の自動化を実装。Cloudflare Quick Tunnelによるインターネット公開にも対応。
+        </div>
+        <div class="patch-changes">
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span><code>cloudflared.exe</code> — Cloudflare Quick Tunnelクライアントを同梱</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span><code>firewall_setup.bat</code> — Windowsファイアウォール ポート3000許可ルールを自動追加</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>launcher.html にLAN IPアドレス自動検出・表示機能を追加（スマートフォン用）</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>launcher.html に「🌐 インターネット公開」ボタンと手順ガイドモーダルを追加</span>
+          </div>
+        </div>
+        <div class="patch-tags">
+          <span class="patch-tag">スマートフォン</span>
+          <span class="patch-tag">Cloudflare</span>
+          <span class="patch-tag">ファイアウォール</span>
+          <span class="patch-tag">LAN公開</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- v1.4 -->
+    <div class="patch-entry">
+      <div class="patch-dot feature">🔗</div>
+      <div class="patch-card">
+        <div class="patch-header">
+          <div>
+            <div class="patch-version">v1.4.0</div>
+          </div>
+          <span class="patch-date">2026-05-03</span>
+        </div>
+        <div class="patch-title">共有状態サーバー非依存化・共有コード機能</div>
+        <div class="patch-summary">
+          共有URLがlocalhost依存だった問題を解消。URLなしでも共有できる「共有コード」機能を追加し、サーバー停止・URL変更の影響を受けない設計に変更。
+        </div>
+        <div class="patch-changes">
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>共有コード機能 — Base64コード文字列のみでURLもサーバーも不要な共有方法を追加</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>「📋 共有コードを入力」ボタンを全ページ右下に常時表示。コード貼り付けで即適用</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-change">CHANGE</span>
+            <span>共有モーダルを「URLで共有」「コードで共有」の2タブ構成に刷新</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-change">CHANGE</span>
+            <span>file://プロトコルでのファイルベースURLを自動記憶・共有URLに付加</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-fix">FIX</span>
+            <span><code>checkSharedView</code> を完全書き直し — URLクエリ・ハッシュ・localStorage全対応</span>
+          </div>
+        </div>
+        <div class="patch-tags">
+          <span class="patch-tag">共有機能</span>
+          <span class="patch-tag">サーバー非依存</span>
+          <span class="patch-tag">Base64</span>
+          <span class="patch-tag">localStorage</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- v1.3 -->
+    <div class="patch-entry">
+      <div class="patch-dot major">🎨</div>
+      <div class="patch-card">
+        <div class="patch-header">
+          <div>
+            <div class="patch-version">v1.3.0</div>
+          </div>
+          <span class="patch-date">2026-05-03</span>
+        </div>
+        <div class="patch-title">色彩理論レッスン追加・カリキュラム再編</div>
+        <div class="patch-summary">
+          Webデザイナーに必須の色彩理論をレッスン15として新規追加。カリキュラム上の配置を中級セクションに移動し、テストに15問追加。
+        </div>
+        <div class="patch-changes">
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>レッスン15「色彩理論」を新規追加 — 6セクション（色の基礎・色相環・配色理論・心理効果・Webカラー・アクセシビリティ）</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>テスト問題15問追加（q44〜q58）— 色彩理論モジュールとして分類</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-change">CHANGE</span>
+            <span>カリキュラムのモジュールグリッド — 色彩理論を中級セクション（アニメーションの後）に移動</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-change">CHANGE</span>
+            <span>レッスン一覧の順序を修正 — レッスン15をレッスン11の直後（中級グループ内）に配置</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-change">CHANGE</span>
+            <span>ヒーロー統計を「15レッスン」「58問テスト」に更新</span>
+          </div>
+        </div>
+        <div class="patch-tags">
+          <span class="patch-tag">新レッスン</span>
+          <span class="patch-tag">色彩理論</span>
+          <span class="patch-tag">テスト追加</span>
+          <span class="patch-tag">カリキュラム再編</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- v1.2 -->
+    <div class="patch-entry">
+      <div class="patch-dot fix">⚙️</div>
+      <div class="patch-card">
+        <div class="patch-header">
+          <div>
+            <div class="patch-version">v1.2.0</div>
+          </div>
+          <span class="patch-date">2026-05-03</span>
+        </div>
+        <div class="patch-title">サーバー起動修正・ランチャー・VS Codeタスク統合</div>
+        <div class="patch-summary">
+          <code>--directory</code> オプションの末尾バックスラッシュ問題によるサーバークラッシュを修正。ワンクリック起動システムを整備。
+        </div>
+        <div class="patch-changes">
+          <div class="patch-change">
+            <span class="change-badge badge-fix">FIX</span>
+            <span><code>start_server.bat</code> / <code>start_server.vbs</code> の <code>--directory "%~dp0"</code> を <code>cd /d "%~dp0"</code> 方式に修正（404エラー解消）</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-fix">FIX</span>
+            <span><code>open.bat</code> の <code>setlocal enabledelayedexpansion</code> 欠落・絵文字ラベルによるcp932エンコードエラーを修正</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span><code>launcher.html</code> — ブラウザ上からサーバー状態確認・起動案内ができるビジュアルランチャーを追加</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span><code>.vscode/tasks.json</code> — Ctrl+Shift+B でサーバー起動＋ブラウザオープンのVS Codeタスク統合</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span><code>stop_server.bat</code> — ポート3000のサーバーをワンクリック停止</span>
+          </div>
+        </div>
+        <div class="patch-tags">
+          <span class="patch-tag">バグ修正</span>
+          <span class="patch-tag">サーバー起動</span>
+          <span class="patch-tag">VS Code</span>
+          <span class="patch-tag">ランチャー</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- v1.1 -->
+    <div class="patch-entry">
+      <div class="patch-dot feature">🔒</div>
+      <div class="patch-card">
+        <div class="patch-header">
+          <div>
+            <div class="patch-version">v1.1.0</div>
+          </div>
+          <span class="patch-date">2026-05-03</span>
+        </div>
+        <div class="patch-title">管理者ログイン・URL共有・永続共有システム実装</div>
+        <div class="patch-summary">
+          進捗共有機能を管理者専用に制限し、URLによる直接共有・永続共有（localStorage）・ライブ更新ブロードキャストを実装。
+        </div>
+        <div class="patch-changes">
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>管理者ログイン機能 — SHA-256パスワード認証、sessionStorage による自動ログアウト</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>共有ボタンを管理者専用に制限</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>URLクエリパラメーター共有 (<code>?share=&data=</code>) — リンクを開くだけで共有ビュー起動</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>永続共有システム — localStorage に保存し、ページ再読み込み・タブ移動後も共有バナーを維持</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>StorageEvent によるライブ進捗ブロードキャスト（同一ブラウザ内タブ間リアルタイム同期）</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>「Produced by Sumeragi」クレジットを全ページフッターに追加</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-change">CHANGE</span>
+            <span>管理者パスワードを <code>onoono28</code> に変更（SHA-256ハッシュ更新）</span>
+          </div>
+        </div>
+        <div class="patch-tags">
+          <span class="patch-tag">管理者機能</span>
+          <span class="patch-tag">共有システム</span>
+          <span class="patch-tag">SHA-256</span>
+          <span class="patch-tag">localStorage</span>
+          <span class="patch-tag">Produced by Sumeragi</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- v1.0 -->
+    <div class="patch-entry">
+      <div class="patch-dot major">🚀</div>
+      <div class="patch-card">
+        <div class="patch-header">
+          <div>
+            <div class="patch-version">v1.0.0</div>
+          </div>
+          <span class="patch-date">2026-05-02</span>
+        </div>
+        <div class="patch-title">初回リリース — CSS完全マスター学習サイト</div>
+        <div class="patch-summary">
+          Webデザイナーを目指す方向けのCSS学習サイトを初公開。14レッスン・用語辞典・43問テスト・進捗管理・ダークテーマを搭載。
+        </div>
+        <div class="patch-changes">
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>14レッスン公開 — HTML基礎・CSSイントロ・セレクター・ボックスモデル・タイポグラフィ・色・Flexbox・Grid・配置・レスポンシブ・アニメーション・CSS変数・疑似クラス・デザイン原則</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>用語辞典 (<code>glossary.html</code>) — CSS用語のホバーツールチップ付き辞典</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>テスト機能 (<code>quiz.html</code>) — 43問・5択形式・モジュール別フィルタリング・即時採点</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>進捗管理 — localStorage によるレッスン完了状態の永続保存・サイドバー進捗バー</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>ダークテーマUI — CSS変数によるデザインシステム・グラデーションアクセント</span>
+          </div>
+          <div class="patch-change">
+            <span class="change-badge badge-new">NEW</span>
+            <span>全ページ共通ナビゲーション・レスポンシブ対応サイドバー</span>
+          </div>
+        </div>
+        <div class="patch-tags">
+          <span class="patch-tag">初回リリース</span>
+          <span class="patch-tag">14レッスン</span>
+          <span class="patch-tag">テスト43問</span>
+          <span class="patch-tag">用語辞典</span>
+          <span class="patch-tag">進捗管理</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /patch-timeline -->
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <p style="color:rgba(255,255,255,0.2); font-size:0.78rem; font-family:'Fira Code',monospace; letter-spacing:0.06em;">
+        Produced by Sumeragi
+      </p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

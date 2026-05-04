@@ -1,0 +1,36 @@
+# 実行ファイル・ツール（GitHubには不要）
+ngrok.exe
+cloudflared.exe
+
+# Netlify関連（移行済み）
+netlify_token.txt
+deploy_netlify/
+deploy_netlify.zip
+deploy_to_netlify.bat
+deploy_to_netlify_urllib.py
+netlify_deploy.py
+deploy.py
+
+# ローカル専用ツール
+auto_deploy.py
+create_dirs.py
+firewall_setup.bat
+ngrok_setup.bat
+open_tunnel.bat
+start_server.bat
+start_server.vbs
+stop_server.bat
+open.bat
+launcher.html
+
+# 秘密情報
+netlify_token.txt
+ngrok_domain.txt
+
+# システム
+.DS_Store
+Thumbs.db
+*.log
+
+# VS Code
+.vscode/

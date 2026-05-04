@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>色彩理論 | CSS学習</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo">&lt;/CSS学習&gt;</a>
+      <div class="nav-links">
+        <a href="../index.html">ホーム</a>
+        <a href="../index.html#curriculum">カリキュラム</a>
+        <a href="../index.html#lessons">レッスン一覧</a>
+        <a href="../glossary.html">用語辞典</a>
+        <a href="../quiz.html">テスト</a>
+        <a href="../patchnotes.html">パッチノート</a>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <button class="share-nav-btn" onclick="openShareModal()" style="display:none">🔗 共有</button>
+        <button class="admin-login-btn" onclick="openAdminModal()">🔒 管理者</button>
+        <button class="menu-btn" id="menuBtn">☰</button>
+      </div>
+    </div>
+  </nav>
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="sidebar-overlay"></div>
+  <div class="lesson-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h3>カリキュラム</h3>
+        <div class="overall-progress">
+          <div class="overall-progress-label"><span>進捗</span><span><span id="progressPct">0</span>%</span></div>
+          <div class="overall-progress-track"><div class="overall-progress-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="01-html-basics.html" class="sidebar-link" data-lesson-id="01-html-basics"><span class="sidebar-num">01</span><span>HTMLの基礎</span></a>
+        <a href="02-css-intro.html" class="sidebar-link" data-lesson-id="02-css-intro"><span class="sidebar-num">02</span><span>CSSとは何か</span></a>
+        <a href="03-selectors.html" class="sidebar-link" data-lesson-id="03-selectors"><span class="sidebar-num">03</span><span>セレクター完全ガイド</span></a>
+        <a href="04-box-model.html" class="sidebar-link" data-lesson-id="04-box-model"><span class="sidebar-num">04</span><span>ボックスモデル</span></a>
+        <a href="05-typography.html" class="sidebar-link" data-lesson-id="05-typography"><span class="sidebar-num">05</span><span>タイポグラフィ</span></a>
+        <a href="06-colors.html" class="sidebar-link" data-lesson-id="06-colors"><span class="sidebar-num">06</span><span>色と背景</span></a>
+        <a href="07-flexbox.html" class="sidebar-link" data-lesson-id="07-flexbox"><span class="sidebar-num">07</span><span>Flexbox完全ガイド</span></a>
+        <a href="08-grid.html" class="sidebar-link" data-lesson-id="08-grid"><span class="sidebar-num">08</span><span>CSS Grid完全ガイド</span></a>
+        <a href="09-positioning.html" class="sidebar-link" data-lesson-id="09-positioning"><span class="sidebar-num">09</span><span>ポジショニング</span></a>
+        <a href="10-responsive.html" class="sidebar-link" data-lesson-id="10-responsive"><span class="sidebar-num">10</span><span>レスポンシブデザイン</span></a>
+        <a href="11-transitions-animations.html" class="sidebar-link" data-lesson-id="11-transitions-animations"><span class="sidebar-num">11</span><span>トランジション・アニメーション</span></a>
+        <a href="12-css-variables.html" class="sidebar-link" data-lesson-id="12-css-variables"><span class="sidebar-num">12</span><span>CSS変数（カスタムプロパティ）</span></a>
+        <a href="13-pseudo.html" class="sidebar-link" data-lesson-id="13-pseudo"><span class="sidebar-num">13</span><span>疑似クラス・疑似要素</span></a>
+        <a href="14-design-principles.html" class="sidebar-link" data-lesson-id="14-design-principles"><span class="sidebar-num">14</span><span>デザイン原則</span></a>
+        <a href="15-color-theory.html" class="sidebar-link" data-lesson-id="15-color-theory"><span class="sidebar-num">15</span><span>色彩理論</span></a>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <div class="lesson-header">
+        <div class="lesson-meta">
+          <span class="badge badge-intermediate">中級</span>
+          <span class="badge">⏱ 50分</span>
+          <span class="badge badge-primary">モジュール: デザイン理論</span>
+        </div>
+        <h1>色彩理論（Color Theory）</h1>
+        <p class="lesson-intro">Webデザイナーとして必須の色の知識を体系的に学びます。色相環・配色ルール・心理効果・アクセシビリティ・ブランドカラーの選び方まで実践的に解説します。</p>
+      </div>
+
+      <!-- セクション1: 色の三属性 -->
+      <section class="content-section">
+        <h2>色の三属性</h2>
+        <p>すべての色は<strong>色相（Hue）・彩度（Saturation）・明度（Lightness/Brightness）</strong>の3つの属性で定義できます。この3属性を理解することが色彩理論の出発点です。</p>
+        <div class="grid-2" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:1rem; margin:1.5rem 0;">
+          <div class="info-box">
+            <div class="info-box-icon">🎨</div>
+            <div class="info-box-content">
+              <h4>色相（Hue）</h4>
+              <p>赤・青・緑などの「色み」そのもの。色相環上の角度（0〜360°）で表現されます。</p>
+            </div>
+          </div>
+          <div class="info-box tip">
+            <div class="info-box-icon">💧</div>
+            <div class="info-box-content">
+              <h4>彩度（Saturation）</h4>
+              <p>色の鮮やかさ・濃さ。0%がグレー、100%が最も鮮やかな色になります。</p>
+            </div>
+          </div>
+          <div class="info-box">
+            <div class="info-box-icon">☀️</div>
+            <div class="info-box-content">
+              <h4>明度（Lightness）</h4>
+              <p>色の明るさ。0%が黒、100%が白、50%が純色になります。</p>
+            </div>
+          </div>
+        </div>
+
+        <h3>HSLとHSBの違い</h3>
+        <p>CSSで主に使われる<strong>HSL</strong>（Hue/Saturation/Lightness）と、デザインツール（Figmaなど）で使われる<strong>HSB</strong>（Hue/Saturation/Brightness）は別物です。HSLの明度50%が純色、HSBの明度100%が純色という点が主な違いです。</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-dots"><span></span><span></span><span></span></div>
+            <span class="code-lang">CSS</span>
+            <button class="copy-btn" onclick="copyCode(this)">コピー</button>
+          </div>
+          <pre><code><span class="token-comment">/* hsl(色相, 彩度, 明度) */</span>
+<span class="token-selector">.red</span>    { <span class="token-property">color</span>: <span class="token-value">hsl(0, 100%, 50%)</span>; }    <span class="token-comment">/* 赤 */</span>
+<span class="token-selector">.green</span>  { <span class="token-property">color</span>: <span class="token-value">hsl(120, 100%, 40%)</span>; } <span class="token-comment">/* 緑 */</span>
+<span class="token-selector">.blue</span>   { <span class="token-property">color</span>: <span class="token-value">hsl(240, 100%, 60%)</span>; } <span class="token-comment">/* 青 */</span>
+
+<span class="token-comment">/* アルファ値（透明度）も指定可能 */</span>
+<span class="token-selector">.semi-transparent</span> {
+  <span class="token-property">background</span>: <span class="token-value">hsl(240, 100%, 60% / 0.5)</span>;
+}
+
+<span class="token-comment">/* oklch() — より知覚均一な新しい色空間 */</span>
+<span class="token-selector">.modern</span> { <span class="token-property">color</span>: <span class="token-value">oklch(0.7 0.2 240)</span>; }</code></pre>
+        </div>
+
+        <div class="info-box tip">
+          <div class="info-box-icon">💡</div>
+          <div class="info-box-content">
+            <h4>HSLを使うメリット</h4>
+            <p>HSLはhex（#ff0000）と違い、数値を変えるだけで直感的に色を調整できます。例えば<code>hsl(220, 80%, 50%)</code>の明度を上げたいなら<code>50%→70%</code>に変えるだけです。CSS変数と組み合わせると非常に強力です。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- セクション2: 色相環と配色ルール -->
+      <section class="content-section">
+        <h2>色相環と配色ルール</h2>
+        <p>色相環（Color Wheel）とは、色を円形に配置したもの。色相環上の位置関係から、調和のとれた配色ルールを導き出せます。</p>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin:1.5rem 0;">
+          <div class="info-box">
+            <div class="info-box-icon">🔴🟢</div>
+            <div class="info-box-content">
+              <h4>補色（Complementary）</h4>
+              <p>色相環で真向かい（180°）の2色。例：赤と緑、青とオレンジ。インパクトが強く、視線を引きつけます。</p>
+            </div>
+          </div>
+          <div class="info-box tip">
+            <div class="info-box-icon">🎨</div>
+            <div class="info-box-content">
+              <h4>類似色（Analogous）</h4>
+              <p>色相環で隣り合う（30〜60°）3色。自然でまとまりのある印象。ナチュラルなサイトに向きます。</p>
+            </div>
+          </div>
+          <div class="info-box">
+            <div class="info-box-icon">🔺</div>
+            <div class="info-box-content">
+              <h4>三角配色（Triadic）</h4>
+              <p>色相環を3等分（120°間隔）した3色。バランスよく鮮やかで、多様性を持たせたいときに有効。</p>
+            </div>
+          </div>
+          <div class="info-box tip">
+            <div class="info-box-icon">✂️</div>
+            <div class="info-box-content">
+              <h4>分裂補色（Split-Complementary）</h4>
+              <p>補色の両隣2色と元の色を組み合わせた3色。補色よりも柔らかく、バランスが取りやすい。</p>
+            </div>
+          </div>
+          <div class="info-box">
+            <div class="info-box-icon">◼️</div>
+            <div class="info-box-content">
+              <h4>四角配色（Tetradic/Square）</h4>
+              <p>色相環を4等分した4色。カラフルで華やかだが、1色をドミナントにしてバランスを取ることが重要。</p>
+            </div>
+          </div>
+          <div class="info-box tip">
+            <div class="info-box-icon">🌊</div>
+            <div class="info-box-content">
+              <h4>単色配色（Monochromatic）</h4>
+              <p>同じ色相で明度・彩度だけを変えた配色。洗練されたシンプルな印象になります。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-dots"><span></span><span></span><span></span></div>
+            <span class="code-lang">CSS — 配色ルールをCSS変数で実装</span>
+            <button class="copy-btn" onclick="copyCode(this)">コピー</button>
+          </div>
+          <pre><code><span class="token-comment">/* 補色配色（赤 + 緑） */</span>
+<span class="token-selector">:root</span> {
+  <span class="token-property">--primary-hue</span>: <span class="token-value">0</span>;       <span class="token-comment">/* 赤 */</span>
+  <span class="token-property">--comp-hue</span>:    <span class="token-value">180</span>;     <span class="token-comment">/* 補色: 赤+180° */</span>
+  <span class="token-property">--primary</span>: <span class="token-value">hsl(var(--primary-hue), 80%, 55%)</span>;
+  <span class="token-property">--comp</span>:    <span class="token-value">hsl(var(--comp-hue), 80%, 55%)</span>;
+}
+
+<span class="token-comment">/* 単色配色（ブルー系） */</span>
+<span class="token-selector">:root</span> {
+  <span class="token-property">--blue-100</span>: <span class="token-value">hsl(220, 80%, 95%)</span>;
+  <span class="token-property">--blue-300</span>: <span class="token-value">hsl(220, 80%, 70%)</span>;
+  <span class="token-property">--blue-500</span>: <span class="token-value">hsl(220, 80%, 50%)</span>;
+  <span class="token-property">--blue-700</span>: <span class="token-value">hsl(220, 80%, 30%)</span>;
+  <span class="token-property">--blue-900</span>: <span class="token-value">hsl(220, 80%, 15%)</span>;
+}</code></pre>
+        </div>
+      </section>
+
+      <!-- セクション3: 色の心理効果 -->
+      <section class="content-section">
+        <h2>色の心理効果</h2>
+        <p>色は人の感情や行動に大きく影響します。Webデザインでは色の心理効果を意識的に活用することで、ユーザー体験を向上させられます。</p>
+        <div style="overflow-x:auto; margin:1.5rem 0;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+            <thead>
+              <tr style="background:var(--surface-3);">
+                <th style="padding:0.75rem 1rem; text-align:left; border-bottom:2px solid var(--border);">色</th>
+                <th style="padding:0.75rem 1rem; text-align:left; border-bottom:2px solid var(--border);">心理効果・印象</th>
+                <th style="padding:0.75rem 1rem; text-align:left; border-bottom:2px solid var(--border);">Webでの主な用途</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.75rem 1rem;"><span style="display:inline-block;width:1rem;height:1rem;background:#e53e3e;border-radius:2px;vertical-align:middle;margin-right:0.5rem;"></span>赤</td>
+                <td style="padding:0.75rem 1rem;">情熱・エネルギー・緊急・危険</td>
+                <td style="padding:0.75rem 1rem;">CTA（購入・今すぐ）、エラー通知、セール</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border); background:var(--surface-2);">
+                <td style="padding:0.75rem 1rem;"><span style="display:inline-block;width:1rem;height:1rem;background:#3182ce;border-radius:2px;vertical-align:middle;margin-right:0.5rem;"></span>青</td>
+                <td style="padding:0.75rem 1rem;">信頼・安定・落ち着き・知性</td>
+                <td style="padding:0.75rem 1rem;">金融・テクノロジー・SNS・企業サイト</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.75rem 1rem;"><span style="display:inline-block;width:1rem;height:1rem;background:#38a169;border-radius:2px;vertical-align:middle;margin-right:0.5rem;"></span>緑</td>
+                <td style="padding:0.75rem 1rem;">自然・成長・健康・安心・成功</td>
+                <td style="padding:0.75rem 1rem;">環境・健康・成功メッセージ・ECサイト</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border); background:var(--surface-2);">
+                <td style="padding:0.75rem 1rem;"><span style="display:inline-block;width:1rem;height:1rem;background:#d69e2e;border-radius:2px;vertical-align:middle;margin-right:0.5rem;"></span>黄</td>
+                <td style="padding:0.75rem 1rem;">楽しさ・注意・希望・エネルギー</td>
+                <td style="padding:0.75rem 1rem;">警告表示・子供向け・フードサイト</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.75rem 1rem;"><span style="display:inline-block;width:1rem;height:1rem;background:#805ad5;border-radius:2px;vertical-align:middle;margin-right:0.5rem;"></span>紫</td>
+                <td style="padding:0.75rem 1rem;">高貴・神秘・創造性・luxury</td>
+                <td style="padding:0.75rem 1rem;">高級品・美容・クリエイティブ系</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border); background:var(--surface-2);">
+                <td style="padding:0.75rem 1rem;"><span style="display:inline-block;width:1rem;height:1rem;background:#dd6b20;border-radius:2px;vertical-align:middle;margin-right:0.5rem;"></span>オレンジ</td>
+                <td style="padding:0.75rem 1rem;">活力・親しみやすさ・創造性・食欲</td>
+                <td style="padding:0.75rem 1rem;">フードサービス・エンタメ・CTA</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.75rem 1rem;"><span style="display:inline-block;width:1rem;height:1rem;background:#f7fafc;border:1px solid var(--border);border-radius:2px;vertical-align:middle;margin-right:0.5rem;"></span>白</td>
+                <td style="padding:0.75rem 1rem;">清潔・シンプル・余白・純粋</td>
+                <td style="padding:0.75rem 1rem;">背景・医療・ミニマルデザイン</td>
+              </tr>
+              <tr style="background:var(--surface-2);">
+                <td style="padding:0.75rem 1rem;"><span style="display:inline-block;width:1rem;height:1rem;background:#1a202c;border-radius:2px;vertical-align:middle;margin-right:0.5rem;"></span>黒</td>
+                <td style="padding:0.75rem 1rem;">洗練・高級感・力強さ・権威</td>
+                <td style="padding:0.75rem 1rem;">高級ブランド・テック・ダークUI</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="info-box">
+          <div class="info-box-icon">⚠️</div>
+          <div class="info-box-content">
+            <h4>文化による色の意味の違い</h4>
+            <p>色の意味は文化によって異なります。例えば「白」は西洋では純粋さを表しますが、東アジアでは葬式と結びつくことがあります。グローバル展開するサービスでは特に注意が必要です。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- セクション4: Webカラーとアクセシビリティ -->
+      <section class="content-section">
+        <h2>Webカラーとアクセシビリティ</h2>
+        <p><strong>WCAG（Web Content Accessibility Guidelines）2.1</strong>では、テキストと背景のコントラスト比に関するガイドラインを定めています。アクセシブルなサイト制作には必須の知識です。</p>
+
+        <div class="grid-2" style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin:1.5rem 0;">
+          <div class="info-box">
+            <div class="info-box-icon">✅</div>
+            <div class="info-box-content">
+              <h4>AA レベル（最低基準）</h4>
+              <p>通常テキスト: <strong>4.5:1</strong>以上<br>大きなテキスト（18px以上）: <strong>3:1</strong>以上</p>
+            </div>
+          </div>
+          <div class="info-box tip">
+            <div class="info-box-icon">⭐</div>
+            <div class="info-box-content">
+              <h4>AAA レベル（最高基準）</h4>
+              <p>通常テキスト: <strong>7:1</strong>以上<br>大きなテキスト: <strong>4.5:1</strong>以上</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-dots"><span></span><span></span><span></span></div>
+            <span class="code-lang">CSS — アクセシブルな色設計</span>
+            <button class="copy-btn" onclick="copyCode(this)">コピー</button>
+          </div>
+          <pre><code><span class="token-comment">/* color-contrast() — CSS Color Level 5（実験的）*/</span>
+<span class="token-selector">.button</span> {
+  <span class="token-property">background</span>: <span class="token-value">hsl(220, 80%, 50%)</span>;
+  <span class="token-comment">/* 背景に対して最もコントラストの高い色を自動選択 */</span>
+  <span class="token-property">color</span>: <span class="token-value">color-contrast(hsl(220, 80%, 50%) vs white, black)</span>;
+}
+
+<span class="token-comment">/* color-scheme でダーク/ライト両対応を宣言 */</span>
+<span class="token-selector">:root</span> {
+  <span class="token-property">color-scheme</span>: <span class="token-value">dark light</span>;
+}</code></pre>
+        </div>
+
+        <div class="info-box">
+          <div class="info-box-icon">🚨</div>
+          <div class="info-box-content">
+            <h4>ひっかけポイント：色だけで情報を伝えてはいけない</h4>
+            <p>WCAG 1.4.1では「色だけを情報の唯一の視覚的手段として使わない」ことが定められています。例えばフォームのエラーを赤色だけで示すのはNG。テキストや記号（⚠️、✗）を必ず併用してください。色覚異常のユーザーにも伝わる設計が重要です。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- セクション5: 実践的なカラーパレット設計 -->
+      <section class="content-section">
+        <h2>実践的なカラーパレット設計</h2>
+        <p>プロのWebデザイナーは、ページ全体で使う色を体系的に管理するカラーシステムを設計します。</p>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin:1.5rem 0;">
+          <div class="info-box">
+            <div class="info-box-icon">🎯</div>
+            <div class="info-box-content">
+              <h4>プライマリ（Primary）</h4>
+              <p>ブランドを象徴するメインカラー。CTAボタン・リンク・ハイライトに使用。</p>
+            </div>
+          </div>
+          <div class="info-box tip">
+            <div class="info-box-icon">🌿</div>
+            <div class="info-box-content">
+              <h4>セカンダリ（Secondary）</h4>
+              <p>プライマリを補完する色。サブアクション・バッジ・アクセントに使用。</p>
+            </div>
+          </div>
+          <div class="info-box">
+            <div class="info-box-icon">⚡</div>
+            <div class="info-box-content">
+              <h4>アクセント（Accent）</h4>
+              <p>注目を集めたい要素に使う強調色。使い過ぎに注意（全体の10%程度）。</p>
+            </div>
+          </div>
+          <div class="info-box tip">
+            <div class="info-box-icon">🖼️</div>
+            <div class="info-box-content">
+              <h4>ニュートラル（Neutral）</h4>
+              <p>背景・テキスト・ボーダーに使うグレー系。コンテンツの可読性を支える。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-dots"><span></span><span></span><span></span></div>
+            <span class="code-lang">CSS — カラーシステムとダークモード対応</span>
+            <button class="copy-btn" onclick="copyCode(this)">コピー</button>
+          </div>
+          <pre><code><span class="token-comment">/* ライトモード */</span>
+<span class="token-selector">:root</span> {
+  <span class="token-property">--color-primary</span>:    <span class="token-value">hsl(220, 80%, 50%)</span>;
+  <span class="token-property">--color-secondary</span>:  <span class="token-value">hsl(160, 70%, 40%)</span>;
+  <span class="token-property">--color-accent</span>:     <span class="token-value">hsl(40,  90%, 55%)</span>;
+  <span class="token-property">--color-bg</span>:         <span class="token-value">hsl(0, 0%, 100%)</span>;
+  <span class="token-property">--color-surface</span>:    <span class="token-value">hsl(220, 14%, 96%)</span>;
+  <span class="token-property">--color-text</span>:       <span class="token-value">hsl(220, 20%, 15%)</span>;
+  <span class="token-property">--color-text-muted</span>: <span class="token-value">hsl(220, 10%, 50%)</span>;
+  <span class="token-property">--color-border</span>:     <span class="token-value">hsl(220, 14%, 88%)</span>;
+}
+
+<span class="token-comment">/* ダークモード */</span>
+<span class="token-at">@media</span> (prefers-color-scheme: dark) {
+  <span class="token-selector">:root</span> {
+    <span class="token-property">--color-bg</span>:         <span class="token-value">hsl(220, 20%, 10%)</span>;
+    <span class="token-property">--color-surface</span>:    <span class="token-value">hsl(220, 18%, 15%)</span>;
+    <span class="token-property">--color-text</span>:       <span class="token-value">hsl(220, 14%, 90%)</span>;
+    <span class="token-property">--color-text-muted</span>: <span class="token-value">hsl(220, 10%, 60%)</span>;
+    <span class="token-property">--color-border</span>:     <span class="token-value">hsl(220, 18%, 22%)</span>;
+  }
+}
+
+<span class="token-comment">/* グラデーションの効果的な使い方 */</span>
+<span class="token-selector">.hero</span> {
+  <span class="token-property">background</span>: <span class="token-value">linear-gradient(
+    135deg,
+    hsl(220, 80%, 50%) 0%,
+    hsl(260, 80%, 60%) 100%
+  )</span>;
+}</code></pre>
+        </div>
+      </section>
+
+      <!-- セクション6: ブランドカラーの選び方 -->
+      <section class="content-section">
+        <h2>ブランドカラーの選び方</h2>
+        <p>ブランドカラーはユーザーの第一印象を決定づけます。業種・ターゲット・競合を考慮して選びましょう。</p>
+
+        <h3>業種別のカラー傾向</h3>
+        <div style="overflow-x:auto; margin:1.5rem 0;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+            <thead>
+              <tr style="background:var(--surface-3);">
+                <th style="padding:0.75rem 1rem; text-align:left; border-bottom:2px solid var(--border);">業種</th>
+                <th style="padding:0.75rem 1rem; text-align:left; border-bottom:2px solid var(--border);">主流のカラー</th>
+                <th style="padding:0.75rem 1rem; text-align:left; border-bottom:2px solid var(--border);">代表例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.75rem 1rem;">金融・テクノロジー</td>
+                <td style="padding:0.75rem 1rem;">青・紺・グレー</td>
+                <td style="padding:0.75rem 1rem;">Google、IBM、PayPal</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border); background:var(--surface-2);">
+                <td style="padding:0.75rem 1rem;">健康・自然・環境</td>
+                <td style="padding:0.75rem 1rem;">緑・アースカラー</td>
+                <td style="padding:0.75rem 1rem;">Whole Foods、Starbucks</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.75rem 1rem;">飲食・エンタメ</td>
+                <td style="padding:0.75rem 1rem;">赤・オレンジ・黄</td>
+                <td style="padding:0.75rem 1rem;">McDonald's、YouTube、Netflix</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border); background:var(--surface-2);">
+                <td style="padding:0.75rem 1rem;">高級品・美容</td>
+                <td style="padding:0.75rem 1rem;">黒・金・紫</td>
+                <td style="padding:0.75rem 1rem;">Chanel、Rolex</td>
+              </tr>
+              <tr>
+                <td style="padding:0.75rem 1rem;">子供・教育</td>
+                <td style="padding:0.75rem 1rem;">カラフル・明るい色</td>
+                <td style="padding:0.75rem 1rem;">LEGO、Fisher-Price</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>60-30-10ルール</h3>
+        <p>プロのデザイナーが使う配色比率の黄金律です。</p>
+        <div class="grid-2" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:1rem; margin:1.5rem 0;">
+          <div class="info-box" style="border-left:4px solid hsl(220,80%,50%);">
+            <div class="info-box-icon">🎨</div>
+            <div class="info-box-content">
+              <h4>60% — ベースカラー</h4>
+              <p>背景など大きな面積を占める色。ニュートラルなカラーが多い。</p>
+            </div>
+          </div>
+          <div class="info-box" style="border-left:4px solid hsl(160,70%,40%);">
+            <div class="info-box-icon">🖼️</div>
+            <div class="info-box-content">
+              <h4>30% — サブカラー</h4>
+              <p>セカンダリ要素（サイドバー・カードなど）に使用する補完色。</p>
+            </div>
+          </div>
+          <div class="info-box" style="border-left:4px solid hsl(40,90%,55%);">
+            <div class="info-box-icon">⚡</div>
+            <div class="info-box-content">
+              <h4>10% — アクセントカラー</h4>
+              <p>ボタン・リンク・強調部分に使う目立つ色。少ないほど効果的。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-box tip">
+          <div class="info-box-icon">💡</div>
+          <div class="info-box-content">
+            <h4>ブランドカラー選定のポイント</h4>
+            <ul>
+              <li>競合と差別化できる色を選ぶ</li>
+              <li>様々な背景色でのコントラストを確認する</li>
+              <li>モノクロでも認識できるかテストする</li>
+              <li>印刷物（名刺・パンフレット）でも再現できるかチェックする</li>
+              <li>ターゲットユーザーの文化的背景を考慮する</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <div class="lesson-complete-section" id="complete-section">
+        <h3>🎉 このレッスンを完了しましたか？</h3>
+        <p>理解できたら完了ボタンを押して進捗を記録しましょう。</p>
+        <button class="btn btn-accent btn-lg" id="complete-btn" onclick="markComplete()">✓ このレッスンを完了にする</button>
+      </div>
+
+      <section class="content-section">
+        <h2>📝 このレッスンの重要用語</h2>
+        <p>青くなった用語をクリックすると詳細な説明が表示されます。<a href="../glossary.html">用語辞典</a>でまとめて確認することもできます。</p>
+        <p class="lesson-term-index">色相（Hue）、彩度（Saturation）、明度（Lightness）、色相環、補色（Complementary Colors）、類似色（Analogous Colors）、単色配色（Monochromatic）、HSB / HSV</p>
+      </section>
+
+      <div class="lesson-nav">
+        <a href="14-design-principles.html" class="btn btn-ghost">← Lesson 14: デザイン原則</a>
+        <a href="../quiz.html" class="btn btn-primary">テストで確認する →</a>
+      </div>
+    </main>
+  </div>
+  <script src="../js/main.js"></script>
+
+  <footer style="border-top:1px solid rgba(255,255,255,0.06);padding:1.5rem 2rem;text-align:center;color:var(--text-dim);font-size:0.82rem;">
+    <a href="../index.html" style="color:var(--primary);text-decoration:none;">&lt;/CSS学習&gt;</a> &nbsp;|&nbsp; <span class="footer-producer">Produced by Sumeragi</span>
+  </footer>
+</body>
+</html>

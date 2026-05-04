@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>テスト問題 | CSS学習</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">&lt;/CSS学習&gt;</a>
+      <div class="nav-links">
+        <a href="index.html">ホーム</a>
+        <a href="index.html#lessons">レッスン一覧</a>
+        <a href="glossary.html">用語辞典</a>
+        <a href="quiz.html" class="active">テスト</a>
+        <a href="patchnotes.html">パッチノート</a>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <button class="share-nav-btn" onclick="openShareModal()" style="display:none">🔗 共有</button>
+      
+        <button class="admin-login-btn" onclick="openAdminModal()">🔒 管理者</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="quiz-hero">
+    <h1>📝 理解度テスト</h1>
+    <p>全43問・うちひっかけ問題25問。レッスン別 or 全問チャレンジで知識を確認しましょう。</p>
+  </div>
+
+  <div class="quiz-main">
+    <!-- モード選択画面 -->
+    <div id="quiz-select-screen">
+      <h2 style="font-size:1rem; color:var(--text-muted); margin-bottom:1.25rem; font-weight:500;">📚 テストモードを選択</h2>
+      <div class="quiz-mode-grid" id="quiz-mode-grid"></div>
+      <div class="quiz-start-area" id="quiz-start-area" style="display:none">
+        <div style="margin-bottom:1rem;">
+          <label style="font-size:0.82rem; color:var(--text-dim); display:flex; align-items:center; gap:0.5rem; justify-content:center; cursor:pointer;">
+            <input type="checkbox" id="quiz-shuffle" style="accent-color:var(--primary);">
+            <span>問題順をシャッフルする</span>
+          </label>
+        </div>
+        <button class="btn btn-primary btn-lg" id="quiz-start-btn">テスト開始 →</button>
+      </div>
+    </div>
+
+    <!-- テスト画面 -->
+    <div id="quiz-screen" style="display:none">
+      <div class="quiz-card" id="quiz-card">
+        <div class="quiz-card-header">
+          <span class="quiz-progress-text" id="quiz-progress-text">問題 1 / 5</span>
+          <div class="quiz-progress-track">
+            <div class="quiz-progress-fill" id="quiz-progress-fill" style="width:0%"></div>
+          </div>
+          <span class="quiz-trick-badge" id="quiz-trick-badge" style="display:none">⚠️ ひっかけ注意</span>
+        </div>
+        <div class="quiz-question-body">
+          <div class="quiz-q-num" id="quiz-q-num"></div>
+          <div class="quiz-question-text" id="quiz-question-text"></div>
+          <pre class="quiz-question-code" id="quiz-question-code" style="display:none"></pre>
+          <div class="quiz-choices" id="quiz-choices"></div>
+          <div class="quiz-explanation" id="quiz-explanation"></div>
+        </div>
+        <div class="quiz-nav">
+          <button class="btn btn-primary" id="quiz-next-btn" style="display:none" onclick="nextQuestion()">次の問題 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 結果画面 -->
+    <div id="quiz-result-screen" style="display:none">
+      <div class="quiz-card">
+        <div class="quiz-result show" id="quiz-result-body">
+          <div class="quiz-result-icon" id="quiz-result-icon"></div>
+          <div class="quiz-result-score" id="quiz-result-score"></div>
+          <div class="quiz-result-label" id="quiz-result-label"></div>
+          <div class="quiz-result-breakdown">
+            <div class="quiz-result-stat">
+              <div class="quiz-result-stat-num green" id="quiz-correct-num"></div>
+              <div class="quiz-result-stat-label">正解</div>
+            </div>
+            <div class="quiz-result-stat">
+              <div class="quiz-result-stat-num red" id="quiz-wrong-num"></div>
+              <div class="quiz-result-stat-label">不正解</div>
+            </div>
+            <div class="quiz-result-stat">
+              <div class="quiz-result-stat-num" id="quiz-trick-num" style="color:var(--warning)"></div>
+              <div class="quiz-result-stat-label">ひっかけ問題</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="retryQuiz()">🔄 もう一度挑戦</button>
+            <button class="btn btn-ghost" onclick="backToSelect()">← モード選択に戻る</button>
+          </div>
+          <div class="quiz-review-list" id="quiz-review-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+const ALL_QUESTIONS = [{"id": "q01", "lesson": "01", "module": "HTML基礎", "trick": false, "q": "HTMLの正式名称は次のうちどれですか？", "choices": ["HyperText Markup Language", "HyperText Making Language", "HighText Markup Language", "HyperText Markdown Language"], "a": 0, "exp": "<strong>HTML = HyperText Markup Language</strong>です。「Hyper（超）」「Text（テキスト）」「Markup（マークアップ）」「Language（言語）」の略語です。"}, {"id": "q02", "lesson": "01", "module": "HTML基礎", "trick": true, "q": "次のHTMLで <strong>正しい</strong> 書き方はどれですか？", "code": "<!-- どれが正しい？ -->\nA: &lt;img src=\"photo.jpg\"&gt;\nB: &lt;img src=\"photo.jpg\" /&gt;\nC: &lt;img src=\"photo.jpg\"&gt;&lt;/img&gt;\nD: &lt;Image src=\"photo.jpg\"&gt;", "choices": ["A のみ正しい", "B のみ正しい", "A と B の両方正しい", "C が最も正しい"], "a": 2, "exp": "<strong>AもBも正しい</strong>のがひっかけポイントです。imgはvoid element（空要素）なので閉じタグ不要。HTML5では <code>&lt;img src&gt;</code> が標準ですが、<code>&lt;img /&gt;</code>（XHTML形式）も有効です。Cは無効、Dはタグ名に大文字を使っており非推奨。"}, {"id": "q03", "lesson": "01", "module": "HTML基礎", "trick": false, "q": "セマンティックHTMLを使う最大のメリットは何ですか？", "choices": ["ページの表示速度が速くなる", "SEOや支援技術（スクリーンリーダー）が内容を正確に理解できる", "CSSを書く量が減る", "JavaScriptが使いやすくなる"], "a": 1, "exp": "<strong>SEOとアクセシビリティ向上</strong>が最大のメリット。&lt;header&gt;・&lt;main&gt;・&lt;nav&gt;などのセマンティックタグは、検索エンジンやスクリーンリーダーにコンテンツの意味を伝えます。"}, {"id": "q04", "lesson": "01", "module": "HTML基礎", "trick": true, "q": "次のHTML属性のうち、1ページ内で <strong>重複してはいけない</strong> ものはどれですか？", "choices": ["class", "id", "data-type", "name"], "a": 1, "exp": "<strong>id属性はページ内で一意</strong>でなければなりません（重複禁止）。classは複数要素に同じ値を使えます。data-*やnameも重複可能です。同じidが複数あるとJavaScriptやCSSが予期しない動作をします。"}, {"id": "q05", "lesson": "01", "module": "HTML基礎", "trick": false, "q": "&lt;strong&gt;と&lt;b&gt;の違いについて正しいのはどれですか？", "choices": ["まったく同じで違いはない", "strongは意味的な重要性、bは視覚的な太字を表す", "bは廃止されており使えない", "strongはブロック要素でbはインライン要素"], "a": 1, "exp": "<strong>&lt;strong&gt;は「重要性・緊急性」</strong>を意味するセマンティックタグ。<strong>&lt;b&gt;は視覚的な太字</strong>のみを指定。スクリーンリーダーはstrongを強調して読み上げますがbは読み上げません。"}, {"id": "q06", "lesson": "02", "module": "CSS基礎", "trick": false, "q": "CSSをHTMLに適用する方法として <strong>推奨されない</strong> 方法はどれですか？", "choices": ["&lt;link&gt;タグで外部CSSファイルを読み込む", "&lt;style&gt;タグにCSS記述", "style属性にCSSを直接記述（インラインCSS）", "@importで別CSSを読み込む"], "a": 2, "exp": "<strong>インラインCSS（style属性）は非推奨</strong>です。再利用性がなく、詳細度が高すぎて後から変更しにくくなります。保守性のために外部CSSファイルを推奨します。"}, {"id": "q07", "lesson": "02", "module": "CSS基礎", "trick": true, "q": "以下のCSSで、&lt;p&gt;要素のテキスト色は何色になりますか？", "code": "body { color: blue; }\np { }", "choices": ["黒（ブラウザデフォルト）", "青（blue）", "色は適用されない", "CSSエラーになる"], "a": 1, "exp": "<strong>継承（Inheritance）</strong>のひっかけです。colorプロパティは子要素に継承されます。&lt;p&gt;に明示的な色指定がなくても、body の color: blue が &lt;p&gt; に継承されて青になります。"}, {"id": "q08", "lesson": "02", "module": "CSS基礎", "trick": true, "q": "CSSの「カスケード」において、同じ詳細度のルールが2つある場合、どちらが適用されますか？", "choices": ["最初に書かれたルール", "後に書かれたルール", "両方同時に適用される", "ブラウザによって異なる"], "a": 1, "exp": "<strong>後に書かれたルールが優先</strong>されます（詳細度が同じ場合）。これをCSSの「順序（Order）」といいます。ただし !important はこの順序より優先されます。"}, {"id": "q09", "lesson": "02", "module": "CSS基礎", "trick": false, "q": "!importantを使いすぎると何が問題になりますか？", "choices": ["ページが重くなる", "スタイルの上書きが困難になり保守性が下がる", "ブラウザによって動作が変わる", "セキュリティリスクがある"], "a": 1, "exp": "<strong>!importantを多用するとCSSが管理困難</strong>に。!importantを上書きするにはさらに!importantが必要になる「!important地獄」に陥ります。設計を見直してカスケードを正しく使いましょう。"}, {"id": "q10", "lesson": "03", "module": "セレクター", "trick": true, "q": "次のCSSセレクターの <strong>詳細度</strong> が最も高いのはどれですか？", "choices": ["div p span", "#header .nav a", "body header nav ul li a", ".active.selected.highlight"], "a": 1, "exp": "<strong>#header .nav a の詳細度が最高</strong>。計算：ID(1,0,0) + クラス(0,1,0) + 要素(0,0,1) = (1,1,1)。他は要素・クラスのみなのでIDを含むものが圧倒的に強い。詳細度は左から桁が大きい順に比較します。"}, {"id": "q11", "lesson": "03", "module": "セレクター", "trick": true, "q": "CSSで「.box の <strong>直接の子要素</strong>である&lt;p&gt;のみ」を選択するセレクターはどれですか？", "choices": [".box p", "p .box", ".box > p", ".box + p"], "a": 2, "exp": "<strong>&gt;（子結合子）</strong>が正解。<code>.box p</code>は子孫すべての&lt;p&gt;に適用。<code>.box &gt; p</code>は直接の子のみ。<code>+</code>は直後の隣接兄弟セレクターです。"}, {"id": "q12", "lesson": "03", "module": "セレクター", "trick": false, "q": ":nth-child(2n+1) と同じ意味のセレクターはどれですか？", "choices": [":nth-child(even)", ":nth-child(odd)", ":first-child", ":nth-child(2n)"], "a": 1, "exp": "<strong>2n+1 = 奇数番目（odd）</strong>です。n=0→1番目、n=1→3番目、n=2→5番目… 偶数は2n（even）。テーブルの縞模様によく使われます。"}, {"id": "q13", "lesson": "04", "module": "ボックスモデル", "trick": true, "q": "box-sizing: content-box（デフォルト）の場合、width: 200px; padding: 20px; border: 5px solid の要素の <strong>実際の幅</strong>は何pxですか？", "choices": ["200px", "245px", "250px", "170px"], "a": 2, "exp": "<strong>content-boxでは width にpadding・borderが加算</strong>される落とし穴。200（content）+ 20×2（padding左右）+ 5×2（border左右）= <strong>250px</strong>。box-sizing: border-boxなら指定幅そのままの200pxになります。"}, {"id": "q14", "lesson": "04", "module": "ボックスモデル", "trick": true, "q": "次のCSSで、上下に隣接する2つの &lt;p&gt; 要素の実際の間隔はいくつですか？", "code": "p { margin-top: 20px; margin-bottom: 30px; }", "choices": ["50px（20+30）", "30px（大きい方）", "20px（小さい方）", "0px（相殺される）"], "a": 1, "exp": "<strong>マージン相殺（Margin Collapsing）</strong>のひっかけ。上下に隣接する要素の垂直マージンは合算されず、<strong>大きい方の値になります</strong>（30px）。左右のマージンは相殺されません。"}, {"id": "q15", "lesson": "04", "module": "ボックスモデル", "trick": false, "q": "ブロック要素を水平中央に配置する最もシンプルな方法はどれですか？（幅固定の場合）", "choices": ["padding: 0 auto", "margin: 0 auto", "align: center", "position: center"], "a": 1, "exp": "<strong>margin: 0 auto</strong>がブロック要素の水平中央配置の定番です。左右のmarginをautoにすると、残りのスペースが均等に分配されます。widthの指定が必要です。"}, {"id": "q16", "lesson": "05", "module": "タイポグラフィ", "trick": true, "q": "font-size: 1.5em が <strong>ネストした要素</strong>に連続して適用された場合、2階層目の要素のフォントサイズは？（ルートは16px）", "choices": ["24px（16×1.5）", "36px（16×1.5×1.5）", "32px（16×2）", "1.5rem と同じ"], "a": 1, "exp": "<strong>em単位は親要素基準で累積する</strong>のが落とし穴。16px × 1.5 = 24px（1階層目）、24px × 1.5 = <strong>36px</strong>（2階層目）。remはルート基準なので累積しません（常に16×1.5=24px）。"}, {"id": "q17", "lesson": "05", "module": "タイポグラフィ", "trick": false, "q": "本文テキストの line-height として最も読みやすいとされる値はどれですか？", "choices": ["1（行間なし）", "1.2〜1.3", "1.5〜1.8", "2.5以上"], "a": 2, "exp": "<strong>本文は1.5〜1.8が推奨</strong>です。line-heightに単位なし数値（例: 1.6）を使うと、フォントサイズに対する比率になり、フォントサイズが変わっても適切な行間が維持されます。"}, {"id": "q18", "lesson": "05", "module": "タイポグラフィ", "trick": true, "q": "font-weight: bold と font-weight: 700 は同じ意味ですか？", "choices": ["まったく異なる", "同じ意味", "boldは相対値なので環境によって異なる", "700の方が常に太い"], "a": 1, "exp": "<strong>bold = 700 は同じ</strong>です。キーワードと数値の対応：thin=100, light=300, normal=400, bold=700, black=900。フォントファイルにその太さがない場合は近い値にフォールバックします。"}, {"id": "q19", "lesson": "06", "module": "色・背景", "trick": true, "q": "opacity: 0.5 と background: rgba(0,0,0,0.5) の違いで <strong>正しい</strong>のはどれですか？", "choices": ["まったく同じ効果", "opacityは子要素も含めて半透明になる、rgbaは背景色だけ半透明", "rgbaの方が透明度が高い", "opacityはbackground-colorにしか効かない"], "a": 1, "exp": "<strong>重要な違い！</strong> <code>opacity: 0.5</code>は要素全体（テキスト・子要素も含む）が半透明。<code>rgba()</code>は背景色だけ半透明にできます。テキストは不透明のまま保ちたい場合はrgbaを使いましょう。"}, {"id": "q20", "lesson": "06", "module": "色・背景", "trick": false, "q": "CSSで斜め45度の黒→白グラデーションを作るには？", "choices": ["background: gradient(45deg, black, white)", "background: linear-gradient(45deg, black, white)", "background: radial-gradient(45deg, black, white)", "background: diagonal-gradient(black, white)"], "a": 1, "exp": "<strong>linear-gradient(方向, 色1, 色2)</strong>が正解。radial-gradientは円形グラデーション。gradient()やdiagonal-gradient()は存在しません。"}, {"id": "q21", "lesson": "07", "module": "Flexbox", "trick": true, "q": "Flexコンテナに justify-content: center を指定した場合、アイテムはどの方向で中央揃えになりますか？", "choices": ["常に水平（横）方向", "常に垂直（縦）方向", "主軸（flex-directionで決まる方向）", "交差軸方向"], "a": 2, "exp": "<strong>justify-contentは主軸方向</strong>に揃えます。flex-direction: row（デフォルト）なら水平中央、flex-direction: columnなら垂直中央になります。交差軸はalign-itemsが担当します。"}, {"id": "q22", "lesson": "07", "module": "Flexbox", "trick": false, "q": "flexアイテムを折り返しさせるプロパティはどれですか？", "choices": ["flex-direction: wrap", "flex-wrap: wrap", "flex-flow: wrap", "flex: wrap"], "a": 1, "exp": "<strong>flex-wrap: wrap</strong>が正解。デフォルトはnowrap（折り返しなし）。flex-flowはflex-directionとflex-wrapのショートハンドです（例: flex-flow: row wrap）。"}, {"id": "q23", "lesson": "07", "module": "Flexbox", "trick": true, "q": "flex: 1 を指定したアイテムの動作として正しいのはどれですか？", "choices": ["幅が1pxになる", "コンテナの残りスペースを均等に分け合う", "flex-grow: 1, flex-shrink: 0, flex-basis: auto", "flex-basisが1remになる"], "a": 1, "exp": "<strong>flex: 1 = flex: 1 1 0%</strong> のひっかけ。flex-grow: 1、flex-shrink: 1、flex-basis: 0%を意味します。flex: autoはflex: 1 1 autoで挙動が異なります。"}, {"id": "q24", "lesson": "08", "module": "CSS Grid", "trick": false, "q": "3列均等のグリッドを作る正しい書き方はどれですか？", "choices": ["grid-template-columns: 1fr 1fr 1fr", "grid-template-columns: 33% 33% 33%", "grid-template-columns: repeat(3, 1fr)", "A と C の両方正解"], "a": 3, "exp": "<strong>AもCも正解</strong>。<code>1fr 1fr 1fr</code>と<code>repeat(3, 1fr)</code>は同じ意味です。33%は合計99%で1%の誤差が出るため非推奨。"}, {"id": "q25", "lesson": "08", "module": "CSS Grid", "trick": true, "q": "grid-column: 1 / 3 を指定した場合、アイテムは何列分の幅を占めますか？", "choices": ["1列", "2列", "3列", "4列"], "a": 1, "exp": "<strong>グリッドラインで指定する</strong>のがポイント。1/3はライン番号1から3まで、つまり<strong>2列分</strong>を占めます（ラインは列より1つ多い）。3列分にするには1/4と指定します。"}, {"id": "q26", "lesson": "08", "module": "CSS Grid", "trick": false, "q": "repeat(auto-fit, minmax(200px, 1fr)) の特徴として正しいのはどれですか？", "choices": ["常に3列を維持する", "メディアクエリなしで画面幅に応じて列数が自動調整される", "200pxより狭い画面では壊れる", "auto-fitとauto-fillは完全に同じ結果になる"], "a": 1, "exp": "<strong>レスポンシブグリッドの定番パターン</strong>。各列は最低200px、余白があれば1frで均等拡大。auto-fitはアイテムがない列を消す、auto-fillは空列を残す（違いあり！）。"}, {"id": "q27", "lesson": "09", "module": "ポジショニング", "trick": true, "q": "position: absolute の要素はどの要素を基準に配置されますか？", "choices": ["常に body を基準にする", "最も近い position: static の祖先要素", "position: static 以外の最も近い祖先要素（なければviewport）", "常に親要素を基準にする"], "a": 2, "exp": "<strong>「position: static以外の」祖先が基準</strong>。親にrelative等がなければ祖先をさかのぼり、見つからなければviewportが基準。「常にbody」は誤りです。"}, {"id": "q28", "lesson": "09", "module": "ポジショニング", "trick": true, "q": "z-index: 999 を指定しているのに要素が後ろに隠れる場合の原因として最も可能性が高いのはどれですか？", "choices": ["z-indexの値が足りない", "要素にpositionが指定されていない（staticのまま）", "ブラウザのバグ", "z-indexは整数のみ有効"], "a": 1, "exp": "<strong>z-indexはpositionがstaticでは効かない</strong>のが典型的な落とし穴。position: relative / absolute / fixed / stickyのいずれかが必要です。"}, {"id": "q29", "lesson": "09", "module": "ポジショニング", "trick": false, "q": "スクロールしても画面に固定表示したいナビバーには、どのpositionを使いますか？", "choices": ["absolute", "fixed", "sticky", "relative"], "a": 1, "exp": "<strong>position: fixed</strong>はviewportを基準に固定されます。スクロールしても常に同じ位置に表示。stickyはスクロールに応じて途中から固定されます。"}, {"id": "q30", "lesson": "10", "module": "レスポンシブ", "trick": true, "q": "viewportメタタグを設定しないと、スマートフォンでは何が起きますか？", "choices": ["CSSが全く効かなくなる", "ページがデスクトップ向けの幅（980px等）で表示され縮小される", "メディアクエリが全て無視される", "特に問題ない"], "a": 1, "exp": "<strong>viewport未設定はモバイルの典型的な問題</strong>。スマートフォンは仮想幅（通常980px）でレンダリングして縮小表示します。&lt;meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"&gt;が必須です。"}, {"id": "q31", "lesson": "10", "module": "レスポンシブ", "trick": true, "q": "モバイルファーストのCSSで正しい書き方はどれですか？", "choices": ["@media (max-width: 768px) { /* モバイル用 */ }", "@media (min-width: 768px) { /* タブレット以上 */ }", "両方書けばよい", "モバイルファーストではメディアクエリを使わない"], "a": 1, "exp": "<strong>モバイルファースト = min-widthを使う</strong>。デフォルトのCSSをモバイル向けに書き、min-widthで大きい画面向けを追加します。max-widthはデスクトップファーストの書き方です。"}, {"id": "q32", "lesson": "10", "module": "レスポンシブ", "trick": false, "q": "clamp(1rem, 3vw, 2rem) の動作として正しいのはどれですか？", "choices": ["常に3vwが適用される", "1rem以上2rem以下の範囲で画面幅に応じて変化する", "最小1rem、最大2remの固定値（中間値は使われない）", "vwはviewport heightを意味する"], "a": 1, "exp": "<strong>clamp(最小, 推奨, 最大)</strong>。推奨値3vwが1rem未満なら1rem、2remを超えるなら2remに固定されます。vwはviewport widthです（viewport heightはvh）。"}, {"id": "q33", "lesson": "11", "module": "アニメーション", "trick": true, "q": "CSSで display: none ↔ display: block の切り替えをtransitionでアニメーションすることはできますか？", "choices": ["できる（transition: display 0.3s）", "できない（displayはトランジション不可）", "opacityと組み合わせればdisplayもトランジションできる", "JavaScriptがあれば必ずできる"], "a": 1, "exp": "<strong>displayプロパティはトランジションできません</strong>。フェードイン/アウトには opacity（0→1）+ visibility の組み合わせを使います。CSS @keyframesと組み合わせた display のアニメーションは一部ブラウザで実験的対応が始まっています。"}, {"id": "q34", "lesson": "11", "module": "アニメーション", "trick": false, "q": "animation: spin 1s linear infinite で、アニメーションは何秒ごとに繰り返されますか？", "choices": ["0.5秒", "1秒", "2秒", "繰り返さない"], "a": 1, "exp": "<strong>1秒（duration）で1周し、infiniteで永遠に繰り返します</strong>。animationのショートハンドは「名前 duration timing-function delay iteration-count」の順。linearは速度一定のイージングです。"}, {"id": "q35", "lesson": "11", "module": "アニメーション", "trick": true, "q": "transform: translateY(-4px) scale(1.05) のように複数のtransformを書く場合、どの順で適用されますか？", "choices": ["左から右（translateY → scale）", "右から左（scale → translateY）", "同時に適用されるので順序は関係ない", "ブラウザによって異なる"], "a": 0, "exp": "<strong>左から右の順で適用</strong>されます（translateY → scale）。順序によって結果が変わるため、意図した動作になるよう順序に注意が必要です。"}, {"id": "q36", "lesson": "12", "module": "モダンCSS", "trick": true, "q": "CSS変数（カスタムプロパティ）とSass変数（$variable）の最も大きな違いは何ですか？", "choices": ["Sass変数の方が高速", "CSS変数はブラウザで動的に変更できる、Sass変数はビルド時に固定値になる", "CSS変数はIE11でも完全対応", "どちらも全く同じ機能"], "a": 1, "exp": "<strong>CSS変数はランタイムで動的変更可能</strong>。JavaScriptで<code>element.style.setProperty('--color', 'red')</code>のように変更できます。Sass変数はコンパイル時に置換され、ブラウザには届きません。"}, {"id": "q37", "lesson": "12", "module": "モダンCSS", "trick": false, "q": "var(--color, red) のフォールバック値 red はどのような場合に使われますか？", "choices": ["常にredが優先される", "--colorが未定義または無効な値の場合にredが使われる", "--colorがredに近い色の場合", "フォールバックは機能しない"], "a": 1, "exp": "<strong>フォールバック値は変数が未定義・無効なとき</strong>に適用されます。<code>var(--color, red)</code>は「--colorが定義されていればその値、なければred」という意味です。"}, {"id": "q38", "lesson": "13", "module": "疑似クラス・疑似要素", "trick": true, "q": "::before 疑似要素を表示するために <strong>必須</strong> のプロパティはどれですか？", "choices": ["display: block", "position: absolute", "content プロパティ（空文字列でも可）", "width と height"], "a": 2, "exp": "<strong>content プロパティが必須</strong>です（空文字列 content: \"\" でもOK）。contentを指定しないと::before/::afterは表示されません。"}, {"id": "q39", "lesson": "13", "module": "疑似クラス・疑似要素", "trick": true, "q": ":nth-child(3) と :nth-of-type(3) は常に同じ要素を選択しますか？", "choices": ["同じ要素を選択する", "同じタグが混在しない場合は同じだが、異なるタグが混在すると結果が変わる", "nth-of-typeはCSSに存在しない", "どちらも3番目の要素を選ぶが詳細度が異なる"], "a": 1, "exp": "<strong>異なるタグが混在する場合に違いが出ます</strong>。<code>&lt;h2&gt;&lt;p&gt;&lt;p&gt;</code>のとき、<code>p:nth-child(2)</code>は最初の&lt;p&gt;、<code>p:nth-of-type(2)</code>は2番目の&lt;p&gt;を選択します。"}, {"id": "q40", "lesson": "13", "module": "疑似クラス・疑似要素", "trick": false, "q": "テキスト選択時の背景色を変更するCSSはどれですか？", "choices": ["::highlight { background: purple }", "::selection { background: purple }", "::selected { background: purple }", ":selected { background: purple }"], "a": 1, "exp": "<strong>::selection</strong>がテキスト選択時のスタイルを制御します。変更できるプロパティはbackground、color、text-shadow等に限られます。"}, {"id": "q41", "lesson": "14", "module": "デザイン原則", "trick": true, "q": "CRAPデザイン原則の「C」は何を意味しますか？", "choices": ["コントラスト（Contrast）", "近接（Proximity）", "色（Color）", "一貫性（Consistency）"], "a": 1, "exp": "<strong>CRAPの「C」はContrast（コントラスト）ではなく、Proximity（近接）です！</strong> CRAP = Contrast・Repetition・Alignment・Proximity の略。語呂合わせのために頭文字の順番が入れ替えられているので要注意。"}, {"id": "q42", "lesson": "14", "module": "デザイン原則", "trick": false, "q": "WCAG AA基準で、通常テキストに必要なコントラスト比は最低いくつですか？", "choices": ["2:1", "3:1", "4.5:1", "7:1"], "a": 2, "exp": "<strong>WCAG AA基準は4.5:1以上</strong>。大きなテキスト（18pt/14pt Bold以上）は3:1以上でOK。AAA基準は7:1以上。コントラスト不足はロービジョンのユーザーが読めなくなります。"}, {"id": "q43", "lesson": "14", "module": "デザイン原則", "trick": true, "q": "60-30-10カラールールの「10」に相当する色はどれですか？", "choices": ["背景色（ベースカラー）", "サブカラー（第2色）", "アクセントカラー（強調色）", "テキスト色"], "a": 2, "exp": "<strong>10%はアクセントカラー</strong>。60%=ベース（背景など落ち着いた色）、30%=サブカラー、10%=アクセント（ボタン・リンクなど目立つ色）。アクセントは使い過ぎると効果が薄れるため10%に抑えます。"},{"id": "q44", "lesson": "15", "module": "色彩理論", "trick": false, "q": "色の三属性として正しい組み合わせはどれですか？", "choices": ["色相・彩度・明度", "色相・輝度・透明度", "明度・彩度・コントラスト", "トーン・シェード・ティント"], "a": 0, "exp": "色の三属性は<strong>色相（Hue）・彩度（Saturation）・明度（Lightness）</strong>です。この3つの組み合わせで全ての色を表現できます。"},{"id": "q45", "lesson": "15", "module": "色彩理論", "trick": true, "q": "補色（Complementary Color）とはどのような色の関係ですか？", "choices": ["色相環で隣り合う色", "色相環で真向かい（180°）の色", "同じ色相で明度だけ異なる色", "色相環を3等分した色"], "a": 1, "exp": "<strong>補色は色相環で180°対面する色</strong>です。「色相環で隣り合う色」は類似色（Analogous）の説明です。補色同士を組み合わせると強いコントラストが生まれます。"},{"id": "q46", "lesson": "15", "module": "色彩理論", "trick": false, "q": "WCAG 2.1のAAレベルで要求される通常テキストのコントラスト比はいくつですか？", "choices": ["3:1以上", "4.5:1以上", "7:1以上", "2:1以上"], "a": 1, "exp": "WCAG 2.1のAAレベルでは通常テキストに<strong>4.5:1以上</strong>のコントラスト比が必要です。大きなテキスト（18px以上）は3:1以上で十分です。"},{"id": "q47", "lesson": "15", "module": "色彩理論", "trick": false, "q": "CSSの hsl() 関数における「S」は何の略ですか？", "choices": ["Shadow", "Saturation", "Shade", "Spectrum"], "a": 1, "exp": "HSLの<strong>S = Saturation（彩度）</strong>です。H=Hue（色相）、L=Lightness（明度）。彩度は色の鮮やかさを0%（グレー）〜100%（最大彩度）で表します。"},{"id": "q48", "lesson": "15", "module": "色彩理論", "trick": true, "q": "「赤と緑は補色関係にある」この説明は正しいですか？", "choices": ["正しい", "間違い。赤の補色はシアンである", "間違い。赤と緑は類似色である", "間違い。補色は隣り合う色のことである"], "a": 0, "exp": "<strong>正しいです。</strong>RGBカラーモデルでは赤（0°）の補色は緑（180°）です。ただし絵の具などの色料混合（CMYKモデル）では赤の補色はシアンになるため注意が必要です。Webデザインで扱うのはRGBモデルです。"},{"id": "q49", "lesson": "15", "module": "色彩理論", "trick": false, "q": "60-30-10ルールで「10」に割り当てるのはどのカラーですか？", "choices": ["ベースカラー（背景色）", "サブカラー（セカンダリ）", "アクセントカラー", "ニュートラルカラー"], "a": 2, "exp": "60-30-10ルールでは<strong>10%をアクセントカラー</strong>に使います。60%がベース（背景など）、30%がサブ（補完色）、10%がアクセント（ボタン・強調）です。少ない面積だからこそアクセントが効果的に目立ちます。"},{"id": "q50", "lesson": "15", "module": "色彩理論", "trick": false, "q": "三角配色（Triadic）では何色を使いますか？", "choices": ["2色", "3色", "4色", "6色"], "a": 1, "exp": "三角配色（Triadic）は色相環を<strong>3等分（120°間隔）した3色</strong>を使います。バランスよく鮮やかで多様性を持たせたいときに有効です。"},{"id": "q51", "lesson": "15", "module": "色彩理論", "trick": false, "q": "ダークモード対応のカラー設計に最も適したCSSの機能はどれですか？", "choices": ["CSS Filter", "CSS変数（カスタムプロパティ）とメディアクエリの組み合わせ", "CSS Grid", "CSS Animations"], "a": 1, "exp": "<strong>CSS変数（カスタムプロパティ）と @media (prefers-color-scheme: dark) の組み合わせ</strong>が最適です。:rootで色変数を定義し、ダークモード用のメディアクエリで値を上書きするだけで全体のカラーが切り替わります。"},{"id": "q52", "lesson": "15", "module": "色彩理論", "trick": true, "q": "フォームのエラー表示を「赤色のボーダーだけ」で伝えることはアクセシビリティ上問題がありますか？", "choices": ["問題ない", "問題がある。色だけで情報を伝えてはいけない", "問題ない。赤は国際的にエラーを意味する", "問題ない。視覚的に明確だから十分"], "a": 1, "exp": "<strong>問題があります。</strong>WCAG 1.4.1「色の使用」では、色だけを情報の唯一の視覚的手段として使ってはいけないと規定されています。色覚異常のユーザーにも伝わるよう、エラーテキストやアイコン（✗など）を必ず併用してください。"},{"id": "q53", "lesson": "15", "module": "色彩理論", "trick": true, "q": "CSS で hsl(0, 100%, 50%) を指定すると何色になりますか？", "choices": ["白", "黒", "赤", "透明"], "a": 2, "exp": "<strong>赤です。</strong>hsl()の最初の引数は色相（Hue）の角度。0°は赤色です。100%彩度・50%明度で純粋な赤になります。ちなみに120°が緑、240°が青です。"},{"id": "q54", "lesson": "15", "module": "色彩理論", "trick": false, "q": "単色配色（Monochromatic）の正しい定義はどれですか？", "choices": ["色相環で隣り合う3色を使う配色", "同じ色相で明度・彩度だけを変えた配色", "補色を中心に構成する配色", "白・黒・グレーだけを使う配色"], "a": 1, "exp": "単色配色（Monochromatic）は<strong>同じ色相で明度・彩度のみを変えた配色</strong>です。洗練されたシンプルな印象を与え、統一感のあるデザインに仕上がります。"},{"id": "q55", "lesson": "15", "module": "色彩理論", "trick": true, "q": "WCAG 2.1のAAAレベルで要求される通常テキストのコントラスト比はいくつですか？", "choices": ["4.5:1以上", "5:1以上", "6:1以上", "7:1以上"], "a": 3, "exp": "AAAレベルは<strong>7:1以上</strong>です。「5:1」と混同しがちですが、正解は7:1。AAが4.5:1、AAAが7:1と覚えましょう。"},{"id": "q56", "lesson": "15", "module": "色彩理論", "trick": false, "q": "CSS の `color-scheme: dark light` プロパティは何を意味しますか？", "choices": ["ダークモードのみを有効にする", "ライトモードのみを有効にする", "ダーク・ライト両モードに対応することを宣言する", "カラースキームを無効にする"], "a": 2, "exp": "<strong>ダーク・ライト両モード対応を宣言するプロパティ</strong>です。ブラウザのデフォルトUIコンポーネント（スクロールバー・フォームなど）がカラーモードに合わせて自動調整されます。"},{"id": "q57", "lesson": "15", "module": "色彩理論", "trick": true, "q": "青色が与える主な心理効果として正しいのはどれですか？", "choices": ["情熱・エネルギー・緊急性", "信頼・安定・落ち着き・知性", "自然・成長・健康", "楽しさ・注意・希望"], "a": 1, "exp": "<strong>青は信頼・安定・落ち着きを与えます。</strong>「情熱・エネルギー」は赤の効果です。青はGoogle・Facebook・PayPalなど多くのテクノロジー・金融系サービスに使われている理由がこの信頼感です。"},{"id": "q58", "lesson": "15", "module": "色彩理論", "trick": false, "q": "CSS の oklch() 関数の主な利点はどれですか？", "choices": ["RGB値をそのまま使用できる", "人間の知覚に合わせた均一な色空間で一貫したコントラストを保てる", "ファイルサイズが小さくなる", "Internet Explorerとの互換性が高い"], "a": 1, "exp": "oklch()は<strong>人間の知覚に合わせた均一な色空間（OKLab）を使用</strong>します。従来のHSLでは明度を同じに設定しても知覚的な明るさが色相によって異なりますが、oklchは知覚的均一性が高く、色をトーン違いで生成する際に一貫したコントラストが保てます。"}];
+
+    // ===== カテゴリ設定 =====
+    const MODES = [
+      { id: 'all',   label: '🎯 全問チャレンジ', desc: '全レッスン・全43問', icon: '🏆', filter: () => true },
+      { id: 'trick', label: '⚠️ ひっかけ問題のみ', desc: 'ひっかけ問題25問', icon: '🎭', filter: q => q.trick },
+      { id: 'l01',   label: 'HTML基礎', desc: 'Lesson 01（5問）', icon: '📄', filter: q => q.lesson === '01' },
+      { id: 'l0203', label: 'CSS基礎・セレクター', desc: 'Lesson 02-03（7問）', icon: '🎨', filter: q => ['02','03'].includes(q.lesson) },
+      { id: 'l04',   label: 'ボックスモデル', desc: 'Lesson 04（3問）', icon: '📦', filter: q => q.lesson === '04' },
+      { id: 'l0506', label: 'タイポグラフィ・色', desc: 'Lesson 05-06（5問）', icon: '🖋️', filter: q => ['05','06'].includes(q.lesson) },
+      { id: 'l0708', label: 'Flexbox・Grid', desc: 'Lesson 07-08（6問）', icon: '⚡', filter: q => ['07','08'].includes(q.lesson) },
+      { id: 'l09',   label: 'ポジショニング', desc: 'Lesson 09（3問）', icon: '📌', filter: q => q.lesson === '09' },
+      { id: 'l10',   label: 'レスポンシブ', desc: 'Lesson 10（3問）', icon: '📱', filter: q => q.lesson === '10' },
+      { id: 'l11',   label: 'アニメーション', desc: 'Lesson 11（3問）', icon: '✨', filter: q => q.lesson === '11' },
+      { id: 'l121314', label: 'モダンCSS・デザイン', desc: 'Lesson 12-14（8問）', icon: '🚀', filter: q => ['12','13','14'].includes(q.lesson) },
+    ];
+
+    let currentMode = null;
+    let questions = [];
+    let current = 0;
+    let answers = [];
+    let answered = false;
+
+    // ===== モード選択画面を描画 =====
+    function renderModeSelect() {
+      const grid = document.getElementById('quiz-mode-grid');
+      grid.innerHTML = MODES.map(m => {
+        const count = ALL_QUESTIONS.filter(m.filter).length;
+        const trickCount = ALL_QUESTIONS.filter(q => m.filter(q) && q.trick).length;
+        return `<div class="quiz-mode-card" data-mode="${m.id}" onclick="selectMode('${m.id}')">
+          <div class="quiz-mode-icon">${m.icon}</div>
+          <div class="quiz-mode-title">${m.label}</div>
+          <div class="quiz-mode-desc">${m.desc}</div>
+          <span class="quiz-mode-count">${count}問 / ひっかけ${trickCount}問</span>
+        </div>`;
+      }).join('');
+    }
+
+    function selectMode(modeId) {
+      currentMode = MODES.find(m => m.id === modeId);
+      document.querySelectorAll('.quiz-mode-card').forEach(c => c.classList.remove('selected'));
+      document.querySelector(`[data-mode="${modeId}"]`).classList.add('selected');
+      document.getElementById('quiz-start-area').style.display = 'block';
+      document.getElementById('quiz-start-btn').onclick = startQuiz;
+    }
+
+    function startQuiz() {
+      if (!currentMode) return;
+      questions = ALL_QUESTIONS.filter(currentMode.filter);
+      if (document.getElementById('quiz-shuffle').checked) {
+        questions = [...questions].sort(() => Math.random() - 0.5);
+      }
+      current = 0;
+      answers = [];
+      answered = false;
+      document.getElementById('quiz-select-screen').style.display = 'none';
+      document.getElementById('quiz-screen').style.display = 'block';
+      document.getElementById('quiz-result-screen').style.display = 'none';
+      renderQuestion();
+    }
+
+    // ===== 問題描画 =====
+    function renderQuestion() {
+      const q = questions[current];
+      answered = false;
+      const pct = (current / questions.length) * 100;
+      document.getElementById('quiz-progress-text').textContent = `問題 ${current + 1} / ${questions.length}`;
+      document.getElementById('quiz-progress-fill').style.width = pct + '%';
+      document.getElementById('quiz-q-num').textContent = `Q${current + 1} — ${q.module}`;
+      document.getElementById('quiz-question-text').innerHTML = q.q;
+      document.getElementById('quiz-next-btn').style.display = 'none';
+
+      const trickBadge = document.getElementById('quiz-trick-badge');
+      // ひっかけバッジは回答後に表示（問題のヒントにならないよう）
+      trickBadge.style.display = 'none';
+
+      const codeEl = document.getElementById('quiz-question-code');
+      if (q.code) {
+        codeEl.innerHTML = q.code;
+        codeEl.style.display = 'block';
+      } else {
+        codeEl.style.display = 'none';
+      }
+
+      const exp = document.getElementById('quiz-explanation');
+      exp.className = 'quiz-explanation';
+      exp.innerHTML = '';
+
+      const labels = ['A', 'B', 'C', 'D'];
+      const choicesEl = document.getElementById('quiz-choices');
+      choicesEl.innerHTML = q.choices.map((c, i) => `
+        <button class="quiz-choice" data-idx="${i}" onclick="selectAnswer(${i})">
+          <span class="quiz-choice-label">${labels[i]}</span>
+          <span>${c}</span>
+        </button>`).join('');
+    }
+
+    function selectAnswer(idx) {
+      if (answered) return;
+      answered = true;
+      const q = questions[current];
+      const isCorrect = idx === q.a;
+      answers.push({ q, userAnswer: idx, correct: isCorrect });
+
+      // ひっかけバッジ表示
+      if (q.trick) {
+        const badge = document.getElementById('quiz-trick-badge');
+        badge.style.display = 'inline-block';
+      }
+
+      const btns = document.querySelectorAll('.quiz-choice');
+      btns.forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === q.a) btn.classList.add('correct');
+        else if (i === idx && !isCorrect) btn.classList.add('wrong');
+        else btn.classList.add('dimmed');
+      });
+
+      const exp = document.getElementById('quiz-explanation');
+      exp.innerHTML = `<strong>${isCorrect ? '✅ 正解！' : '❌ 不正解...'}</strong><br><br>${q.exp}`;
+      exp.className = `quiz-explanation show ${isCorrect ? 'correct-exp' : 'wrong-exp'}`;
+
+      document.getElementById('quiz-next-btn').style.display = 'block';
+      document.getElementById('quiz-next-btn').textContent =
+        current + 1 < questions.length ? '次の問題 →' : '結果を見る';
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current < questions.length) {
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    // ===== 結果画面 =====
+    function showResult() {
+      document.getElementById('quiz-screen').style.display = 'none';
+      document.getElementById('quiz-result-screen').style.display = 'block';
+
+      const total = answers.length;
+      const correct = answers.filter(a => a.correct).length;
+      const wrong = total - correct;
+      const trickTotal = answers.filter(a => a.q.trick).length;
+      const trickCorrect = answers.filter(a => a.q.trick && a.correct).length;
+      const pct = Math.round((correct / total) * 100);
+
+      const icons = pct >= 90 ? '🏆' : pct >= 70 ? '😊' : pct >= 50 ? '😅' : '💪';
+      const labels = pct >= 90 ? '完璧です！すばらしい！' : pct >= 70 ? 'よくできました！' : pct >= 50 ? 'もう少し！復習してみよう' : '基礎からおさらいしよう！';
+
+      document.getElementById('quiz-result-icon').textContent = icons;
+      document.getElementById('quiz-result-score').textContent = `${pct}%`;
+      document.getElementById('quiz-result-label').textContent = `${labels}（${correct} / ${total} 問正解）`;
+      document.getElementById('quiz-correct-num').textContent = correct;
+      document.getElementById('quiz-wrong-num').textContent = wrong;
+      document.getElementById('quiz-trick-num').textContent = `${trickCorrect}/${trickTotal}`;
+
+      const labels4 = ['A', 'B', 'C', 'D'];
+      const reviewHtml = answers.map((a, i) => `
+        <div class="quiz-review-item ${a.correct ? 'ok' : 'ng'}">
+          <span class="quiz-review-item-icon">${a.correct ? '✅' : '❌'}</span>
+          <div class="quiz-review-item-q">
+            <strong>Q${i + 1}. ${a.q.q.replace(/<[^>]+>/g, '')}</strong>
+            ${!a.correct ? `<span style="color:var(--secondary)">あなたの答え: ${labels4[a.userAnswer]}. ${a.q.choices[a.userAnswer]}</span><br>` : ''}
+            <span style="color:var(--accent)">正解: ${labels4[a.q.a]}. ${a.q.choices[a.q.a]}</span>
+          </div>
+        </div>`).join('');
+
+      document.getElementById('quiz-review-list').innerHTML = `
+        <div class="quiz-review-title">📋 問題ごとの結果</div>
+        ${reviewHtml}`;
+    }
+
+    function retryQuiz() {
+      startQuiz();
+    }
+
+    function backToSelect() {
+      document.getElementById('quiz-result-screen').style.display = 'none';
+      document.getElementById('quiz-screen').style.display = 'none';
+      document.getElementById('quiz-select-screen').style.display = 'block';
+    }
+
+    // 初期化
+    document.addEventListener('DOMContentLoaded', renderModeSelect);
+  </script>
+
+  <footer style="border-top:1px solid rgba(255,255,255,0.06);padding:1.5rem;text-align:center;color:var(--text-dim);font-size:0.82rem;">
+    <span class="footer-producer">Produced by Sumeragi</span>
+  </footer>
+</body>
+</html>

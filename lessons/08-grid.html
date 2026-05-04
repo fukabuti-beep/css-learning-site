@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Grid完全ガイド | CSS学習</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo">&lt;/CSS学習&gt;</a>
+      <div class="nav-links">
+        <a href="../index.html">ホーム</a>
+        <a href="../index.html#curriculum">カリキュラム</a>
+        <a href="../index.html#lessons">レッスン一覧</a>
+        <a href="../glossary.html">用語辞典</a>
+        <a href="../quiz.html">テスト</a>
+        <a href="../patchnotes.html">パッチノート</a>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <button class="share-nav-btn" onclick="openShareModal()" style="display:none">🔗 共有</button>
+        <button class="admin-login-btn" onclick="openAdminModal()">🔒 管理者</button>
+        <button class="menu-btn" id="menuBtn">☰</button>
+      </div>
+    </div>
+  </nav>
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="sidebar-overlay"></div>
+  <div class="lesson-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h3>カリキュラム</h3>
+        <div class="overall-progress">
+          <div class="overall-progress-label"><span>進捗</span><span><span id="progressPct">0</span>%</span></div>
+          <div class="overall-progress-track"><div class="overall-progress-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="01-html-basics.html" class="sidebar-link" data-lesson-id="01-html-basics"><span class="sidebar-num">01</span><span>HTMLの基礎</span></a>
+        <a href="02-css-intro.html" class="sidebar-link" data-lesson-id="02-css-intro"><span class="sidebar-num">02</span><span>CSSとは何か</span></a>
+        <a href="03-selectors.html" class="sidebar-link" data-lesson-id="03-selectors"><span class="sidebar-num">03</span><span>セレクター完全ガイド</span></a>
+        <a href="04-box-model.html" class="sidebar-link" data-lesson-id="04-box-model"><span class="sidebar-num">04</span><span>ボックスモデル</span></a>
+        <a href="05-typography.html" class="sidebar-link" data-lesson-id="05-typography"><span class="sidebar-num">05</span><span>タイポグラフィ</span></a>
+        <a href="06-colors.html" class="sidebar-link" data-lesson-id="06-colors"><span class="sidebar-num">06</span><span>色と背景</span></a>
+        <a href="07-flexbox.html" class="sidebar-link" data-lesson-id="07-flexbox"><span class="sidebar-num">07</span><span>Flexbox完全ガイド</span></a>
+        <a href="08-grid.html" class="sidebar-link" data-lesson-id="08-grid"><span class="sidebar-num">08</span><span>CSS Grid完全ガイド</span></a>
+        <a href="09-positioning.html" class="sidebar-link" data-lesson-id="09-positioning"><span class="sidebar-num">09</span><span>ポジショニング</span></a>
+        <a href="10-responsive.html" class="sidebar-link" data-lesson-id="10-responsive"><span class="sidebar-num">10</span><span>レスポンシブデザイン</span></a>
+        <a href="11-transitions-animations.html" class="sidebar-link" data-lesson-id="11-transitions-animations"><span class="sidebar-num">11</span><span>トランジション・アニメーション</span></a>
+        <a href="12-css-variables.html" class="sidebar-link" data-lesson-id="12-css-variables"><span class="sidebar-num">12</span><span>CSS変数（カスタムプロパティ）</span></a>
+        <a href="13-pseudo.html" class="sidebar-link" data-lesson-id="13-pseudo"><span class="sidebar-num">13</span><span>疑似クラス・疑似要素</span></a>
+        <a href="14-design-principles.html" class="sidebar-link" data-lesson-id="14-design-principles"><span class="sidebar-num">14</span><span>デザイン原則</span></a>
+        <a href="15-color-theory.html" class="sidebar-link" data-lesson-id="15-color-theory"><span class="sidebar-num">15</span><span>色彩理論</span></a>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <div class="lesson-header">
+        <div class="lesson-meta">
+          <span class="badge badge-intermediate">中級</span>
+          <span class="badge">⏱ 40分</span>
+          <span class="badge badge-primary">モジュール3: レイアウト</span>
+        </div>
+        <h1>CSS Grid完全ガイド</h1>
+        <p class="lesson-intro">CSS Gridは2次元レイアウトシステムです。grid-template-columns・fr単位・grid-template-areasをマスターして、複雑なページレイアウトを自在に構築しましょう。</p>
+      </div>
+
+      <section class="content-section">
+        <h2>CSS Gridとは</h2>
+        <p><strong>CSS Grid</strong>は、行と列の2次元でレイアウトを構築できる強力なシステムです。Flexboxが1次元（行または列）なのに対し、Gridは両方向を同時に制御できます。</p>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-selector">.grid</span> {
+  <span class="token-property">display</span>: <span class="token-value">grid</span>;
+  <span class="token-comment">/* 3列: 各200px */</span>
+  <span class="token-property">grid-template-columns</span>: <span class="token-value">200px 200px 200px</span>;
+  <span class="token-comment">/* repeat()で簡潔に */</span>
+  <span class="token-property">grid-template-columns</span>: <span class="token-value">repeat(3, 200px)</span>;
+  <span class="token-comment">/* fr単位: 使用可能スペースの比率 */</span>
+  <span class="token-property">grid-template-columns</span>: <span class="token-value">1fr 2fr 1fr</span>;
+  <span class="token-comment">/* 隙間 */</span>
+  <span class="token-property">gap</span>: <span class="token-value">1rem</span>;
+  <span class="token-property">row-gap</span>: <span class="token-value">2rem</span>;
+  <span class="token-property">column-gap</span>: <span class="token-value">1rem</span>;
+}</code></pre>
+        </div>
+
+        <div class="code-anatomy">
+          <h4>🔍 Grid コードの読み方 - fr単位とrepeat()</h4>
+          <div class="anatomy-code-block">
+<span class="ana-selector">.grid</span> {
+  <span class="ana-property">display</span>: <span class="ana-value">grid</span>;
+  <span class="ana-property">grid-template-columns</span>: <span class="ana-value">repeat(3, 1fr)</span>;
+  <span class="ana-property">gap</span>: <span class="token-value">1rem</span>;
+}</div>
+          <div class="code-explain-rows">
+            <div class="code-explain-row">
+              <code><span class="ana-property">display</span>: <span class="ana-value">grid</span></code>
+              <span>→ Grid レイアウトを有効化。子要素がグリッドセルに配置される</span>
+            </div>
+            <div class="code-explain-row">
+              <code><span class="ana-value">repeat(3, 1fr)</span></code>
+              <span>→ <strong>repeat(繰り返す数, 列の幅)</strong>。1frの列を3つ作る</span>
+            </div>
+            <div class="code-explain-row">
+              <code class="ana-value">1fr</code>
+              <span>→ <strong>fr = fraction（分数）</strong>。利用可能なスペースを分割する単位。<code>1fr 2fr 1fr</code>なら 25% : 50% : 25% の比率</span>
+            </div>
+          </div>
+          <ul class="code-note-list">
+            <li class="code-note"><strong>Flexbox vs Grid</strong>：Flexboxは「アイテムが並ぶ」→ 1次元。Gridは「マス目を作る」→ 2次元</li>
+            <li class="code-note"><code>1fr</code>は「残りのスペースを1等分」。<code>repeat(3, 1fr)</code>で均等3列グリッドが作れる</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>repeat() と minmax()</h2>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-selector">.grid</span> {
+  <span class="token-comment">/* 最小280px、最大1fr の列を自動配置 */</span>
+  <span class="token-property">grid-template-columns</span>: <span class="token-value">repeat(auto-fill, minmax(280px, 1fr))</span>;
+
+  <span class="token-comment">/* auto-fit: 余ったスペースをアイテムが広がって埋める */</span>
+  <span class="token-property">grid-template-columns</span>: <span class="token-value">repeat(auto-fit, minmax(200px, 1fr))</span>;
+}</code></pre>
+        </div>
+
+        <div class="code-anatomy">
+          <h4>🧩 repeat(auto-fill, minmax()) の読み方</h4>
+          <div class="anatomy-code-block">
+<span class="ana-property">grid-template-columns</span>: <span class="ana-value">repeat</span>(<span class="ana-selector">auto-fill</span>, <span class="token-value">minmax</span>(<span class="ana-value">280px</span>, <span class="token-value">1fr</span>));</div>
+          <div class="code-explain-rows">
+            <div class="code-explain-row">
+              <code class="ana-value">repeat()</code>
+              <span>→ 列の定義を繰り返す関数</span>
+            </div>
+            <div class="code-explain-row">
+              <code class="ana-selector">auto-fill</code>
+              <span>→ コンテナ幅に収まるだけ列を<strong>自動的に</strong>作る</span>
+            </div>
+            <div class="code-explain-row">
+              <code>minmax(280px, 1fr)</code>
+              <span>→ 列の幅は<strong>最小280px・最大1fr</strong>（画面幅に合わせて伸縮）</span>
+            </div>
+          </div>
+          <ul class="code-note-list">
+            <li class="code-note">このコード1行でレスポンシブなカードグリッドが完成する「魔法の1行」として有名</li>
+            <li class="code-note"><code>auto-fill</code>は空のセルを作る、<code>auto-fit</code>は空セルをなくしてアイテムを引き伸ばす違いがある</li>
+          </ul>
+        </div>
+
+        <div class="demo-section">
+          <h3>🎯 Gridレイアウトデモ</h3>
+          <div class="demo-preview">
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem;">
+              <div class="demo-box">1</div>
+              <div class="demo-box demo-box-accent">2</div>
+              <div class="demo-box">3</div>
+              <div class="demo-box demo-box-secondary">4</div>
+              <div class="demo-box">5</div>
+              <div class="demo-box demo-box-accent">6</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>グリッドアイテムの配置</h2>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-selector">.item</span> {
+  <span class="token-comment">/* 列の開始〜終了ライン */</span>
+  <span class="token-property">grid-column</span>: <span class="token-value">1 / 3</span>;  <span class="token-comment">/* 1〜3ライン（2列分）*/</span>
+  <span class="token-property">grid-column</span>: <span class="token-value">1 / -1</span>; <span class="token-comment">/* 全幅 */</span>
+  <span class="token-property">grid-column</span>: <span class="token-value">span 2</span>; <span class="token-comment">/* 2列分広がる */</span>
+
+  <span class="token-comment">/* 行の開始〜終了ライン */</span>
+  <span class="token-property">grid-row</span>: <span class="token-value">1 / 3</span>;
+  <span class="token-property">grid-row</span>: <span class="token-value">span 2</span>;
+}</code></pre>
+        </div>
+        <div class="code-anatomy">
+          <h4>📐 grid-column: 1 / 3 の読み方</h4>
+          <div class="code-explain-rows">
+            <div class="code-explain-row">
+              <code>grid-column: <span class="ana-selector">1</span> / <span class="ana-value">3</span></code>
+              <span>→ 列ライン<strong>1番から3番まで</strong>（＝2列分を占有）</span>
+            </div>
+            <div class="code-explain-row">
+              <code>grid-column: 1 / <span class="ana-value">-1</span></code>
+              <span>→ <code>-1</code>は「最後のライン」。全列幅を占有する</span>
+            </div>
+            <div class="code-explain-row">
+              <code>grid-column: <span class="ana-value">span 2</span></code>
+              <span>→ 現在の位置から<strong>2列分</strong>広がる（開始ラインは自動）</span>
+            </div>
+          </div>
+          <ul class="code-note-list">
+            <li class="code-note">グリッドラインは列の<em>間</em>に引かれる線。3列グリッドは「1・2・3・4」の4本のライン</li>
+            <li class="code-note"><code>span</code>を使うと「何列分広げるか」を指定できて直感的</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>grid-template-areas（名前付きグリッドエリア）</h2>
+        <p>エリアに名前をつけてレイアウトをテキストで表現できます。直感的なレイアウト設計が可能です。</p>
+        <div class="code-block">
+          <div class="code-header"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">コピー</button></div>
+          <pre><code><span class="token-selector">.layout</span> {
+  <span class="token-property">display</span>: <span class="token-value">grid</span>;
+  <span class="token-property">grid-template-areas</span>:
+    <span class="token-string">"header header header"</span>
+    <span class="token-string">"sidebar main main"</span>
+    <span class="token-string">"footer footer footer"</span>;
+  <span class="token-property">grid-template-columns</span>: <span class="token-value">240px 1fr 1fr</span>;
+  <span class="token-property">grid-template-rows</span>: <span class="token-value">64px 1fr 60px</span>;
+  <span class="token-property">min-height</span>: <span class="token-value">100vh</span>;
+}
+
+<span class="token-selector">header</span>  { <span class="token-property">grid-area</span>: <span class="token-value">header</span>; }
+<span class="token-selector">aside</span>   { <span class="token-property">grid-area</span>: <span class="token-value">sidebar</span>; }
+<span class="token-selector">main</span>    { <span class="token-property">grid-area</span>: <span class="token-value">main</span>; }
+<span class="token-selector">footer</span>  { <span class="token-property">grid-area</span>: <span class="token-value">footer</span>; }</code></pre>
+        </div>
+
+        <div class="code-anatomy">
+          <h4>🗺️ grid-template-areas の読み方</h4>
+          <div class="code-explain-rows">
+            <div class="code-explain-row" style="flex-direction:column; align-items:flex-start;">
+              <code class="ana-value">"header header header"</code>
+              <span>→ 1行目：<strong>3列すべてがheader</strong>（横幅いっぱい）</span>
+            </div>
+            <div class="code-explain-row" style="flex-direction:column; align-items:flex-start;">
+              <code class="ana-value">"sidebar main main"</code>
+              <span>→ 2行目：<strong>1列目がsidebar</strong>、<strong>2〜3列目がmain</strong></span>
+            </div>
+            <div class="code-explain-row" style="flex-direction:column; align-items:flex-start;">
+              <code class="ana-selector">grid-area: header</code>
+              <span>→ その要素を「header」という名前のエリアに<strong>配置</strong>する</span>
+            </div>
+          </div>
+          <ul class="code-note-list">
+            <li class="code-note">文字列でレイアウトを「絵」のように書ける。チームでの意図共有がしやすい</li>
+            <li class="code-note">コンテナ側でエリア名を定義し、各要素に <code>grid-area: 名前</code> で割り当てる2段階の仕組み</li>
+          </ul>
+        </div>
+        <div class="demo-section">
+          <h3>🎯 聖杯レイアウト（Holy Grail Layout）</h3>
+          <div class="demo-preview">
+            <div style="display:grid; grid-template-areas:'h h h' 's m m' 'f f f'; grid-template-columns:80px 1fr 1fr; grid-template-rows:40px 100px 30px; gap:4px;">
+              <div style="grid-area:h; background:rgba(108,99,255,0.3); border-radius:4px; display:flex;align-items:center;justify-content:center; font-size:0.75rem; color:var(--primary); font-weight:700;">header</div>
+              <div style="grid-area:s; background:rgba(67,217,173,0.2); border-radius:4px; display:flex;align-items:center;justify-content:center; font-size:0.75rem; color:var(--accent); font-weight:700;">sidebar</div>
+              <div style="grid-area:m; background:rgba(255,255,255,0.05); border-radius:4px; display:flex;align-items:center;justify-content:center; font-size:0.75rem; color:var(--text-muted); font-weight:700;">main content</div>
+              <div style="grid-area:f; background:rgba(255,101,132,0.2); border-radius:4px; display:flex;align-items:center;justify-content:center; font-size:0.75rem; color:var(--secondary); font-weight:700;">footer</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="lesson-complete-section" id="complete-section">
+        <h3>🎉 このレッスンを完了しましたか？</h3>
+        <p>理解できたら完了ボタンを押して進捗を記録しましょう。</p>
+        <button class="btn btn-accent btn-lg" id="complete-btn" onclick="markComplete()">✓ このレッスンを完了にする</button>
+      </div>
+
+      <section class="content-section">
+        <h2>📝 このレッスンの重要用語</h2>
+        <p>青くなった用語をクリックすると詳細な説明が表示されます。<a href="../glossary.html">用語辞典</a>でまとめて確認することもできます。</p>
+        <p class="lesson-term-index">grid-column / grid-row、auto-fill / auto-fit、minmax()</p>
+      </section>
+
+      <div class="lesson-navigation">
+        <a href="07-flexbox.html" class="btn btn-ghost">← 前のレッスン</a>
+        <a href="09-positioning.html" class="btn btn-primary">次のレッスン →</a>
+      </div>
+    </main>
+  </div>
+  <script src="../js/main.js"></script>
+
+  <footer style="border-top:1px solid rgba(255,255,255,0.06);padding:1.5rem 2rem;text-align:center;color:var(--text-dim);font-size:0.82rem;">
+    <a href="../index.html" style="color:var(--primary);text-decoration:none;">&lt;/CSS学習&gt;</a> &nbsp;|&nbsp; <span class="footer-producer">Produced by Sumeragi</span>
+  </footer>
+</body>
+</html>
